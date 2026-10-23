@@ -1247,7 +1247,7 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 23 Oct 2026, 18:15 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 23 Oct 2026, 18:34 WIT</div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -2543,9 +2543,9 @@
           <td style="color:#fca5a5">${s[20] || '-'}</td>
           <td style="color:#fcd34d">${s[22] || '-'}</td>
           <td style="color:#6ee7b7">${s[24] || '-'}</td>
-          <td><span class="badge badge-purple">${s[29] || '-'}</span></td>
-          <td>${s[31] || '-'}</td>
-          <td style="color:#93c5fd">${s[33] || '-'}</td>
+          <td><span class="badge badge-purple">${s[32] || '-'}</span></td>
+          <td>${s[34] || '-'}</td>
+          <td style="color:#93c5fd">${s[36] || '-'}</td>
         </tr>`;
       });
       tbody.innerHTML = html;
@@ -2577,16 +2577,16 @@
 
     filteredProgRows = augData.filter(r => {
       if (q) {
-        const text = (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + r[3] + ' ' + r[4] + ' ' + r[20] + ' ' + r[21] + ' ' + r[22] + ' ' + r[23] + ' ' + r[24] + ' ' + r[25] + ' ' + r[29] + ' ' + r[33]).toLowerCase();
+        const text = (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + r[3] + ' ' + r[4] + ' ' + r[20] + ' ' + r[21] + ' ' + r[22] + ' ' + r[23] + ' ' + r[24] + ' ' + r[25] + ' ' + r[26] + ' ' + r[27] + ' ' + r[28] + ' ' + r[29] + ' ' + r[30] + ' ' + r[31] + ' ' + r[32] + ' ' + r[33] + ' ' + r[34] + ' ' + r[35] + ' ' + r[36] + ' ' + r[37]).toLowerCase();
         if (!text.includes(q)) return false;
       }
       if (branchVal !== 'ALL' && r[3] !== branchVal) return false;
       if (pnlVal !== 'ALL' && r[13] !== pnlVal) return false;
       if (plweekVal !== 'ALL') {
-        if (plweekVal === 'CLEAR' && r[33] !== 'CLEAR') return false;
-        if (plweekVal === 'UNCLEAR' && r[33] === 'CLEAR') return false;
+        if (plweekVal === 'CLEAR' && r[36] !== 'CLEAR') return false;
+        if (plweekVal === 'UNCLEAR' && r[36] === 'CLEAR') return false;
       }
-      if (transVal !== 'ALL' && r[29] !== transVal) return false;
+      if (transVal !== 'ALL' && r[32] !== transVal) return false;
       return true;
     });
 
@@ -2649,7 +2649,7 @@
       : `Menampilkan ${startIdx + 1} - ${endIdx} dari ${total.toLocaleString()} site`;
 
     if (total === 0) {
-      tbody.innerHTML = `<tr><td colspan="23" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="26" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
       return;
     }
 
@@ -2675,7 +2675,19 @@
 
       const plWeekBadge = (r[36] === 'CLEAR')
         ? `<span class="badge badge-success">CLEAR</span>`
-        : (r[33] ? `<span class="badge badge-warning">${r[33]}</span>` : '-');
+        : (r[36] ? `<span class="badge badge-warning">${r[36]}</span>` : '-');
+
+      const rhiWeekBadge = (r[26] === 'Pass')
+        ? `<span class="badge badge-success">Pass</span>`
+        : (r[26] === 'Fail' ? `<span class="badge badge-danger">Fail</span>` : (r[26] || '-'));
+
+      const thiWeekBadge = (r[29] === 'Pass')
+        ? `<span class="badge badge-success">Pass</span>`
+        : (r[29] === 'Fail' ? `<span class="badge badge-danger">Fail</span>` : (r[29] || '-'));
+
+      const availBadge = (r[34] === 'Achieved')
+        ? `<span class="badge badge-success">Achieved</span>`
+        : (r[34] || '-');
 
       rowsHtml += `<tr>
         <td style="color:var(--text-dim);font-family:'JetBrains Mono'">${i + 1}</td>
@@ -2686,28 +2698,32 @@
         <td>${pnlBadge}</td>
         <td>${classBadge}</td>
         <td>${oaBadge}</td>
-        <!-- SQA -->
+        <!-- SQA (AF, AG) -->
         <td class="new-col-td" style="color:#fca5a5">${r[20] || '-'}</td>
         <td class="new-col-td" style="color:#fca5a5">${r[21] || '-'}</td>
-        <!-- Sales -->
+        <!-- Sales (AH, AI) -->
         <td class="new-col-td" style="color:#fcd34d">${r[22] || '-'}</td>
         <td class="new-col-td" style="color:#fcd34d">${r[23] || '-'}</td>
-        <!-- NOP -->
+        <!-- NOP (AJ, AK) -->
         <td class="new-col-td" style="color:#6ee7b7">${r[24] || '-'}</td>
         <td class="new-col-td" style="color:#6ee7b7">${r[25] || '-'}</td>
-        <!-- THI -->
-        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[26] || '-'}</td>
-        <td class="new-col-td" style="color:#67e8f9">${r[27] || '-'}</td>
-        <td class="new-col-td" style="color:#67e8f9">${r[28] || '-'}</td>
-        <!-- Transport & BDBH -->
-        <td class="new-col-td"><span class="badge badge-purple">${r[29] || '-'}</span></td>
-        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[30] || '-'}</td>
-        <!-- Availability -->
-        <td class="new-col-td">${r[31] || '-'}</td>
-        <td class="new-col-td" style="color:#67e8f9">${r[32] || '-'}</td>
-        <!-- Status PL -->
+        <!-- RHI (AL, AM, AN) -->
+        <td class="new-col-td" style="font-family:'JetBrains Mono'">${rhiWeekBadge}</td>
+        <td class="new-col-td" style="color:#c4b5fd">${r[27] || '-'}</td>
+        <td class="new-col-td" style="color:#c4b5fd">${r[28] || '-'}</td>
+        <!-- THI (AO, AP, AQ) -->
+        <td class="new-col-td" style="font-family:'JetBrains Mono'">${thiWeekBadge}</td>
+        <td class="new-col-td" style="color:#7dd3fc">${r[30] || '-'}</td>
+        <td class="new-col-td" style="color:#7dd3fc">${r[31] || '-'}</td>
+        <!-- Transport & BDBH (AR, AS) -->
+        <td class="new-col-td">${r[32] ? '<span class="badge badge-purple">' + r[32] + '</span>' : '-'}</td>
+        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[33] || '-'}</td>
+        <!-- Availability (AT, AU) -->
+        <td class="new-col-td">${availBadge}</td>
+        <td class="new-col-td" style="color:#fbbf24">${r[35] || '-'}</td>
+        <!-- Status PL & MBA (AV, AW) -->
         <td class="new-col-td">${plWeekBadge}</td>
-        <td class="new-col-td" style="color:#93c5fd">${r[34] || '-'}</td>
+        <td class="new-col-td" style="color:#93c5fd">${r[37] || '-'}</td>
       </tr>`;
     }
 
@@ -2720,10 +2736,11 @@
       'Action to be taken SQA', 'Update action taken sqa',
       'Action to be taken Sales', 'Update action taken sales',
       'Action to be taken NOP', 'Update action taken NOP',
-      'update THI Week terakhir', 'plan action THI', 'propose action THI',
+      'update RHI Week terakhir', 'Root Cause RHI', 'propose action RHI',
+      'update THI Week terakhir', 'Root Cause THI', 'propose action THI',
       'Typer Transport', 'utilisasi average weekly BDBH',
       'update average status availability', 'plan action availability',
-      'Status PL week terakhir', 'propose action'
+      'Status PL week terakhir', 'propose action (MBA)'
     ];
 
     let csv = [];
@@ -2733,8 +2750,10 @@
       const rowVals = [
         r[0], r[1], r[3], r[4], r[13], r[7], r[8],
         r[20], r[21], r[22], r[23], r[24], r[25],
-        r[26], r[27], r[28], r[29], r[30], r[31], r[32],
-        r[33], r[34]
+        r[26], r[27], r[28],
+        r[29], r[30], r[31],
+        r[32], r[33], r[34], r[35],
+        r[36], r[37]
       ];
       csv.push(rowVals.map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(','));
     });
@@ -2838,7 +2857,7 @@
       : `Menampilkan ${startIdx + 1} - ${endIdx} dari ${total.toLocaleString()} site`;
 
     if (total === 0) {
-      tbody.innerHTML = `<tr><td colspan="36" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai dengan kriteria filter/pencarian</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="39" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai dengan kriteria filter/pencarian</td></tr>`;
       return;
     }
 
@@ -2901,22 +2920,25 @@
         <td>${intervBadge}</td>
         <td style="color:var(--text-muted)">${r[18] || '-'}</td>
         <td style="font-family:'JetBrains Mono'">${r[19] || '-'}</td>
-        <!-- 15 NEW COLUMNS (AF to AT) -->
+        <!-- 18 ACTION / TRACKING COLUMNS (AF to AW) -->
         <td class="new-col-td" style="color:#fca5a5">${r[20] || '-'}</td>
         <td class="new-col-td" style="color:#fca5a5">${r[21] || '-'}</td>
         <td class="new-col-td" style="color:#fcd34d">${r[22] || '-'}</td>
         <td class="new-col-td" style="color:#fcd34d">${r[23] || '-'}</td>
         <td class="new-col-td" style="color:#6ee7b7">${r[24] || '-'}</td>
         <td class="new-col-td" style="color:#6ee7b7">${r[25] || '-'}</td>
-        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[26] || '-'}</td>
-        <td class="new-col-td" style="color:#67e8f9">${r[27] || '-'}</td>
-        <td class="new-col-td" style="color:#67e8f9">${r[28] || '-'}</td>
-        <td class="new-col-td"><span class="badge badge-purple">${r[29] || '-'}</span></td>
-        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[30] || '-'}</td>
-        <td class="new-col-td">${r[31] || '-'}</td>
-        <td class="new-col-td" style="color:#67e8f9">${r[32] || '-'}</td>
+        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[26] ? (r[26] === 'Pass' ? '<span class="badge badge-success">Pass</span>' : (r[26] === 'Fail' ? '<span class="badge badge-danger">Fail</span>' : r[26])) : '-'}</td>
+        <td class="new-col-td" style="color:#c4b5fd">${r[27] || '-'}</td>
+        <td class="new-col-td" style="color:#c4b5fd">${r[28] || '-'}</td>
+        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[29] ? (r[29] === 'Pass' ? '<span class="badge badge-success">Pass</span>' : (r[29] === 'Fail' ? '<span class="badge badge-danger">Fail</span>' : r[29])) : '-'}</td>
+        <td class="new-col-td" style="color:#7dd3fc">${r[30] || '-'}</td>
+        <td class="new-col-td" style="color:#7dd3fc">${r[31] || '-'}</td>
+        <td class="new-col-td">${r[32] ? '<span class="badge badge-purple">' + r[32] + '</span>' : '-'}</td>
+        <td class="new-col-td" style="font-family:'JetBrains Mono'">${r[33] || '-'}</td>
+        <td class="new-col-td">${r[34] ? (r[34] === 'Achieved' ? '<span class="badge badge-success">Achieved</span>' : r[34]) : '-'}</td>
+        <td class="new-col-td" style="color:#fbbf24">${r[35] || '-'}</td>
         <td class="new-col-td">${plWeekBadge}</td>
-        <td class="new-col-td" style="color:#93c5fd">${r[34] || '-'}</td>
+        <td class="new-col-td" style="color:#93c5fd">${r[37] || '-'}</td>
       </tr>`;
     }
 
@@ -2926,16 +2948,17 @@
   // Export Filtered Aug 26 To CSV
   function exportFilteredAugToCSV() {
     const headers = [
-      'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Site Class', 'Status OA', 'Type Site', 'BTS Equipment',
+      'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Type Site', 'BTS Equipment', 'Site Class', 'Status OA',
       'Revenue Aug-26', 'Direct Cost Aug-26', 'Margin Aug-26', 'Margin Pct', 'PnL Status',
       'GAP Dist', 'Inline SSGJ', 'Program Group', 'Intervention Flag', 'Status Aug', 'Payload',
       'Action to be taken SQA', 'Update action taken sqa',
       'Action to be taken Sales', 'Update action taken sales',
       'Action to be taken NOP', 'Update action taken NOP',
-      'update THI Week terakhir', 'plan action THI', 'propose action THI',
+      'update RHI Week terakhir', 'Root Cause RHI', 'propose action RHI',
+      'update THI Week terakhir', 'Root Cause THI', 'propose action THI',
       'Typer Transport', 'utilisasi average weekly BDBH',
       'update average status availability', 'plan action availability',
-      'Status PL week terakhir', 'propose action'
+      'Status PL week terakhir', 'propose action (MBA)'
     ];
 
     let csv = [];
@@ -2980,7 +3003,7 @@
   // --- REAL-TIME AUTO-REFRESH & MANUAL REFRESH (WIT) ---
   let refreshCountdown = 30;
   let isRefreshing = false;
-  const currentVersionHash = "1792746946";
+  const currentVersionHash = "1792748060";
 
   function manualTriggerRefresh() {
     if (isRefreshing) return;
