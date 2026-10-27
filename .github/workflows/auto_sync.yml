@@ -1,0 +1,35 @@
+name: 24/7 Auto Sync Site Loss Dashboard
+
+on:
+  schedule:
+    # Runs every 30 minutes 24/7
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Auto Sync & Rebuild Dashboard
+        env:
+          ONEDRIVE_EXCEL_URL: ${{ secrets.ONEDRIVE_EXCEL_URL }}
+        run: |
+          python scripts/sync_and_build.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html version.json .last_excel_hash || true
+          git diff --staged --quiet || (git commit -m "Auto-sync dashboard from OneDrive [skip ci]" && git push)
