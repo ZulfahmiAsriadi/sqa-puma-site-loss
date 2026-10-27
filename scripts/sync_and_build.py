@@ -4149,8 +4149,7 @@ html_template = f"""<!DOCTYPE html>
       csv.push(rowVals.map(val => `"${{String(val || '').replace(/"/g, '""')}}"`).join(','));
     }});
 
-    const blob = new Blob([csv.join('
-')], {{ type: 'text/csv;charset=utf-8;' }});
+    const blob = new Blob([csv.join('\\\\n')], {{ type: 'text/csv;charset=utf-8;' }});
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `Progress_Action_Tracker_${{new Date().toISOString().slice(0,10)}}.csv`;
