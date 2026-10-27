@@ -2107,7 +2107,7 @@ html_template = f"""<!DOCTYPE html>
                 <span class="badge" style="background:rgba(245,158,11,0.2);color:#fcd34d;border:1px solid rgba(245,158,11,0.4);font-size:11px" id="priority-main-badge">78 Priority Sites (Papua Maluku)</span>
               </div>
               <p style="font-size:12px;color:var(--text-muted);margin-top:4px">
-                Visualisasi diagram batang volume site <strong>Priority Sales & Priority Network</strong> beserta status progres pemenuhan action plan (Action SQA, Sales, NOP, RHI, MBA, Availability).
+                Visualisasi diagram batang volume site <strong>Priority Sales & Priority Network</strong> beserta status progres pemenuhan action plan (<strong>Sales:</strong> Action Sales & NOP | <strong>Network:</strong> SQA, RHI, THI, Availability, PL/MBA & Cost).
               </p>
             </div>
           </div>
@@ -2251,8 +2251,22 @@ html_template = f"""<!DOCTYPE html>
           <button class="priority-pill" id="prio-pill-net" onclick="setPriorityFilter('NET_ONLY')">📡 Priority Network (23)</button>
           <button class="priority-pill" id="prio-pill-p1" onclick="setPriorityFilter('P1_ONLY')">🔥 Priority P1 (42)</button>
           <button class="priority-pill" id="prio-pill-p2" onclick="setPriorityFilter('P2_ONLY')">⚡ Priority P2 (35)</button>
-          <button class="priority-pill" id="prio-pill-done" onclick="setPriorityFilter('ACTION_DONE')">✅ Sudah Ada Action (37)</button>
-          <button class="priority-pill" id="prio-pill-pending" onclick="setPriorityFilter('ACTION_PENDING')">⏳ Belum Ada Action (41)</button>
+          <button class="priority-pill" id="prio-pill-done" onclick="setPriorityFilter('ACTION_DONE')">✅ Sudah Ada Action (39)</button>
+          <button class="priority-pill" id="prio-pill-pending" onclick="setPriorityFilter('ACTION_PENDING')">⏳ Belum Ada Action (39)</button>
+        </div>
+
+        <!-- QUICK NETWORK PART FILTER PILLS -->
+        <div class="priority-filter-bar" style="margin-top:6px;background:rgba(168,85,247,0.06);border-color:rgba(168,85,247,0.25)">
+          <span style="font-size:12px;font-weight:700;color:#d8b4fe;display:flex;align-items:center;gap:6px">
+            <span>📡</span> Part Priority Net:
+          </span>
+          <button class="priority-pill active" id="prio-part-all" onclick="setNetPartFilter('ALL')">Semua Part Net</button>
+          <button class="priority-pill" id="prio-part-sqa" onclick="setNetPartFilter('PART_SQA')">🎯 Part SQA (23)</button>
+          <button class="priority-pill" id="prio-part-rhi" onclick="setNetPartFilter('PART_RHI')">📡 Part RHI (16)</button>
+          <button class="priority-pill" id="prio-part-thi" onclick="setNetPartFilter('PART_THI')">📶 Part THI (0)</button>
+          <button class="priority-pill" id="prio-part-avail" onclick="setNetPartFilter('PART_AVAIL')">⚡ Part Avail (11)</button>
+          <button class="priority-pill" id="prio-part-pl" onclick="setNetPartFilter('PART_PL')">🔌 Part PL/MBA (12)</button>
+          <button class="priority-pill" id="prio-part-cost" onclick="setNetPartFilter('PART_COST')">💰 Part Cost (0)</button>
         </div>
 
         <!-- Controls for Progress Tracker -->
@@ -2288,6 +2302,18 @@ html_template = f"""<!DOCTYPE html>
               <option value="P2">P2 Network Priority (19)</option>
               <option value="P3">P3 Network Priority (1)</option>
               <option value="Not Priority">Not Priority Network</option>
+            </select>
+
+            <select id="prog-filter-net-part" class="filter-select" onchange="onNetPartDropdownChange()" style="border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.08);color:#d8b4fe">
+              <option value="ALL">Part Priority Net: Semua</option>
+              <option value="PART_SQA">🎯 Part SQA (Col AH/AI)</option>
+              <option value="PART_RHI">📡 Part RHI (Col AO/AP)</option>
+              <option value="PART_THI">📶 Part THI (Col AR/AS)</option>
+              <option value="PART_AVAIL">⚡ Part Avail (Col AW)</option>
+              <option value="PART_PL">🔌 Part PL / MBA (Col AY)</option>
+              <option value="PART_COST">💰 Part Cost (Col AZ/BA)</option>
+              <option value="PART_ANY">✅ Sudah Ada Part Net (Any)</option>
+              <option value="PART_NONE">⏳ Belum Ada Part Net</option>
             </select>
 
             <select id="prog-filter-pnl" class="filter-select" onchange="applyProgFilters()">
@@ -3364,9 +3390,37 @@ html_template = f"""<!DOCTYPE html>
     return `<span class="badge badge-info">${{val}}</span>`;
   }}
 
+  function isFilledVal(v) {{
+    if (v === null || v === undefined) return false;
+    const s = String(v).trim();
+    return s !== '' && s !== '-' && s !== '0' && s !== '#N/A' && s !== 'None';
+  }}
+
+  function hasSalesPrioAction(r) {{
+    return isFilledVal(r[22]) || isFilledVal(r[23]) || isFilledVal(r[24]) || isFilledVal(r[25]);
+  }}
+  function hasNetPartSQA(r) {{ return isFilledVal(r[20]) || isFilledVal(r[21]); }}
+  function hasNetPartRHI(r) {{ return isFilledVal(r[27]) || isFilledVal(r[28]); }}
+  function hasNetPartTHI(r) {{ return isFilledVal(r[30]) || isFilledVal(r[31]); }}
+  function hasNetPartAvail(r) {{ return isFilledVal(r[35]); }}
+  function hasNetPartPL(r) {{ return isFilledVal(r[37]); }}
+  function hasNetPartCost(r) {{ return isFilledVal(r[38]) || isFilledVal(r[39]); }}
+  function hasNetPrioAction(r) {{
+    return hasNetPartSQA(r) || hasNetPartRHI(r) || hasNetPartTHI(r) || hasNetPartAvail(r) || hasNetPartPL(r) || hasNetPartCost(r);
+  }}
+  function prioSiteHasProg(r) {{
+    const isSales = (r[17] === 'P1' || r[17] === 'P2' || r[17] === 'P3');
+    const isNet = (r[18] === 'P1' || r[18] === 'P2' || r[18] === 'P3');
+    if (isSales && hasSalesPrioAction(r)) return true;
+    if (isNet && hasNetPrioAction(r)) return true;
+    return false;
+  }}
+
   function setPriorityFilter(prioType) {{
     activePriorityPill = prioType;
-    document.querySelectorAll('.priority-pill').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.priority-pill').forEach(btn => {{
+      if (!btn.id.startsWith('prio-part-')) btn.classList.remove('active');
+    }});
     const btnId = 
       prioType === 'ALL' ? 'prio-pill-all' :
       prioType === 'ANY_PRIO' ? 'prio-pill-any' :
@@ -3378,6 +3432,69 @@ html_template = f"""<!DOCTYPE html>
       prioType === 'ACTION_PENDING' ? 'prio-pill-pending' : '';
     const btn = document.getElementById(btnId);
     if (btn) btn.classList.add('active');
+
+    // If switching away from NET_ONLY, reset net part dropdown and pills
+    if (prioType !== 'NET_ONLY') {{
+      const el = document.getElementById('prog-filter-net-part');
+      if (el) el.value = 'ALL';
+      document.querySelectorAll('[id^="prio-part-"]').forEach(b => b.classList.remove('active'));
+      const allPartBtn = document.getElementById('prio-part-all');
+      if (allPartBtn) allPartBtn.classList.add('active');
+    }}
+    applyProgFilters();
+  }}
+
+  function setNetPartFilter(part) {{
+    const el = document.getElementById('prog-filter-net-part');
+    if (el) el.value = part;
+    
+    document.querySelectorAll('[id^="prio-part-"]').forEach(b => b.classList.remove('active'));
+    const pillId = 
+      part === 'ALL' ? 'prio-part-all' :
+      part === 'PART_SQA' ? 'prio-part-sqa' :
+      part === 'PART_RHI' ? 'prio-part-rhi' :
+      part === 'PART_THI' ? 'prio-part-thi' :
+      part === 'PART_AVAIL' ? 'prio-part-avail' :
+      part === 'PART_PL' ? 'prio-part-pl' :
+      part === 'PART_COST' ? 'prio-part-cost' : '';
+    const pillBtn = document.getElementById(pillId);
+    if (pillBtn) pillBtn.classList.add('active');
+
+    if (part !== 'ALL') {{
+      activePriorityPill = 'NET_ONLY';
+      document.querySelectorAll('.priority-pill').forEach(btn => {{
+        if (!btn.id.startsWith('prio-part-')) btn.classList.remove('active');
+      }});
+      const netBtn = document.getElementById('prio-pill-net');
+      if (netBtn) netBtn.classList.add('active');
+    }}
+
+    applyProgFilters();
+  }}
+
+  function onNetPartDropdownChange() {{
+    const el = document.getElementById('prog-filter-net-part');
+    const val = el ? el.value : 'ALL';
+    document.querySelectorAll('[id^="prio-part-"]').forEach(b => b.classList.remove('active'));
+    const pillId = 
+      val === 'ALL' ? 'prio-part-all' :
+      val === 'PART_SQA' ? 'prio-part-sqa' :
+      val === 'PART_RHI' ? 'prio-part-rhi' :
+      val === 'PART_THI' ? 'prio-part-thi' :
+      val === 'PART_AVAIL' ? 'prio-part-avail' :
+      val === 'PART_PL' ? 'prio-part-pl' :
+      val === 'PART_COST' ? 'prio-part-cost' : '';
+    const pillBtn = document.getElementById(pillId);
+    if (pillBtn) pillBtn.classList.add('active');
+
+    if (val !== 'ALL') {{
+      activePriorityPill = 'NET_ONLY';
+      document.querySelectorAll('.priority-pill').forEach(btn => {{
+        if (!btn.id.startsWith('prio-part-')) btn.classList.remove('active');
+      }});
+      const netBtn = document.getElementById('prio-pill-net');
+      if (netBtn) netBtn.classList.add('active');
+    }}
     applyProgFilters();
   }}
 
@@ -3394,6 +3511,7 @@ html_template = f"""<!DOCTYPE html>
     const oaVal = document.getElementById('prog-filter-oa') ? document.getElementById('prog-filter-oa').value : 'ALL';
     const salesPrioVal = document.getElementById('prog-filter-priority-sales') ? document.getElementById('prog-filter-priority-sales').value : 'ALL';
     const netPrioVal = document.getElementById('prog-filter-priority-net') ? document.getElementById('prog-filter-priority-net').value : 'ALL';
+    const netPartVal = document.getElementById('prog-filter-net-part') ? document.getElementById('prog-filter-net-part').value : 'ALL';
 
     filteredProgRows = augData.filter(r => {{
       // 1. Text Search across identifiers, priorities and action columns
@@ -3411,10 +3529,9 @@ html_template = f"""<!DOCTYPE html>
       const isNetPrio = (r[18] === 'P1' || r[18] === 'P2' || r[18] === 'P3');
       const isAnyPrio = isSalesPrio || isNetPrio;
 
-      const hasAction = isFilledVal(r[20]) || isFilledVal(r[21]) || isFilledVal(r[22]) || isFilledVal(r[23]) ||
-                        isFilledVal(r[24]) || isFilledVal(r[25]) || isFilledVal(r[27]) || isFilledVal(r[28]) ||
-                        isFilledVal(r[30]) || isFilledVal(r[31]) || isFilledVal(r[35]) || isFilledVal(r[37]) ||
-                        isFilledVal(r[38]) || isFilledVal(r[39]);
+      const hasSalesAct = hasSalesPrioAction(r);
+      const hasNetAct = hasNetPrioAction(r);
+      const siteHasProg = prioSiteHasProg(r);
 
       // Pill filter evaluation
       if (activePriorityPill === 'ANY_PRIO' && !isAnyPrio) return false;
@@ -3423,10 +3540,10 @@ html_template = f"""<!DOCTYPE html>
       if (activePriorityPill === 'P1_ONLY' && r[17] !== 'P1' && r[18] !== 'P1') return false;
       if (activePriorityPill === 'P2_ONLY' && r[17] !== 'P2' && r[18] !== 'P2') return false;
       if (activePriorityPill === 'ACTION_DONE') {{
-        if (!isAnyPrio || !hasAction) return false;
+        if (!isAnyPrio || !siteHasProg) return false;
       }}
       if (activePriorityPill === 'ACTION_PENDING') {{
-        if (!isAnyPrio || hasAction) return false;
+        if (!isAnyPrio || siteHasProg) return false;
       }}
 
       // Dropdown Priority Filters
@@ -3437,6 +3554,19 @@ html_template = f"""<!DOCTYPE html>
       if (netPrioVal !== 'ALL') {{
         if (netPrioVal === 'PRIORITY_ONLY' && !isNetPrio) return false;
         if (netPrioVal !== 'PRIORITY_ONLY' && r[18] !== netPrioVal) return false;
+      }}
+
+      // Dropdown Priority Network Part Filter
+      if (netPartVal !== 'ALL') {{
+        if (!isNetPrio) return false;
+        if (netPartVal === 'PART_SQA' && !hasNetPartSQA(r)) return false;
+        if (netPartVal === 'PART_RHI' && !hasNetPartRHI(r)) return false;
+        if (netPartVal === 'PART_THI' && !hasNetPartTHI(r)) return false;
+        if (netPartVal === 'PART_AVAIL' && !hasNetPartAvail(r)) return false;
+        if (netPartVal === 'PART_PL' && !hasNetPartPL(r)) return false;
+        if (netPartVal === 'PART_COST' && !hasNetPartCost(r)) return false;
+        if (netPartVal === 'PART_ANY' && !hasNetAct) return false;
+        if (netPartVal === 'PART_NONE' && hasNetAct) return false;
       }}
 
       // 4. Other Filters
@@ -3602,12 +3732,6 @@ html_template = f"""<!DOCTYPE html>
     renderPriorityCharts();
   }}
 
-  function isFilledVal(v) {{
-    if (v === null || v === undefined) return false;
-    const s = String(v).trim();
-    return s !== '' && s !== '-' && s !== '0' && s !== '#N/A' && s !== 'None';
-  }}
-
   function renderPriorityCharts() {{
     const containerVol = document.getElementById('priority-volume-bars');
     const containerProg = document.getElementById('priority-progress-bars');
@@ -3633,32 +3757,31 @@ html_template = f"""<!DOCTYPE html>
 
     const allTotal = allPrioRows.length;
 
-    function hasAnyAction(r) {{
-      return isFilledVal(r[20]) || isFilledVal(r[21]) || isFilledVal(r[22]) || isFilledVal(r[23]) ||
-             isFilledVal(r[24]) || isFilledVal(r[25]) || isFilledVal(r[27]) || isFilledVal(r[28]) ||
-             isFilledVal(r[30]) || isFilledVal(r[31]) || isFilledVal(r[35]) || isFilledVal(r[37]) ||
-             isFilledVal(r[38]) || isFilledVal(r[39]);
-    }}
-
-    const sProg = prioSalesRows.filter(hasAnyAction).length;
+    // Priority Sales Action: Sales & NOP
+    const sProg = prioSalesRows.filter(hasSalesPrioAction).length;
     const sProgPct = sTotal > 0 ? (sProg / sTotal * 100).toFixed(1) : '0.0';
 
-    const nProg = prioNetRows.filter(hasAnyAction).length;
+    // Priority Network Action: SQA, RHI, THI, Avail, PL/MBA, Cost
+    const nProg = prioNetRows.filter(hasNetPrioAction).length;
     const nProgPct = nTotal > 0 ? (nProg / nTotal * 100).toFixed(1) : '0.0';
 
-    const allProg = allPrioRows.filter(hasAnyAction).length;
+    // Overall Priority Action Progress
+    const allProg = allPrioRows.filter(prioSiteHasProg).length;
     const allProgPct = allTotal > 0 ? (allProg / allTotal * 100).toFixed(1) : '0.0';
     const allPending = allTotal - allProg;
     const allPendingPct = allTotal > 0 ? (allPending / allTotal * 100).toFixed(1) : '0.0';
 
-    // Domain counts on Priority Sites
-    const pNop = allPrioRows.filter(r => isFilledVal(r[24]) || isFilledVal(r[25])).length;
-    const pSales = allPrioRows.filter(r => isFilledVal(r[22]) || isFilledVal(r[23])).length;
-    const pSqa = allPrioRows.filter(r => isFilledVal(r[20]) || isFilledVal(r[21])).length;
-    const pRhi = allPrioRows.filter(r => isFilledVal(r[27]) || isFilledVal(r[28])).length;
-    const pMba = allPrioRows.filter(r => isFilledVal(r[37])).length;
-    const pAvail = allPrioRows.filter(r => isFilledVal(r[35])).length;
-    const pNos = allPrioRows.filter(r => isFilledVal(r[38]) || isFilledVal(r[39])).length;
+    // Priority Network Parts Breakdown:
+    const netSqa = prioNetRows.filter(hasNetPartSQA).length;
+    const netRhi = prioNetRows.filter(hasNetPartRHI).length;
+    const netThi = prioNetRows.filter(hasNetPartTHI).length;
+    const netAvail = prioNetRows.filter(hasNetPartAvail).length;
+    const netPl = prioNetRows.filter(hasNetPartPL).length;
+    const netCost = prioNetRows.filter(hasNetPartCost).length;
+
+    // Priority Sales Breakdown:
+    const sSales = prioSalesRows.filter(r => isFilledVal(r[22]) || isFilledVal(r[23])).length;
+    const sNop = prioSalesRows.filter(r => isFilledVal(r[24]) || isFilledVal(r[25])).length;
 
     // KPI Cards Updates
     const badge = document.getElementById('priority-main-badge');
@@ -3764,7 +3887,7 @@ html_template = f"""<!DOCTYPE html>
     let progHtml = `
       <div class="prio-bar-wrapper" onclick="setPriorityFilter('NET_ONLY')" style="cursor:pointer" title="Klik untuk filter ke Priority Network">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:12px;font-weight:700;color:#7dd3fc">📡 Progress Priority Network</span>
+          <span style="font-size:12px;font-weight:700;color:#7dd3fc">📡 Progress Priority Network (SQA, RHI, THI, Avail, PL, Cost)</span>
           <span style="font-size:12px;color:#34d399;font-weight:700">${{nProg}} / ${{nTotal}} Site Terisi (${{nProgPct}}%)</span>
         </div>
         <div style="height:18px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;position:relative">
@@ -3774,7 +3897,7 @@ html_template = f"""<!DOCTYPE html>
 
       <div class="prio-bar-wrapper" onclick="setPriorityFilter('SALES_ONLY')" style="cursor:pointer;margin-top:10px" title="Klik untuk filter ke Priority Sales">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:12px;font-weight:700;color:#fcd34d">💼 Progress Priority Sales</span>
+          <span style="font-size:12px;font-weight:700;color:#fcd34d">💼 Progress Priority Sales (Action Sales & NOP)</span>
           <span style="font-size:12px;color:${{sProgPct > 50 ? '#34d399' : '#f59e0b'}};font-weight:700">${{sProg}} / ${{sTotal}} Site Terisi (${{sProgPct}}%)</span>
         </div>
         <div style="height:18px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;position:relative">
@@ -3784,7 +3907,7 @@ html_template = f"""<!DOCTYPE html>
 
       <div class="prio-bar-wrapper" onclick="setPriorityFilter('ANY_PRIO')" style="cursor:pointer;margin-top:10px" title="Klik untuk filter ke Semua Priority">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:12px;font-weight:700;color:#d8b4fe">⭐ Total Action Progress (All Priority)</span>
+          <span style="font-size:12px;font-weight:700;color:#d8b4fe">⭐ Total Action Progress (All Priority Sites)</span>
           <span style="font-size:12px;color:#60a5fa;font-weight:700">${{allProg}} / ${{allTotal}} Site Terisi (${{allProgPct}}%)</span>
         </div>
         <div style="height:18px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;display:flex">
@@ -3794,28 +3917,40 @@ html_template = f"""<!DOCTYPE html>
       </div>
 
       <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.1)">
-        <div style="font-size:11px;color:var(--text-muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Rincian Progress per Unit PIC (Site Priority):</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted)">
-            <span>🏢 Action Plan NOP:</span>
-            <span style="font-weight:700;color:#10b981">${{pNop}} site (${{allTotal > 0 ? (pNop/allTotal*100).toFixed(1) : 0}}%)</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Rincian Part Priority Network (Klik untuk filter):</span>
+          <span style="font-size:10.5px;color:#d8b4fe">Filter Part Network</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div class="prio-part-chip" onclick="setNetPartFilter('PART_SQA')" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:6px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;font-size:11.5px" title="Klik untuk filter ke Part SQA">
+            <span style="color:#fca5a5">🎯 Part SQA:</span>
+            <span style="font-weight:700;color:#f87171">${{netSqa}} / ${{nTotal}}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted)">
-            <span>📡 RHI Root Cause / Propose:</span>
-            <span style="font-weight:700;color:#a78bfa">${{pRhi}} site (${{allTotal > 0 ? (pRhi/allTotal*100).toFixed(1) : 0}}%)</span>
+          <div class="prio-part-chip" onclick="setNetPartFilter('PART_RHI')" style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);border-radius:6px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;font-size:11.5px" title="Klik untuk filter ke Part RHI">
+            <span style="color:#c4b5fd">📡 Part RHI:</span>
+            <span style="font-weight:700;color:#a78bfa">${{netRhi}} / ${{nTotal}}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted)">
-            <span>🔌 Propose Action PL / MBA:</span>
-            <span style="font-weight:700;color:#60a5fa">${{pMba}} site (${{allTotal > 0 ? (pMba/allTotal*100).toFixed(1) : 0}}%)</span>
+          <div class="prio-part-chip" onclick="setNetPartFilter('PART_THI')" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);border-radius:6px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;font-size:11.5px" title="Klik untuk filter ke Part THI">
+            <span style="color:#7dd3fc">📶 Part THI:</span>
+            <span style="font-weight:700;color:#38bdf8">${{netThi}} / ${{nTotal}}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted)">
-            <span>💼 Action Plan Sales:</span>
-            <span style="font-weight:700;color:#f59e0b">${{pSales}} site (${{allTotal > 0 ? (pSales/allTotal*100).toFixed(1) : 0}}%)</span>
+          <div class="prio-part-chip" onclick="setNetPartFilter('PART_AVAIL')" style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.25);border-radius:6px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;font-size:11.5px" title="Klik untuk filter ke Part Availability">
+            <span style="color:#fde047">⚡ Part Avail:</span>
+            <span style="font-weight:700;color:#eab308">${{netAvail}} / ${{nTotal}}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted)">
-            <span>🎯 Action Plan SQA:</span>
-            <span style="font-weight:700;color:#f87171">${{pSqa}} site (${{allTotal > 0 ? (pSqa/allTotal*100).toFixed(1) : 0}}%)</span>
+          <div class="prio-part-chip" onclick="setNetPartFilter('PART_PL')" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.25);border-radius:6px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;font-size:11.5px" title="Klik untuk filter ke Part PL / MBA">
+            <span style="color:#93c5fd">🔌 Part PL / MBA:</span>
+            <span style="font-weight:700;color:#60a5fa">${{netPl}} / ${{nTotal}}</span>
           </div>
+          <div class="prio-part-chip" onclick="setNetPartFilter('PART_COST')" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.25);border-radius:6px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;font-size:11.5px" title="Klik untuk filter ke Part Cost">
+            <span style="color:#5eead4">💰 Part Cost:</span>
+            <span style="font-weight:700;color:#14b8a6">${{netCost}} / ${{nTotal}}</span>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(255,255,255,0.08);display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted)">
+          <span>💼 Priority Sales Action Breakdown:</span>
+          <span style="color:#fcd34d">NOP: <strong>${{sNop}}</strong> | Sales: <strong>${{sSales}}</strong></span>
         </div>
       </div>
     `;
