@@ -1537,7 +1537,7 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 27 Oct 2026, 16:59 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 27 Oct 2026, 17:04 WIT</div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -1948,8 +1948,8 @@
             <!-- Diagram Batang 2: Komparasi per Branch -->
             <div class="prog-chart-box">
               <div class="prog-chart-title">
-                <span>🏙️ Pemenuhan Action Plan per Branch</span>
-                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Klik bar untuk filter tabel</span>
+                <span>🏙️ Pemenuhan Action Plan (NOP & Sales) per Branch</span>
+                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Berdasarkan input Kolom AJ-AM (Sales & NOP) • Klik bar untuk filter</span>
               </div>
               <div id="prog-branch-bars" style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
                 <!-- Injected dynamically by renderProgCharts() -->
@@ -3671,8 +3671,14 @@
       const bRows = filteredProgRows.filter(r => r[3] === b.name);
       const bTotal = bRows.length;
       let bWithAction = 0;
+      let bNop = 0;
+      let bSales = 0;
       bRows.forEach(r => {
-        if (isFilledVal(r[24]) || isFilledVal(r[22]) || isFilledVal(r[27]) || isFilledVal(r[28]) || isFilledVal(r[37]) || isFilledVal(r[35]) || isFilledVal(r[20]) || isFilledVal(r[38])) {
+        const hasNop = isFilledVal(r[24]) || isFilledVal(r[25]);
+        const hasSales = isFilledVal(r[22]) || isFilledVal(r[23]);
+        if (hasNop) bNop++;
+        if (hasSales) bSales++;
+        if (hasNop || hasSales) {
           bWithAction++;
         }
       });
@@ -3686,7 +3692,7 @@
           </div>
           <div class="branch-bar-track-wrap">
             <div class="branch-bar-meta">
-              <span><strong>${bWithAction}</strong> dari ${bTotal} site terisi</span>
+              <span><strong>${bWithAction}</strong> dari ${bTotal} site terisi (NOP: ${bNop} | Sales: ${bSales})</span>
               <span>${bTotal - bWithAction} belum terisi</span>
             </div>
             <div class="branch-bar-track">
@@ -4015,7 +4021,7 @@
   // --- REAL-TIME AUTO-REFRESH & MANUAL REFRESH (WIT) ---
   let refreshCountdown = 30;
   let isRefreshing = false;
-  const currentVersionHash = "1793087977";
+  const currentVersionHash = "1793088296";
 
   function manualTriggerRefresh() {
     if (isRefreshing) return;

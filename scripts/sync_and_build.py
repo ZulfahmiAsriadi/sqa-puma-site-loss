@@ -1,146 +1,28 @@
 import sys
 import os
+
+# Prevent crash when running headless/detached where sys.stdout is None
+if sys.stdout is None:
+    try:
+        sys.stdout = open(os.devnull, "w")
+    except Exception:
+        pass
+if sys.stderr is None:
+    try:
+        sys.stderr = open(os.devnull, "w")
+    except Exception:
+        pass
+
 import datetime
+current_time_str = datetime.datetime.now().strftime("%d %b %Y, %H:%M WIT")
+build_timestamp_hash = str(int(datetime.datetime.now().timestamp()))
 import zipfile
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 import json
-import base64
-import urllib.request
-import urllib.parse
-import hashlib
+import os
 
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUTPUT_HTML = os.path.join(REPO_ROOT, "index.html")
-OUTPUT_VERSION = os.path.join(REPO_ROOT, "version.json")
-HASH_FILE = os.path.join(REPO_ROOT, ".last_excel_hash")
-LOGO_FILE = os.path.join(REPO_ROOT, "sqa_puma_logo.png")
-TEMP_EXCEL = os.path.join(REPO_ROOT, "temp_downloaded_tracking.xlsx")
-
-def log(msg):
-    ts = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-    print(f"{ts} {msg}", flush=True)
-
-def resolve_download_url(url):
-    url = url.strip()
-    if not url: return ""
-    if "sharepoint.com" in url or "1drv.ms" in url or "onedrive.live.com" in url:
-        parsed = urllib.parse.urlparse(url)
-        q = urllib.parse.parse_qs(parsed.query)
-        if 'download' not in q:
-            sep = '&' if parsed.query else '?'
-            return f"{url}{sep}download=1"
-    return url
-
-def download_file(url, target_path):
-    download_url = resolve_download_url(url)
-    log(f"Downloading Excel from: {download_url[:70]}...")
-    req = urllib.request.Request(
-        download_url,
-        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-    )
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        content = resp.read()
-    if not content.startswith(b"PK\x03\x04"):
-        log("ERROR: Downloaded content is not a valid Excel file (.xlsx signature missing).")
-        raise ValueError("Invalid Excel file signature (likely HTML login page).")
-    with open(target_path, "wb") as f:
-        f.write(content)
-    size_mb = round(len(content) / (1024 * 1024), 2)
-    log(f"Successfully downloaded Excel ({size_mb} MB).")
-    return target_path
-
-def copy_locked_file_win32(src, dst):
-    if os.name != 'nt':
-        import shutil
-        shutil.copyfile(src, dst)
-        return
-    import ctypes
-    from ctypes import wintypes
-    GENERIC_READ = 0x80000000
-    FILE_SHARE_READ = 0x00000001
-    FILE_SHARE_WRITE = 0x00000002
-    FILE_SHARE_DELETE = 0x00000004
-    OPEN_EXISTING = 3
-    FILE_ATTRIBUTE_NORMAL = 0x80
-    kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
-    handle = kernel32.CreateFileW(
-        src, GENERIC_READ,
-        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-        None, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, None
-    )
-    if handle == -1:
-        raise OSError(f"CreateFileW failed with error {ctypes.get_last_error()}")
-    try:
-        buf_size = 1024 * 1024
-        buf = ctypes.create_string_buffer(buf_size)
-        bytes_read = wintypes.DWORD()
-        with open(dst, "wb") as f_out:
-            while True:
-                success = kernel32.ReadFile(handle, buf, buf_size, ctypes.byref(bytes_read), None)
-                if not success or bytes_read.value == 0:
-                    break
-                f_out.write(buf.raw[:bytes_read.value])
-    finally:
-        kernel32.CloseHandle(handle)
-
-def compute_file_hash(path):
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        while chunk := f.read(1024 * 1024):
-            h.update(chunk)
-    return h.hexdigest()
-
-# Determine Excel source
-excel_url = os.environ.get("ONEDRIVE_EXCEL_URL", "").strip()
-local_excel = os.environ.get("LOCAL_EXCEL_PATH", "").strip()
-
-excel_path = None
-if excel_url:
-    try:
-        excel_path = download_file(excel_url, TEMP_EXCEL)
-    except Exception as e:
-        log(f"Download failed: {e}")
-        if os.path.exists(TEMP_EXCEL):
-            log("Using previously cached temp Excel.")
-            excel_path = TEMP_EXCEL
-        else:
-            log("ERROR: Could not download Excel file.")
-            sys.exit(1)
-elif local_excel and os.path.exists(local_excel):
-    excel_path = local_excel
-elif os.path.exists(TEMP_EXCEL):
-    excel_path = TEMP_EXCEL
-else:
-    default_dev = r"C:\Users\Zulfahmi Asriadi\OneDrive - PT Telekomunikasi Selular\SQA PUMA\Site loss\Tracking Profitability 2026 (2026 07) final pake ini.xlsx"
-    if os.path.exists(default_dev):
-        try:
-            copy_locked_file_win32(default_dev, TEMP_EXCEL)
-            excel_path = TEMP_EXCEL
-        except Exception as e:
-            log(f"Could not copy local Excel: {e}")
-            excel_path = default_dev
-    else:
-        log("ERROR: No Excel path or URL available.")
-        sys.exit(1)
-
-log(f"Processing Excel: {excel_path}")
-curr_hash = compute_file_hash(excel_path)
-old_hash = ""
-if os.path.exists(HASH_FILE):
-    try:
-        with open(HASH_FILE, "r", encoding="utf-8") as hf:
-            old_hash = hf.read().strip()
-    except: pass
-
-force_build = os.environ.get("FORCE_BUILD", "").lower() in ["1", "true", "yes"]
-if curr_hash == old_hash and os.path.exists(OUTPUT_HTML) and not force_build:
-    log("No changes detected in Excel (hash matched). Skipping dashboard rebuild.")
-    sys.exit(0)
-
-current_time_str = datetime.datetime.now().strftime("%d %b %Y, %H:%M WIT")
-build_timestamp_hash = str(int(datetime.datetime.now().timestamp()))
-
+excel_path = r"C:\Users\Zulfahmi Asriadi\.gemini\antigravity-ide\scratch\tracking_temp.xlsx"
 z = zipfile.ZipFile(excel_path, 'r')
 
 shared_strings = []
@@ -2347,8 +2229,8 @@ html_template = f"""<!DOCTYPE html>
             <!-- Diagram Batang 2: Komparasi per Branch -->
             <div class="prog-chart-box">
               <div class="prog-chart-title">
-                <span>🏙️ Pemenuhan Action Plan per Branch</span>
-                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Klik bar untuk filter tabel</span>
+                <span>🏙️ Pemenuhan Action Plan (NOP & Sales) per Branch</span>
+                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Berdasarkan input Kolom AJ-AM (Sales & NOP) • Klik bar untuk filter</span>
               </div>
               <div id="prog-branch-bars" style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
                 <!-- Injected dynamically by renderProgCharts() -->
@@ -4070,8 +3952,14 @@ html_template = f"""<!DOCTYPE html>
       const bRows = filteredProgRows.filter(r => r[3] === b.name);
       const bTotal = bRows.length;
       let bWithAction = 0;
+      let bNop = 0;
+      let bSales = 0;
       bRows.forEach(r => {{
-        if (isFilledVal(r[24]) || isFilledVal(r[22]) || isFilledVal(r[27]) || isFilledVal(r[28]) || isFilledVal(r[37]) || isFilledVal(r[35]) || isFilledVal(r[20]) || isFilledVal(r[38])) {{
+        const hasNop = isFilledVal(r[24]) || isFilledVal(r[25]);
+        const hasSales = isFilledVal(r[22]) || isFilledVal(r[23]);
+        if (hasNop) bNop++;
+        if (hasSales) bSales++;
+        if (hasNop || hasSales) {{
           bWithAction++;
         }}
       }});
@@ -4085,7 +3973,7 @@ html_template = f"""<!DOCTYPE html>
           </div>
           <div class="branch-bar-track-wrap">
             <div class="branch-bar-meta">
-              <span><strong>${{bWithAction}}</strong> dari ${{bTotal}} site terisi</span>
+              <span><strong>${{bWithAction}}</strong> dari ${{bTotal}} site terisi (NOP: ${{bNop}} | Sales: ${{bSales}})</span>
               <span>${{bTotal - bWithAction}} belum terisi</span>
             </div>
             <div class="branch-bar-track">
