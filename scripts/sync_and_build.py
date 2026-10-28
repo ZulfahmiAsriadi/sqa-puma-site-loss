@@ -73,6 +73,35 @@ for sheet in wb_tree.findall('.//main:sheet', ns):
 if not sheet_aug_path:
     sheet_aug_path = 'xl/worksheets/sheet8.xml'
 
+# Dynamic column header detection from Row 3 (handles inserted columns like Nilai Cost)
+headers_r3 = {}
+with z.open(sheet_aug_path) as f_hdr:
+    for event, elem in ET.iterparse(f_hdr, events=('end',)):
+        if elem.tag.endswith('row'):
+            if int(elem.attrib.get('r', 0)) == 3:
+                for c in elem:
+                    ref = c.attrib.get('r', '')
+                    val = parse_cell(c)
+                    if val is not None:
+                        headers_r3[col_letter(ref)] = str(val).strip().lower()
+                break
+            elem.clear()
+
+col_breakdown = 'AZ'
+col_nilai_cost = None
+col_plan_improv = 'BA'
+col_cek = 'BB'
+
+for let, text in headers_r3.items():
+    if 'breakdown cost' in text:
+        col_breakdown = let
+    elif 'nilai cost' in text:
+        col_nilai_cost = let
+    elif 'plan improvement' in text:
+        col_plan_improv = let
+    elif text == 'cek' or 'kategori' in text:
+        col_cek = let
+
 col_letters = [
     'A', 'B', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -144,9 +173,24 @@ with z.open(sheet_aug_path) as f:
                     update_action_sales = c_dict.get('AK', '')
                     action_nop = c_dict.get('AL', '')
                     update_action_nop = c_dict.get('AM', '')
-                    col_bb = str(c_dict.get('BB', '') or '').strip()
-                    if col_bb in ['#N/A', '-', 'None', 'nan']:
-                        col_bb = ''
+
+                    breakdown_val = str(c_dict.get(col_breakdown, '') or '').strip()
+                    if breakdown_val in ['#N/A', '-', 'None', 'nan']: breakdown_val = ''
+
+                    nilai_cost_val = ''
+                    if col_nilai_cost:
+                        raw_nc = c_dict.get(col_nilai_cost, '')
+                        if raw_nc and str(raw_nc).strip() not in ['#N/A', '-', 'None', 'nan']:
+                            try:
+                                nilai_cost_val = str(round(float(raw_nc)))
+                            except:
+                                nilai_cost_val = str(raw_nc).strip()
+
+                    plan_improv_val = str(c_dict.get(col_plan_improv, '') or '').strip()
+                    if plan_improv_val in ['#N/A', '-', 'None', 'nan']: plan_improv_val = ''
+
+                    cek_val = str(c_dict.get(col_cek, '') or '').strip()
+                    if cek_val in ['#N/A', '-', 'None', 'nan']: cek_val = ''
 
                     row = [
                         c_dict.get('A', ''),  # 0: siteid
@@ -187,12 +231,13 @@ with z.open(sheet_aug_path) as f:
                         c_dict.get('AW', ''), # 35: plan_avail (plan action availability - AW)
                         c_dict.get('AX', ''), # 36: status_pl_last (Status PL week terakhir - AX)
                         c_dict.get('AY', ''), # 37: propose_pl (propose action PL / MBA - AY)
-                        c_dict.get('AZ', ''), # 38: breakdown_cost (Breakdown cost terbesar - AZ)
-                        c_dict.get('BA', ''), # 39: plan_improv_cost (plan improvement cost terbesar - BA)
+                        breakdown_val,        # 38: breakdown_cost (Breakdown cost terbesar)
+                        plan_improv_val,      # 39: plan_improv_cost (plan improvement cost terbesar)
                         c_dict.get('AD', ''), # 40: status_aug (Status Profit Loss up to Aug 26 - AD)
                         c_dict.get('AE', ''), # 41: intervention (Intervention Flag - AE)
                         c_dict.get('AG', ''), # 42: site_loss_tracker (Site loss tracker - AG)
-                        col_bb                # 43: col_bb (cek / Kategori Site - BB)
+                        cek_val,              # 43: col_cek (cek / Kategori Site)
+                        nilai_cost_val        # 44: nilai_cost (Nilai Cost)
                     ]
                     rows.append(row)
 
@@ -1972,7 +2017,7 @@ html_template = f"""<!DOCTYPE html>
       </button>
       <button class="tab-btn" onclick="switchTab('tab-target')">🎯 Target vs Realisasi Agustus 2026</button>
       <button class="tab-btn" onclick="switchTab('tab-aug-db')" style="background:rgba(6,182,212,0.15);color:#38bdf8;border-color:rgba(6,182,212,0.4)">
-        📋 Database Site Sheet Aug 26 <span class="badge badge-info" style="font-size:10px;margin-left:4px">Lengkap 54 Kolom (Termasuk Cek / Kategori Site)</span>
+        📋 Database Site Sheet Aug 26 <span class="badge badge-info" style="font-size:10px;margin-left:4px">Lengkap 55 Kolom (Termasuk Breakdown, Nilai Cost, Plan Improv, Kategori)</span>
       </button>
       <button class="tab-btn" onclick="switchTab('tab-movement')">📅 Pergerakan Bulanan (Jan – Agu 2026)</button>
       <button class="tab-btn" onclick="switchTab('tab-gap')">📊 Matriks Defisit Gap (<3M s/d >10M)</button>
@@ -2089,7 +2134,10 @@ html_template = f"""<!DOCTYPE html>
                   <th>Type Transport</th>
                   <th>Update Availability</th>
                   <th>Status PL Terakhir</th>
-                  <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site (BB)</th>
+                  <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Breakdown Cost</th>
+                  <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Nilai Cost</th>
+                  <th class="new-col-th" style="background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important">Plan Improvement</th>
+                  <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site</th>
                 </tr>
               </thead>
               <tbody id="drilldown-tbody">
@@ -2409,8 +2457,9 @@ html_template = f"""<!DOCTYPE html>
                 <th class="new-col-th" style="background:rgba(59,130,246,0.25) !important;color:#93c5fd !important">Status PL week terakhir</th>
                 <th class="new-col-th" style="background:rgba(59,130,246,0.18) !important;color:#93c5fd !important">propose action (MBA)</th>
                 <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Breakdown cost terbesar</th>
+                <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Nilai Cost</th>
                 <th class="new-col-th" style="background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important">plan improvement cost terbesar</th>
-                <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site (BB)</th>
+                <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site</th>
               </tr>
             </thead>
             <tbody id="prog-table-body">
@@ -2526,7 +2575,7 @@ html_template = f"""<!DOCTYPE html>
       <div class="card-title-bar">
         <div>
           <h3 style="font-size:16px;color:#fff;display:flex;align-items:center;gap:10px;">
-            <span>Database Site Sheet Aug 26 (Lengkap 54 Kolom)</span>
+            <span>Database Site Sheet Aug 26 (Lengkap 55 Kolom)</span>
             <span class="badge badge-info" style="font-size:11px">2,791 Sites</span>
           </h3>
           <p style="font-size:12px;color:var(--text-muted)">
@@ -2675,8 +2724,9 @@ html_template = f"""<!DOCTYPE html>
               <th class="new-col-th" style="background:rgba(59,130,246,0.25) !important;color:#93c5fd !important">Status PL week terakhir</th>
               <th class="new-col-th" style="background:rgba(59,130,246,0.18) !important;color:#93c5fd !important">propose action (MBA)</th>
               <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Breakdown cost terbesar</th>
+              <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Nilai Cost</th>
               <th class="new-col-th" style="background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important">plan improvement cost terbesar</th>
-              <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site (BB)</th>
+              <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site</th>
             </tr>
           </thead>
           <tbody id="aug-table-body">
@@ -3357,7 +3407,7 @@ html_template = f"""<!DOCTYPE html>
     const tbody = document.getElementById('drilldown-tbody');
 
     if (kabLossSites.length === 0) {{
-      tbody.innerHTML = `<tr><td colspan="18" style="text-align:center;padding:25px;color:var(--text-muted)">Tidak ada site loss di Kabupaten ini</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="21" style="text-align:center;padding:25px;color:var(--text-muted)">Tidak ada site loss di Kabupaten ini</td></tr>`;
     }} else {{
       let html = '';
       kabLossSites.forEach(s => {{
@@ -3391,6 +3441,9 @@ html_template = f"""<!DOCTYPE html>
           <td><span class="badge badge-purple">${{s[32] || '-'}}</span></td>
           <td>${{s[34] || '-'}}</td>
           <td style="color:#93c5fd">${{s[36] || '-'}}</td>
+          <td style="color:#38bdf8">${{s[38] || '-'}}</td>
+          <td style="text-align:right;color:#38bdf8;font-family:'JetBrains Mono'">${{s[44] ? ('Rp ' + Number(s[44]).toLocaleString()) : '-'}}</td>
+          <td style="color:#38bdf8">${{s[39] || '-'}}</td>
           <td>${{s[43] ? ('<span class="badge" style="background:rgba(6,182,212,0.15);color:#22d3ee;border:1px solid rgba(6,182,212,0.3)">' + s[43] + '</span>') : '-'}}</td>
         </tr>`;
       }});
@@ -3680,7 +3733,7 @@ html_template = f"""<!DOCTYPE html>
       : `Menampilkan ${{startIdx + 1}} - ${{endIdx}} dari ${{total.toLocaleString()}} site`;
 
     if (total === 0) {{
-      tbody.innerHTML = `<tr><td colspan="31" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="32" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
       renderProgCharts();
       renderPriorityCharts();
       return;
@@ -3760,10 +3813,11 @@ html_template = f"""<!DOCTYPE html>
         <!-- Status PL & MBA (AX, AY) -->
         <td class="new-col-td">${{plWeekBadge}}</td>
         <td class="new-col-td" style="color:#93c5fd">${{r[37] || '-'}}</td>
-        <!-- NOS (AZ, BA) -->
+        <!-- NOS (AZ, BA, BB, BC) -->
         <td class="new-col-td" style="color:#38bdf8">${{r[38] || '-'}}</td>
+        <td class="new-col-td" style="text-align:right;color:#38bdf8;font-family:'JetBrains Mono'">${{r[44] ? ('Rp ' + Number(r[44]).toLocaleString()) : '-'}}</td>
         <td class="new-col-td" style="color:#38bdf8">${{r[39] || '-'}}</td>
-        <!-- Cek / Kategori Site (BB) -->
+        <!-- Cek / Kategori Site -->
         <td class="new-col-td">${{r[43] ? ('<span class="badge" style="background:rgba(6,182,212,0.15);color:#22d3ee;border:1px solid rgba(6,182,212,0.3)">' + r[43] + '</span>') : '-'}}</td>
       </tr>`;
     }}
@@ -4193,8 +4247,8 @@ html_template = f"""<!DOCTYPE html>
       'Typer Transport', 'utilisasi average weekly BDBH',
       'update average status availability', 'plan action availability',
       'Status PL week terakhir', 'propose action (MBA)',
-      'Breakdown cost terbesar', 'plan improvement cost terbesar',
-      'Cek / Kategori Site (BB)'
+      'Breakdown cost terbesar', 'Nilai Cost', 'plan improvement cost terbesar',
+      'Cek / Kategori Site'
     ];
 
     let csv = [];
@@ -4331,7 +4385,7 @@ html_template = f"""<!DOCTYPE html>
       : `Menampilkan ${{startIdx + 1}} - ${{endIdx}} dari ${{total.toLocaleString()}} site`;
 
     if (total === 0) {{
-      tbody.innerHTML = `<tr><td colspan="44" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai dengan kriteria filter/pencarian</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="45" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai dengan kriteria filter/pencarian</td></tr>`;
       return;
     }}
 
@@ -4413,10 +4467,11 @@ html_template = f"""<!DOCTYPE html>
         <td class="new-col-td" style="color:#fbbf24">${{r[35] || '-'}}</td>
         <td class="new-col-td">${{plWeekBadge}}</td>
         <td class="new-col-td" style="color:#93c5fd">${{r[37] || '-'}}</td>
-        <!-- NOS (AX, AY) -->
+        <!-- NOS (AX, AY, BB, BC) -->
         <td class="new-col-td" style="color:#38bdf8">${{r[38] || '-'}}</td>
+        <td class="new-col-td" style="text-align:right;color:#38bdf8;font-family:'JetBrains Mono'">${{r[44] ? ('Rp ' + Number(r[44]).toLocaleString()) : '-'}}</td>
         <td class="new-col-td" style="color:#38bdf8">${{r[39] || '-'}}</td>
-        <!-- Cek / Kategori Site (BB) -->
+        <!-- Cek / Kategori Site -->
         <td class="new-col-td">${{r[43] ? ('<span class="badge" style="background:rgba(6,182,212,0.15);color:#22d3ee;border:1px solid rgba(6,182,212,0.3)">' + r[43] + '</span>') : '-'}}</td>
       </tr>`;
     }}
