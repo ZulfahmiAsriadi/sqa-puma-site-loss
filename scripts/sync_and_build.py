@@ -78,7 +78,8 @@ col_letters = [
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
     'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK',
     'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS',
-    'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', 'BA'
+    'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', 'BA',
+    'BB', 'BC', 'BD', 'BE'
 ]
 
 rows = []
@@ -143,6 +144,9 @@ with z.open(sheet_aug_path) as f:
                     update_action_sales = c_dict.get('AK', '')
                     action_nop = c_dict.get('AL', '')
                     update_action_nop = c_dict.get('AM', '')
+                    col_bb = str(c_dict.get('BB', '') or '').strip()
+                    if col_bb in ['#N/A', '-', 'None', 'nan']:
+                        col_bb = ''
 
                     row = [
                         c_dict.get('A', ''),  # 0: siteid
@@ -187,7 +191,8 @@ with z.open(sheet_aug_path) as f:
                         c_dict.get('BA', ''), # 39: plan_improv_cost (plan improvement cost terbesar - BA)
                         c_dict.get('AD', ''), # 40: status_aug (Status Profit Loss up to Aug 26 - AD)
                         c_dict.get('AE', ''), # 41: intervention (Intervention Flag - AE)
-                        c_dict.get('AG', '')  # 42: site_loss_tracker (Site loss tracker - AG)
+                        c_dict.get('AG', ''), # 42: site_loss_tracker (Site loss tracker - AG)
+                        col_bb                # 43: col_bb (cek / Kategori Site - BB)
                     ]
                     rows.append(row)
 
@@ -1967,7 +1972,7 @@ html_template = f"""<!DOCTYPE html>
       </button>
       <button class="tab-btn" onclick="switchTab('tab-target')">🎯 Target vs Realisasi Agustus 2026</button>
       <button class="tab-btn" onclick="switchTab('tab-aug-db')" style="background:rgba(6,182,212,0.15);color:#38bdf8;border-color:rgba(6,182,212,0.4)">
-        📋 Database Site Sheet Aug 26 <span class="badge badge-info" style="font-size:10px;margin-left:4px">Lengkap 51 Kolom</span>
+        📋 Database Site Sheet Aug 26 <span class="badge badge-info" style="font-size:10px;margin-left:4px">Lengkap 54 Kolom (Termasuk Cek / Kategori Site)</span>
       </button>
       <button class="tab-btn" onclick="switchTab('tab-movement')">📅 Pergerakan Bulanan (Jan – Agu 2026)</button>
       <button class="tab-btn" onclick="switchTab('tab-gap')">📊 Matriks Defisit Gap (<3M s/d >10M)</button>
@@ -2084,6 +2089,7 @@ html_template = f"""<!DOCTYPE html>
                   <th>Type Transport</th>
                   <th>Update Availability</th>
                   <th>Status PL Terakhir</th>
+                  <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site (BB)</th>
                 </tr>
               </thead>
               <tbody id="drilldown-tbody">
@@ -2341,6 +2347,20 @@ html_template = f"""<!DOCTYPE html>
               <option value="FO TSEL">FO TSEL</option>
             </select>
 
+            <select id="prog-filter-cek" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(6,182,212,0.4);background:rgba(6,182,212,0.08);color:#67e8f9">
+              <option value="ALL">Semua Kategori (Kolom BB)</option>
+              <option value="Reguler">Reguler</option>
+              <option value="Repeater/CDC/IDR/SPS">Repeater/CDC/IDR/SPS</option>
+              <option value="Business & Commercial">Business & Commercial</option>
+              <option value="N3T">N3T</option>
+              <option value="B2B">B2B</option>
+              <option value="VIP">VIP</option>
+              <option value="Public Open Space & Tourism">Public Open Space & Tourism</option>
+              <option value="Public Transportation">Public Transportation</option>
+              <option value="Reguler / CDC">Reguler / CDC</option>
+              <option value="TTC/MSC/STO">TTC/MSC/STO</option>
+            </select>
+
             <select id="prog-page-size" class="filter-select" onchange="changeProgPageSize(this.value)">
               <option value="25">25 per hal</option>
               <option value="50" selected>50 per hal</option>
@@ -2390,6 +2410,7 @@ html_template = f"""<!DOCTYPE html>
                 <th class="new-col-th" style="background:rgba(59,130,246,0.18) !important;color:#93c5fd !important">propose action (MBA)</th>
                 <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Breakdown cost terbesar</th>
                 <th class="new-col-th" style="background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important">plan improvement cost terbesar</th>
+                <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site (BB)</th>
               </tr>
             </thead>
             <tbody id="prog-table-body">
@@ -2505,7 +2526,7 @@ html_template = f"""<!DOCTYPE html>
       <div class="card-title-bar">
         <div>
           <h3 style="font-size:16px;color:#fff;display:flex;align-items:center;gap:10px;">
-            <span>Database Site Sheet Aug 26 (Lengkap 51 Kolom)</span>
+            <span>Database Site Sheet Aug 26 (Lengkap 54 Kolom)</span>
             <span class="badge badge-info" style="font-size:11px">2,791 Sites</span>
           </h3>
           <p style="font-size:12px;color:var(--text-muted)">
@@ -2583,6 +2604,20 @@ html_template = f"""<!DOCTYPE html>
             <option value="Profit">Profit</option>
           </select>
 
+          <select id="aug-filter-cek" class="filter-select" onchange="applyAugFilters()" style="border-color:rgba(6,182,212,0.4);background:rgba(6,182,212,0.08);color:#67e8f9">
+            <option value="ALL">Semua Kategori (Kolom BB)</option>
+            <option value="Reguler">Reguler</option>
+            <option value="Repeater/CDC/IDR/SPS">Repeater/CDC/IDR/SPS</option>
+            <option value="Business & Commercial">Business & Commercial</option>
+            <option value="N3T">N3T</option>
+            <option value="B2B">B2B</option>
+            <option value="VIP">VIP</option>
+            <option value="Public Open Space & Tourism">Public Open Space & Tourism</option>
+            <option value="Public Transportation">Public Transportation</option>
+            <option value="Reguler / CDC">Reguler / CDC</option>
+            <option value="TTC/MSC/STO">TTC/MSC/STO</option>
+          </select>
+
           <select id="aug-page-size" class="filter-select" onchange="changePageSize(this.value)">
             <option value="25">25 per hal</option>
             <option value="50" selected>50 per hal</option>
@@ -2641,6 +2676,7 @@ html_template = f"""<!DOCTYPE html>
               <th class="new-col-th" style="background:rgba(59,130,246,0.18) !important;color:#93c5fd !important">propose action (MBA)</th>
               <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Breakdown cost terbesar</th>
               <th class="new-col-th" style="background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important">plan improvement cost terbesar</th>
+              <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site (BB)</th>
             </tr>
           </thead>
           <tbody id="aug-table-body">
@@ -3321,7 +3357,7 @@ html_template = f"""<!DOCTYPE html>
     const tbody = document.getElementById('drilldown-tbody');
 
     if (kabLossSites.length === 0) {{
-      tbody.innerHTML = `<tr><td colspan="17" style="text-align:center;padding:25px;color:var(--text-muted)">Tidak ada site loss di Kabupaten ini</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="18" style="text-align:center;padding:25px;color:var(--text-muted)">Tidak ada site loss di Kabupaten ini</td></tr>`;
     }} else {{
       let html = '';
       kabLossSites.forEach(s => {{
@@ -3355,6 +3391,7 @@ html_template = f"""<!DOCTYPE html>
           <td><span class="badge badge-purple">${{s[32] || '-'}}</span></td>
           <td>${{s[34] || '-'}}</td>
           <td style="color:#93c5fd">${{s[36] || '-'}}</td>
+          <td>${{s[43] ? ('<span class="badge" style="background:rgba(6,182,212,0.15);color:#22d3ee;border:1px solid rgba(6,182,212,0.3)">' + s[43] + '</span>') : '-'}}</td>
         </tr>`;
       }});
       tbody.innerHTML = html;
@@ -3512,17 +3549,19 @@ html_template = f"""<!DOCTYPE html>
     const salesPrioVal = document.getElementById('prog-filter-priority-sales') ? document.getElementById('prog-filter-priority-sales').value : 'ALL';
     const netPrioVal = document.getElementById('prog-filter-priority-net') ? document.getElementById('prog-filter-priority-net').value : 'ALL';
     const netPartVal = document.getElementById('prog-filter-net-part') ? document.getElementById('prog-filter-net-part').value : 'ALL';
+    const cekVal = document.getElementById('prog-filter-cek') ? document.getElementById('prog-filter-cek').value : 'ALL';
 
     filteredProgRows = augData.filter(r => {{
       // 1. Text Search across identifiers, priorities and action columns
       if (q) {{
-        const text = (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + r[3] + ' ' + r[4] + ' ' + r[17] + ' ' + r[18] + ' ' + r[20] + ' ' + r[21] + ' ' + r[22] + ' ' + r[23] + ' ' + r[24] + ' ' + r[25] + ' ' + r[26] + ' ' + r[27] + ' ' + r[28] + ' ' + r[29] + ' ' + r[30] + ' ' + r[31] + ' ' + r[32] + ' ' + r[33] + ' ' + r[34] + ' ' + r[35] + ' ' + r[36] + ' ' + r[37] + ' ' + r[38] + ' ' + r[39]).toLowerCase();
+        const text = (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + r[3] + ' ' + r[4] + ' ' + r[17] + ' ' + r[18] + ' ' + r[20] + ' ' + r[21] + ' ' + r[22] + ' ' + r[23] + ' ' + r[24] + ' ' + r[25] + ' ' + r[26] + ' ' + r[27] + ' ' + r[28] + ' ' + r[29] + ' ' + r[30] + ' ' + r[31] + ' ' + r[32] + ' ' + r[33] + ' ' + r[34] + ' ' + r[35] + ' ' + r[36] + ' ' + r[37] + ' ' + r[38] + ' ' + r[39] + ' ' + (r[43] || '')).toLowerCase();
         if (!text.includes(q)) return false;
       }}
 
       // 2. Branch & PnL
       if (branchVal !== 'ALL' && r[3] !== branchVal) return false;
       if (pnlVal !== 'ALL' && r[13] !== pnlVal) return false;
+      if (cekVal !== 'ALL' && r[43] !== cekVal) return false;
 
       // 3. Priority Checks
       const isSalesPrio = (r[17] === 'P1' || r[17] === 'P2' || r[17] === 'P3');
@@ -3641,7 +3680,7 @@ html_template = f"""<!DOCTYPE html>
       : `Menampilkan ${{startIdx + 1}} - ${{endIdx}} dari ${{total.toLocaleString()}} site`;
 
     if (total === 0) {{
-      tbody.innerHTML = `<tr><td colspan="30" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="31" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
       renderProgCharts();
       renderPriorityCharts();
       return;
@@ -3724,6 +3763,8 @@ html_template = f"""<!DOCTYPE html>
         <!-- NOS (AZ, BA) -->
         <td class="new-col-td" style="color:#38bdf8">${{r[38] || '-'}}</td>
         <td class="new-col-td" style="color:#38bdf8">${{r[39] || '-'}}</td>
+        <!-- Cek / Kategori Site (BB) -->
+        <td class="new-col-td">${{r[43] ? ('<span class="badge" style="background:rgba(6,182,212,0.15);color:#22d3ee;border:1px solid rgba(6,182,212,0.3)">' + r[43] + '</span>') : '-'}}</td>
       </tr>`;
     }}
 
@@ -4152,7 +4193,8 @@ html_template = f"""<!DOCTYPE html>
       'Typer Transport', 'utilisasi average weekly BDBH',
       'update average status availability', 'plan action availability',
       'Status PL week terakhir', 'propose action (MBA)',
-      'Breakdown cost terbesar', 'plan improvement cost terbesar'
+      'Breakdown cost terbesar', 'plan improvement cost terbesar',
+      'Cek / Kategori Site (BB)'
     ];
 
     let csv = [];
@@ -4197,16 +4239,18 @@ html_template = f"""<!DOCTYPE html>
     const gapVal = document.getElementById('aug-filter-gap').value;
     const salesPrioVal = document.getElementById('aug-filter-priority-sales') ? document.getElementById('aug-filter-priority-sales').value : 'ALL';
     const netPrioVal = document.getElementById('aug-filter-priority-net') ? document.getElementById('aug-filter-priority-net').value : 'ALL';
+    const cekVal = document.getElementById('aug-filter-cek') ? document.getElementById('aug-filter-cek').value : 'ALL';
 
     filteredAugRows = augData.filter(row => {{
       if (q) {{
-        const text = (row[0] + ' ' + row[1] + ' ' + row[2] + ' ' + row[3] + ' ' + row[4] + ' ' + row[17] + ' ' + row[18] + ' ' + row[20] + ' ' + row[21]).toLowerCase();
+        const text = (row[0] + ' ' + row[1] + ' ' + row[2] + ' ' + row[3] + ' ' + row[4] + ' ' + row[17] + ' ' + row[18] + ' ' + row[20] + ' ' + row[21] + ' ' + (row[43] || '')).toLowerCase();
         if (!text.includes(q)) return false;
       }}
       if (nopVal !== 'ALL' && row[2] !== nopVal) return false;
       if (pnlVal !== 'ALL' && row[13] !== pnlVal) return false;
       if (classVal !== 'ALL' && row[7] !== classVal) return false;
       if (oaVal !== 'ALL' && row[8] !== oaVal) return false;
+      if (cekVal !== 'ALL' && row[43] !== cekVal) return false;
       if (gapVal !== 'ALL') {{
         if (gapVal === 'Profit' && row[14] !== 'Profit') return false;
         if (gapVal !== 'Profit' && row[14] !== gapVal) return false;
@@ -4287,7 +4331,7 @@ html_template = f"""<!DOCTYPE html>
       : `Menampilkan ${{startIdx + 1}} - ${{endIdx}} dari ${{total.toLocaleString()}} site`;
 
     if (total === 0) {{
-      tbody.innerHTML = `<tr><td colspan="41" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai dengan kriteria filter/pencarian</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="44" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai dengan kriteria filter/pencarian</td></tr>`;
       return;
     }}
 
@@ -4372,6 +4416,8 @@ html_template = f"""<!DOCTYPE html>
         <!-- NOS (AX, AY) -->
         <td class="new-col-td" style="color:#38bdf8">${{r[38] || '-'}}</td>
         <td class="new-col-td" style="color:#38bdf8">${{r[39] || '-'}}</td>
+        <!-- Cek / Kategori Site (BB) -->
+        <td class="new-col-td">${{r[43] ? ('<span class="badge" style="background:rgba(6,182,212,0.15);color:#22d3ee;border:1px solid rgba(6,182,212,0.3)">' + r[43] + '</span>') : '-'}}</td>
       </tr>`;
     }}
 
