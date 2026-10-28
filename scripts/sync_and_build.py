@@ -4445,8 +4445,10 @@ html_template = f"""<!DOCTYPE html>
         <td>${{gapBadge}}</td>
         <td>${{ssgjBadge}}</td>
         <td style="color:var(--text-muted)">${{r[16] || '-'}}</td>
+        <td>${{getPriorityBadge(r[17], 'sales')}}</td>
+        <td>${{getPriorityBadge(r[18], 'net')}}</td>
         <td>${{intervBadge}}</td>
-        <td style="color:var(--text-muted)">${{r[18] || '-'}}</td>
+        <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#94a3b8">${{r[40] || '-'}}</span></td>
         <td style="font-family:'JetBrains Mono'">${{r[19] || '-'}}</td>
         <!-- 18 ACTION / TRACKING COLUMNS (AF to AW) -->
         <td class="new-col-td" style="color:#fca5a5">${{r[20] || '-'}}</td>
@@ -4482,26 +4484,35 @@ html_template = f"""<!DOCTYPE html>
   // Export Filtered Aug 26 To CSV
   function exportFilteredAugToCSV() {{
     const headers = [
-      'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Type Site', 'BTS Equipment', 'Site Class', 'Status OA',
-      'Revenue Aug-26', 'Direct Cost Aug-26', 'Margin Aug-26', 'Margin Pct', 'PnL Status',
-      'GAP Dist', 'Inline SSGJ', 'Program Group', 'Intervention Flag', 'Status Aug', 'Payload',
-      'Action to be taken SQA', 'Update action taken sqa',
-      'Action to be taken Sales', 'Update action taken sales',
-      'Action to be taken NOP', 'Update action taken NOP',
-      'update RHI Week terakhir', 'Root Cause RHI', 'propose action RHI',
-      'update THI Week terakhir', 'Root Cause THI', 'propose action THI',
-      'Typer Transport', 'utilisasi average weekly BDBH',
-      'update average status availability', 'plan action availability',
+      'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Kelas Site', 'Status OA', 'Type Site', 'BTS Equip',
+      'Revenue Aug-26 (Rp)', 'Direct Cost (Rp)', 'Margin (Rp)', '% Margin', 'Status PnL',
+      'GAP Dist', 'Inline SSGJ', 'Program Group', 'Priority Sales', 'Priority Network', 'Intervention Flag', 'Status Aug', 'Payload',
+      'Action to be taken SQA', 'Update Action SQA',
+      'Action to be taken Sales', 'Update Action Sales',
+      'Action to be taken NOP', 'Update Action NOP',
+      'update RHI Week Terakhir', 'Root Cause RHI', 'propose action RHI',
+      'update THI Week Terakhir', 'Root Cause THI', 'propose action THI',
+      'Typer Transport', 'utilisasi avg weekly BDBH',
+      'update avg status availability', 'plan action availability',
       'Status PL week terakhir', 'propose action (MBA)',
-      'Breakdown cost terbesar', 'plan improvement cost terbesar'
+      'Breakdown cost terbesar', 'Nilai Cost', 'plan improvement cost terbesar', 'Cek / Kategori Site'
     ];
 
     let csv = [];
     csv.push(headers.map(h => `"${{h}}"`).join(','));
 
-    filteredAugRows.forEach(row => {{
-      const line = row.map(val => `"${{String(val || '').replace(/"/g, '""')}}"`).join(',');
-      csv.push(line);
+    filteredAugRows.forEach(r => {{
+      const cols = [
+        r[0], r[1], r[2], r[3], r[4], r[7], r[8], r[5], r[6],
+        Math.round(r[9]), Math.round(r[10]), Math.round(r[11]), r[12] + '%', r[13],
+        r[14], r[15], r[16], r[17], r[18], r[41], r[40], r[19],
+        r[20], r[21], r[22], r[23], r[24], r[25],
+        r[26], r[27], r[28], r[29], r[30], r[31],
+        r[32], r[33], r[34], r[35],
+        r[36], r[37],
+        r[38], r[44], r[39], r[43]
+      ];
+      csv.push(cols.map(val => `"${{String(val || '').replace(/"/g, '""')}}"`).join(','));
     }});
 
     const blob = new Blob([csv.join('\\n')], {{ type: 'text/csv;charset=utf-8;' }});
