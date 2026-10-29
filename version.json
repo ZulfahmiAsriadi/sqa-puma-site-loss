@@ -1,1 +1,11 @@
-{"version": "1793158945", "updated_at": "28 Oct 2026, 12:42 WIT", "site_count": 2791, "change": "Fix Database Site Sheet Aug 26 column alignment"}
+{
+  "version": "1793236691",
+  "last_updated": "29 Oct 2026, 10:18 WIT",
+  "rows": 2791,
+  "branches": [
+    "AMBON",
+    "JAYAPURA",
+    "SORONG",
+    "TIMIKA"
+  ]
+}
