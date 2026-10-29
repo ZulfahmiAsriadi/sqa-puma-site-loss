@@ -1536,17 +1536,18 @@
     }
     .raw-dl-menu {
       display: none;
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      width: 340px;
-      background: rgba(15, 23, 42, 0.98);
-      border: 1px solid rgba(16, 185, 129, 0.4);
+      position: fixed;
+      top: 78px;
+      right: 32px;
+      width: 360px;
+      max-width: calc(100vw - 24px);
+      background: #0f172a;
+      border: 1px solid rgba(16, 185, 129, 0.55);
       border-radius: 14px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(18px);
-      padding: 10px;
-      z-index: 9999;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(16, 185, 129, 0.2);
+      padding: 12px;
+      z-index: 999999;
+      pointer-events: auto;
     }
     .raw-dl-menu.open {
       display: block;
@@ -1747,62 +1748,14 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 29 Oct 2026, 14:22 WIT</div>
-      <!-- Quick Raw File Download Dropdown -->
+      <div class="meta-tag" id="last-updated-badge">Update: 29 Oct 2026, 14:36 WIT</div>
+      <!-- Quick Raw File Download Trigger -->
       <div class="raw-dl-dropdown-wrap" id="header-raw-dl-wrap">
-        <button class="btn-download-raw-header" onclick="toggleRawDlMenu(event)" title="Download Raw File Excel (.xlsx) atau CSV">
+        <button type="button" class="btn-download-raw-header" id="btn-raw-dl-trigger" onclick="toggleRawDlMenu(event)" title="Download Raw File Excel (.xlsx) atau CSV">
           <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
           <span>Download Raw File</span>
-          <span style="font-size:10px;opacity:0.85">▼</span>
+          <span id="raw-dl-caret" style="font-size:10px;opacity:0.9;transition:transform 0.2s">▼</span>
         </button>
-        <div class="raw-dl-menu" id="header-raw-dl-menu">
-          <div class="raw-dl-menu-title">📗 Format Excel (.XLSX) — 55 Kolom Asli</div>
-          <button class="raw-dl-item" onclick="downloadRawDataset('ALL', 'xlsx', '55'); closeRawDlMenu();">
-            <div class="raw-dl-item-icon" style="background:rgba(16,185,129,0.2);color:#34d399">📗</div>
-            <div class="raw-dl-item-info">
-              <span class="raw-dl-item-name">Sheet Aug 26 — Full Data (.xlsx)</span>
-              <span class="raw-dl-item-sub">2,791 Site • Lengkap 55 Kolom (A s/d BC)</span>
-            </div>
-          </button>
-          <button class="raw-dl-item" onclick="downloadRawDataset('LOSS', 'xlsx', '55'); closeRawDlMenu();">
-            <div class="raw-dl-item-icon" style="background:rgba(239,68,68,0.2);color:#f87171">📕</div>
-            <div class="raw-dl-item-info">
-              <span class="raw-dl-item-name">Khusus Site Loss (.xlsx)</span>
-              <span class="raw-dl-item-sub">242 Site Loss • Lengkap 55 Kolom & Action Plan</span>
-            </div>
-          </button>
-          <button class="raw-dl-item" onclick="downloadMultiSheetWorkbook(); closeRawDlMenu();">
-            <div class="raw-dl-item-icon" style="background:rgba(56,189,248,0.2);color:#38bdf8">📚</div>
-            <div class="raw-dl-item-info">
-              <span class="raw-dl-item-name">Workbook Lengkap Multi-Sheet (.xlsx)</span>
-              <span class="raw-dl-item-sub">4 Sheet: Full 2.791 + 242 Loss + 78 Priority + Rekap Kab</span>
-            </div>
-          </button>
-          <div class="raw-dl-menu-title" style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px">📄 Format CSV (.CSV)</div>
-          <button class="raw-dl-item" onclick="downloadRawDataset('ALL', 'csv', '55'); closeRawDlMenu();">
-            <div class="raw-dl-item-icon" style="background:rgba(148,163,184,0.15);color:#cbd5e1">📄</div>
-            <div class="raw-dl-item-info">
-              <span class="raw-dl-item-name">Raw CSV — Full 2,791 Site (55 Kolom)</span>
-              <span class="raw-dl-item-sub">Siap diolah di Excel / PowerBI / Python</span>
-            </div>
-          </button>
-          <button class="raw-dl-item" onclick="downloadRawDataset('LOSS', 'csv', '55'); closeRawDlMenu();">
-            <div class="raw-dl-item-icon" style="background:rgba(245,158,11,0.15);color:#fbbf24">📄</div>
-            <div class="raw-dl-item-info">
-              <span class="raw-dl-item-name">Raw CSV — 242 Site Loss Only</span>
-              <span class="raw-dl-item-sub">Khusus populasi site defisit Agustus 2026</span>
-            </div>
-          </button>
-          <div style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px">
-            <button class="raw-dl-item" onclick="openDownloadTabFromHeader()" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3)">
-              <div class="raw-dl-item-icon" style="background:rgba(16,185,129,0.25);color:#34d399">⚙️</div>
-              <div class="raw-dl-item-info">
-                <span class="raw-dl-item-name" style="color:#34d399">Buka Tab Download Raw File →</span>
-                <span class="raw-dl-item-sub">Filter custom per Branch, Priority, & Kategori</span>
-              </div>
-            </button>
-          </div>
-        </div>
       </div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
@@ -1822,14 +1775,17 @@
       <button class="filter-pill" onclick="setBranchFilter('TIMIKA')">Timika (576)</button>
     </div>
 
-    <!-- TAB LANGSUNG DI BRANCH FOCUS (BUKAN DI BAWAH) -->
+    <!-- TAB LANGSUNG DI BRANCH FOCUS -->
     <div class="branch-tab-switcher">
       <span style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Tab Focus:</span>
-      <button class="top-subtab-btn active" data-subtab="subtab-kab-distribusi" onclick="switchBranchSubTab('subtab-kab-distribusi', true)">
+      <button type="button" class="top-subtab-btn active" data-subtab="subtab-kab-distribusi" onclick="switchBranchSubTab('subtab-kab-distribusi', true)">
         🏙️ Sebaran Kota/Kabupaten
       </button>
-      <button class="top-subtab-btn" data-subtab="subtab-prog-tracker" onclick="switchBranchSubTab('subtab-prog-tracker', true)">
+      <button type="button" class="top-subtab-btn" data-subtab="subtab-prog-tracker" onclick="switchBranchSubTab('subtab-prog-tracker', true)">
         📌 Update Progress & Action Tracker
+      </button>
+      <button type="button" class="top-subtab-btn" id="top-btn-download-raw" onclick="openDownloadTabFromHeader()" style="border-color:rgba(16,185,129,0.45);color:#34d399;background:rgba(16,185,129,0.1)">
+        📥 Download Raw File
       </button>
     </div>
 
@@ -3340,31 +3296,66 @@
   }
 
   // Switch Main Tabs
-  function switchTab(tabId) {
+  function switchTab(tabId, triggerEl) {
     document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    document.getElementById(tabId).classList.add('active');
+    const btn = triggerEl || (typeof event !== 'undefined' && event ? event.currentTarget : null) || document.querySelector(`.tabs-nav .tab-btn[onclick*="${tabId}"]`);
+    if (btn && btn.classList) btn.classList.add('active');
+    const pane = document.getElementById(tabId);
+    if (pane) pane.classList.add('active');
+
+    const topDlBtn = document.getElementById('top-btn-download-raw');
+    if (topDlBtn) {
+      if (tabId === 'tab-download-raw') {
+        document.querySelectorAll('.top-subtab-btn').forEach(b => b.classList.remove('active'));
+        topDlBtn.classList.add('active');
+      } else {
+        topDlBtn.classList.remove('active');
+      }
+    }
 
     if (tabId === 'tab-kabupaten') {
       renderKabTable();
       renderProgTable();
     } else if (tabId === 'tab-aug-db') {
       renderAugTable();
+    } else if (tabId === 'tab-download-raw') {
+      updateCustomDlPreview();
     }
   }
 
   // Switch Sub-Tabs inside Branch Focus
-  function switchBranchSubTab(subTabId) {
-    document.querySelectorAll('.subtabs-bar .subtab-btn').forEach(btn => btn.classList.remove('active'));
+  function switchBranchSubTab(subTabId, fromTop = false) {
+    // Ensure main tab-kabupaten is active
+    const kabPane = document.getElementById('tab-kabupaten');
+    if (kabPane && !kabPane.classList.contains('active')) {
+      document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      const firstMainBtn = document.querySelector('.tabs-nav .tab-btn');
+      if (firstMainBtn) firstMainBtn.classList.add('active');
+      kabPane.classList.add('active');
+    }
+
+    document.querySelectorAll('.subtabs-bar .subtab-btn, .branch-tab-switcher .top-subtab-btn').forEach(btn => {
+      if (btn.getAttribute('data-subtab') === subTabId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
     document.querySelectorAll('.branch-subtab-pane').forEach(p => p.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    document.getElementById(subTabId).classList.add('active');
+    const targetPane = document.getElementById(subTabId);
+    if (targetPane) targetPane.classList.add('active');
 
     if (subTabId === 'subtab-kab-distribusi') {
       renderKabTable();
     } else if (subTabId === 'subtab-prog-tracker') {
       renderProgTable();
+    }
+
+    if (fromTop && kabPane) {
+      kabPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -5265,42 +5256,78 @@
     showToast(`📗 Mengunduh ${fname}`, true);
   }
 
-  function toggleRawDlMenu(e) {
-    e.stopPropagation();
+  function positionRawDlMenu() {
+    const btn = document.getElementById('btn-raw-dl-trigger');
     const menu = document.getElementById('header-raw-dl-menu');
-    if (menu) menu.classList.toggle('open');
+    if (!btn || !menu) return;
+    const rect = btn.getBoundingClientRect();
+    const topPos = Math.max(rect.bottom + 8, 12);
+    const rightPos = Math.max(window.innerWidth - rect.right, 12);
+    menu.style.top = topPos + 'px';
+    menu.style.right = rightPos + 'px';
+  }
+
+  function toggleRawDlMenu(e) {
+    if (e) e.stopPropagation();
+    const menu = document.getElementById('header-raw-dl-menu');
+    const caret = document.getElementById('raw-dl-caret');
+    if (!menu) return;
+    const isOpening = !menu.classList.contains('open');
+    if (isOpening) {
+      positionRawDlMenu();
+      menu.classList.add('open');
+      if (caret) caret.style.transform = 'rotate(180deg)';
+    } else {
+      menu.classList.remove('open');
+      if (caret) caret.style.transform = 'rotate(0deg)';
+    }
   }
 
   function closeRawDlMenu() {
     const menu = document.getElementById('header-raw-dl-menu');
+    const caret = document.getElementById('raw-dl-caret');
     if (menu) menu.classList.remove('open');
+    if (caret) caret.style.transform = 'rotate(0deg)';
   }
 
   function openDownloadTabFromHeader() {
     closeRawDlMenu();
-    document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     const tabBtn = document.getElementById('tab-btn-download-raw');
+    switchTab('tab-download-raw', tabBtn);
     const tabPane = document.getElementById('tab-download-raw');
-    if (tabBtn) tabBtn.classList.add('active');
     if (tabPane) {
-      tabPane.classList.add('active');
-      tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
     }
-    updateCustomDlPreview();
   }
+
+  window.addEventListener('scroll', () => {
+    const menu = document.getElementById('header-raw-dl-menu');
+    if (menu && menu.classList.contains('open')) {
+      positionRawDlMenu();
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    const menu = document.getElementById('header-raw-dl-menu');
+    if (menu && menu.classList.contains('open')) {
+      positionRawDlMenu();
+    }
+  });
 
   document.addEventListener('click', (e) => {
     const wrap = document.getElementById('header-raw-dl-wrap');
-    if (wrap && !wrap.contains(e.target)) {
-      closeRawDlMenu();
-    }
+    const menu = document.getElementById('header-raw-dl-menu');
+    if (wrap && wrap.contains(e.target)) return;
+    if (menu && menu.contains(e.target)) return;
+    closeRawDlMenu();
   });
 
   // --- REAL-TIME AUTO-REFRESH & MANUAL REFRESH (WIT) ---
   let refreshCountdown = 30;
   let isRefreshing = false;
-  const currentVersionHash = "1793251570";
+  const currentVersionHash = "1793252264";
 
   function manualTriggerRefresh() {
     if (isRefreshing) return;
@@ -5387,6 +5414,68 @@
     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
     <span>Ke Atas</span>
   </button>
+
+
+  <!-- Floating Raw File Download Menu Portal (Outside Header to prevent clipping) -->
+  <div class="raw-dl-menu" id="header-raw-dl-menu">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px 6px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:6px">
+      <span style="font-size:11.5px;font-weight:800;color:#34d399;letter-spacing:0.5px">📥 DOWNLOAD RAW DATA (AUG 26)</span>
+      <button type="button" onclick="closeRawDlMenu()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:13px;padding:2px 6px" title="Tutup">✕</button>
+    </div>
+    <div class="raw-dl-menu-title">📗 Format Excel (.XLSX) — 55 Kolom Asli</div>
+    <button type="button" class="raw-dl-item" onclick="downloadRawDataset('ALL', 'xlsx', '55'); closeRawDlMenu();">
+      <div class="raw-dl-item-icon" style="background:rgba(16,185,129,0.2);color:#34d399">📗</div>
+      <div class="raw-dl-item-info">
+        <span class="raw-dl-item-name">Sheet Aug 26 — Full Data (.xlsx)</span>
+        <span class="raw-dl-item-sub">2,791 Site • Lengkap 55 Kolom (A s/d BC)</span>
+      </div>
+    </button>
+    <button type="button" class="raw-dl-item" onclick="downloadRawDataset('LOSS', 'xlsx', '55'); closeRawDlMenu();">
+      <div class="raw-dl-item-icon" style="background:rgba(239,68,68,0.2);color:#f87171">📕</div>
+      <div class="raw-dl-item-info">
+        <span class="raw-dl-item-name">Khusus Site Loss (.xlsx)</span>
+        <span class="raw-dl-item-sub">242 Site Loss • Lengkap 55 Kolom & Action Plan</span>
+      </div>
+    </button>
+    <button type="button" class="raw-dl-item" onclick="downloadRawDataset('PRIORITY', 'xlsx', '55'); closeRawDlMenu();">
+      <div class="raw-dl-item-icon" style="background:rgba(245,158,11,0.2);color:#fbbf24">⭐</div>
+      <div class="raw-dl-item-info">
+        <span class="raw-dl-item-name">Khusus Site Priority P1/P2/P3 (.xlsx)</span>
+        <span class="raw-dl-item-sub">78 Site Priority Sales & Network (55 Kolom)</span>
+      </div>
+    </button>
+    <button type="button" class="raw-dl-item" onclick="downloadMultiSheetWorkbook(); closeRawDlMenu();">
+      <div class="raw-dl-item-icon" style="background:rgba(56,189,248,0.2);color:#38bdf8">📚</div>
+      <div class="raw-dl-item-info">
+        <span class="raw-dl-item-name">Workbook Lengkap Multi-Sheet (.xlsx)</span>
+        <span class="raw-dl-item-sub">4 Sheet: Full 2.791 + 242 Loss + 78 Priority + Rekap Kab</span>
+      </div>
+    </button>
+    <div class="raw-dl-menu-title" style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px">📄 Format CSV (.CSV)</div>
+    <button type="button" class="raw-dl-item" onclick="downloadRawDataset('ALL', 'csv', '55'); closeRawDlMenu();">
+      <div class="raw-dl-item-icon" style="background:rgba(148,163,184,0.15);color:#cbd5e1">📄</div>
+      <div class="raw-dl-item-info">
+        <span class="raw-dl-item-name">Raw CSV — Full 2,791 Site (55 Kolom)</span>
+        <span class="raw-dl-item-sub">Siap diolah di Excel / PowerBI / Python</span>
+      </div>
+    </button>
+    <button type="button" class="raw-dl-item" onclick="downloadRawDataset('LOSS', 'csv', '55'); closeRawDlMenu();">
+      <div class="raw-dl-item-icon" style="background:rgba(245,158,11,0.15);color:#fbbf24">📄</div>
+      <div class="raw-dl-item-info">
+        <span class="raw-dl-item-name">Raw CSV — 242 Site Loss Only</span>
+        <span class="raw-dl-item-sub">Khusus populasi site defisit Agustus 2026</span>
+      </div>
+    </button>
+    <div style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px">
+      <button type="button" class="raw-dl-item" onclick="openDownloadTabFromHeader()" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35)">
+        <div class="raw-dl-item-icon" style="background:rgba(16,185,129,0.25);color:#34d399">⚙️</div>
+        <div class="raw-dl-item-info">
+          <span class="raw-dl-item-name" style="color:#34d399">Buka Tab Download Center & Filter Custom →</span>
+          <span class="raw-dl-item-sub">Filter per Branch (Ambon, Jyp, Sorong, Timika) & Kategori</span>
+        </div>
+      </button>
+    </div>
+  </div>
 
 </body>
 </html>
