@@ -1506,6 +1506,216 @@
       transform: translateX(2px);
     }
 
+
+    /* Raw File Download Dropdown & Tab Styles */
+    .raw-dl-dropdown-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .btn-download-raw-header {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(6, 182, 212, 0.22));
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.18);
+    }
+    .btn-download-raw-header:hover {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #090d16;
+      border-color: #34d399;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+    }
+    .raw-dl-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 340px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 14px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(18px);
+      padding: 10px;
+      z-index: 9999;
+    }
+    .raw-dl-menu.open {
+      display: block;
+      animation: fadeDownMenu 0.18s ease-out;
+    }
+    @keyframes fadeDownMenu {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .raw-dl-menu-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-dim);
+      padding: 6px 10px 4px;
+    }
+    .raw-dl-item {
+      width: 100%;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 9px 11px;
+      text-align: left;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.18s ease;
+      margin-bottom: 3px;
+    }
+    .raw-dl-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateX(2px);
+    }
+    .raw-dl-item-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .raw-dl-item-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.3;
+    }
+    .raw-dl-item-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .raw-dl-item-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .dl-hero-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(6, 182, 212, 0.1), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+    .dl-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .dl-card {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .dl-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    }
+    .dl-card-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-dl-xlsx {
+      flex: 1;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #06130e;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+    .btn-dl-xlsx:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+    }
+    .btn-dl-csv {
+      background: rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-dl-csv:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .dl-custom-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+    }
+    .dl-custom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .dl-field label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dl-field select {
+      width: 100%;
+    }
+
   </style>
 </head>
 <body>
@@ -1537,7 +1747,63 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 29 Oct 2026, 11:18 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 29 Oct 2026, 14:22 WIT</div>
+      <!-- Quick Raw File Download Dropdown -->
+      <div class="raw-dl-dropdown-wrap" id="header-raw-dl-wrap">
+        <button class="btn-download-raw-header" onclick="toggleRawDlMenu(event)" title="Download Raw File Excel (.xlsx) atau CSV">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Download Raw File</span>
+          <span style="font-size:10px;opacity:0.85">▼</span>
+        </button>
+        <div class="raw-dl-menu" id="header-raw-dl-menu">
+          <div class="raw-dl-menu-title">📗 Format Excel (.XLSX) — 55 Kolom Asli</div>
+          <button class="raw-dl-item" onclick="downloadRawDataset('ALL', 'xlsx', '55'); closeRawDlMenu();">
+            <div class="raw-dl-item-icon" style="background:rgba(16,185,129,0.2);color:#34d399">📗</div>
+            <div class="raw-dl-item-info">
+              <span class="raw-dl-item-name">Sheet Aug 26 — Full Data (.xlsx)</span>
+              <span class="raw-dl-item-sub">2,791 Site • Lengkap 55 Kolom (A s/d BC)</span>
+            </div>
+          </button>
+          <button class="raw-dl-item" onclick="downloadRawDataset('LOSS', 'xlsx', '55'); closeRawDlMenu();">
+            <div class="raw-dl-item-icon" style="background:rgba(239,68,68,0.2);color:#f87171">📕</div>
+            <div class="raw-dl-item-info">
+              <span class="raw-dl-item-name">Khusus Site Loss (.xlsx)</span>
+              <span class="raw-dl-item-sub">242 Site Loss • Lengkap 55 Kolom & Action Plan</span>
+            </div>
+          </button>
+          <button class="raw-dl-item" onclick="downloadMultiSheetWorkbook(); closeRawDlMenu();">
+            <div class="raw-dl-item-icon" style="background:rgba(56,189,248,0.2);color:#38bdf8">📚</div>
+            <div class="raw-dl-item-info">
+              <span class="raw-dl-item-name">Workbook Lengkap Multi-Sheet (.xlsx)</span>
+              <span class="raw-dl-item-sub">4 Sheet: Full 2.791 + 242 Loss + 78 Priority + Rekap Kab</span>
+            </div>
+          </button>
+          <div class="raw-dl-menu-title" style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px">📄 Format CSV (.CSV)</div>
+          <button class="raw-dl-item" onclick="downloadRawDataset('ALL', 'csv', '55'); closeRawDlMenu();">
+            <div class="raw-dl-item-icon" style="background:rgba(148,163,184,0.15);color:#cbd5e1">📄</div>
+            <div class="raw-dl-item-info">
+              <span class="raw-dl-item-name">Raw CSV — Full 2,791 Site (55 Kolom)</span>
+              <span class="raw-dl-item-sub">Siap diolah di Excel / PowerBI / Python</span>
+            </div>
+          </button>
+          <button class="raw-dl-item" onclick="downloadRawDataset('LOSS', 'csv', '55'); closeRawDlMenu();">
+            <div class="raw-dl-item-icon" style="background:rgba(245,158,11,0.15);color:#fbbf24">📄</div>
+            <div class="raw-dl-item-info">
+              <span class="raw-dl-item-name">Raw CSV — 242 Site Loss Only</span>
+              <span class="raw-dl-item-sub">Khusus populasi site defisit Agustus 2026</span>
+            </div>
+          </button>
+          <div style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px">
+            <button class="raw-dl-item" onclick="openDownloadTabFromHeader()" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3)">
+              <div class="raw-dl-item-icon" style="background:rgba(16,185,129,0.25);color:#34d399">⚙️</div>
+              <div class="raw-dl-item-info">
+                <span class="raw-dl-item-name" style="color:#34d399">Buka Tab Download Raw File →</span>
+                <span class="raw-dl-item-sub">Filter custom per Branch, Priority, & Kategori</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -1691,6 +1957,9 @@
       <button class="tab-btn" onclick="switchTab('tab-movement')">📅 Pergerakan Bulanan (Jan – Agu 2026)</button>
       <button class="tab-btn" onclick="switchTab('tab-gap')">📊 Matriks Defisit Gap (<3M s/d >10M)</button>
       <button class="tab-btn" onclick="switchTab('tab-regional')">🌐 Pembanding Nasional</button>
+      <button class="tab-btn" id="tab-btn-download-raw" onclick="switchTab('tab-download-raw')" style="background:rgba(16,185,129,0.15);color:#34d399;border-color:rgba(16,185,129,0.45)">
+        📥 Download Raw File <span class="badge badge-success" style="font-size:10px;margin-left:4px">Excel .xlsx & CSV</span>
+      </button>
     </div>
 
     <!-- Tab 1: Branch Focus: Site Loss & Progress Tracker (DI SINI TAB PROGRESSNYA!) -->
@@ -2085,6 +2354,9 @@
               <option value="250">250 per hal</option>
             </select>
 
+            <button class="btn-action" style="background:rgba(16,185,129,0.18);border-color:rgba(16,185,129,0.45);color:#34d399" onclick="exportProgressToXLSX()">
+              📗 Export Excel (.xlsx)
+            </button>
             <button class="btn-action" onclick="exportProgressToCSV()">
               <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
               Export CSV
@@ -2251,10 +2523,15 @@
             Menampilkan seluruh data site sheet Aug 26 beserta <strong>Kelas Site</strong>, <strong>Status OA</strong>, <strong>Action SQA, Sales & NOP</strong>, performa THI, Transport, BDBH, Availability, dan Status PL.
           </p>
         </div>
-        <button class="btn-action" onclick="exportFilteredAugToCSV()">
-          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          Export Filtered CSV
-        </button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-action" style="background:rgba(16,185,129,0.18);border-color:rgba(16,185,129,0.45);color:#34d399" onclick="exportFilteredAugToXLSX()">
+            📗 Download Filtered Excel (.xlsx)
+          </button>
+          <button class="btn-action" onclick="exportFilteredAugToCSV()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Export Filtered CSV
+          </button>
+        </div>
       </div>
 
       <!-- Controls: Search & Filters -->
@@ -2687,6 +2964,230 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Tab 7: Download Raw File Center -->
+    <div id="tab-download-raw" class="tab-pane">
+      <div class="dl-hero-banner">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <span class="badge badge-success" style="font-size:11.5px;padding:4px 10px">📥 RAW FILE DOWNLOAD CENTER</span>
+            <span class="badge badge-info" style="font-size:11.5px;padding:4px 10px">Sheet Aug 26 • 55 Kolom (A s/d BC)</span>
+          </div>
+          <h3 style="font-size:18px;color:#fff;font-weight:800">Unduh Raw Data Profitability & Action Tracker (Excel .XLSX & .CSV)</h3>
+          <p style="font-size:12.5px;color:var(--text-muted);margin-top:4px;max-width:880px">
+            Seluruh file yang diunduh dari halaman ini memiliki struktur <strong>55 kolom asli (Kolom A hingga BC)</strong> persis seperti pada sheet <code>Aug 26</code> di file master <em>Tracking Profitability 2026</em>, termasuk histori PnL Jan–Jul 2026, Priority Sales & Network, serta kolom update PIC (SQA, Sales, NOP, RHI, THI, MBA, dan NOS).
+          </p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn-dl-xlsx" onclick="downloadMultiSheetWorkbook()" style="padding:12px 18px;font-size:13px">
+            📚 Download Workbook Lengkap (.XLSX — 4 Sheet)
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Main Quick Download Cards -->
+      <div class="dl-cards-grid">
+        <!-- Card 1: Full 2,791 Sites -->
+        <div class="dl-card" style="border-top:3px solid #10b981">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span class="badge badge-success">RECOMMENDED • FULL DATA</span>
+              <span style="font-family:'JetBrains Mono';font-size:12px;color:#34d399;font-weight:700">2,791 Rows × 55 Cols</span>
+            </div>
+            <h4 style="font-size:15.5px;color:#fff;margin-bottom:6px">📗 Raw Data Sheet Aug 26 (Full 2,791 Site)</h4>
+            <p style="font-size:12px;color:var(--text-muted);line-height:1.5">
+              Seluruh populasi site aktif Regional 11 Papua Maluku (Profit & Loss) lengkap dengan 55 kolom asli (<code>A: siteid</code> s/d <code>BC: cek</code>) beserta baris header Part PIC.
+            </p>
+          </div>
+          <div class="dl-card-btns">
+            <button class="btn-dl-xlsx" onclick="downloadRawDataset('ALL', 'xlsx', '55')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Download Excel (.xlsx)
+            </button>
+            <button class="btn-dl-csv" onclick="downloadRawDataset('ALL', 'csv', '55')">
+              📄 CSV (.csv)
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2: 242 Site Loss Only -->
+        <div class="dl-card" style="border-top:3px solid #ef4444">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span class="badge badge-danger">FOCUS POPULASI LOSS</span>
+              <span style="font-family:'JetBrains Mono';font-size:12px;color:#f87171;font-weight:700">242 Rows × 55 Cols</span>
+            </div>
+            <h4 style="font-size:15.5px;color:#fff;margin-bottom:6px">📕 Raw Data Khusus Site Loss (242 Site)</h4>
+            <p style="font-size:12px;color:var(--text-muted);line-height:1.5">
+              Ekstrak khusus 242 site berstatus <strong>Loss</strong> pada baseline Agustus 2026 beserta seluruh rincian defisit, breakdown cost NOS, dan progres action plan tiap fungsi.
+            </p>
+          </div>
+          <div class="dl-card-btns">
+            <button class="btn-dl-xlsx" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff" onclick="downloadRawDataset('LOSS', 'xlsx', '55')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Download Excel (.xlsx)
+            </button>
+            <button class="btn-dl-csv" onclick="downloadRawDataset('LOSS', 'csv', '55')">
+              📄 CSV (.csv)
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: 78 Priority Sites -->
+        <div class="dl-card" style="border-top:3px solid #f59e0b">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span class="badge badge-warning">PRIORITY SALES & NETWORK</span>
+              <span style="font-family:'JetBrains Mono';font-size:12px;color:#fbbf24;font-weight:700">78 Rows × 55 Cols</span>
+            </div>
+            <h4 style="font-size:15.5px;color:#fff;margin-bottom:6px">⭐ Raw Data Site Priority (78 Site P1/P2/P3)</h4>
+            <p style="font-size:12px;color:var(--text-muted);line-height:1.5">
+              Berisi 78 site yang masuk dalam daftar <strong>Priority Sales (56 site)</strong> dan/atau <strong>Priority Network (23 site)</strong> untuk monitoring pemenuhan action plan mingguan.
+            </p>
+          </div>
+          <div class="dl-card-btns">
+            <button class="btn-dl-xlsx" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#090d16" onclick="downloadRawDataset('PRIORITY', 'xlsx', '55')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Download Excel (.xlsx)
+            </button>
+            <button class="btn-dl-csv" onclick="downloadRawDataset('PRIORITY', 'csv', '55')">
+              📄 CSV (.csv)
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4: Multi-Sheet All-in-One Workbook -->
+        <div class="dl-card" style="border-top:3px solid #38bdf8">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span class="badge badge-info">ALL-IN-ONE WORKBOOK</span>
+              <span style="font-family:'JetBrains Mono';font-size:12px;color:#38bdf8;font-weight:700">4 Sheets (.xlsx)</span>
+            </div>
+            <h4 style="font-size:15.5px;color:#fff;margin-bottom:6px">📚 Paket Lengkap Multi-Sheet (.XLSX)</h4>
+            <p style="font-size:12px;color:var(--text-muted);line-height:1.5">
+              Satu file Excel berisi 4 sheet sekaligus: <strong>1) Aug 26 Full (2,791)</strong>, <strong>2) Site Loss (242)</strong>, <strong>3) Site Priority (78)</strong>, dan <strong>4) Rekap Kota/Kabupaten (57 Kab)</strong>.
+            </p>
+          </div>
+          <div class="dl-card-btns">
+            <button class="btn-dl-xlsx" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#090d16" onclick="downloadMultiSheetWorkbook()">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Download 4-Sheet Workbook (.xlsx)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Filter & Download Builder -->
+      <div class="dl-custom-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <div>
+            <h4 style="font-size:15.5px;color:#fff;display:flex;align-items:center;gap:8px">
+              <span>🛠️ Custom Raw File Downloader (Filter Sesuai Kebutuhan)</span>
+              <span class="badge badge-info" id="custom-dl-count-badge">2,791 Site Terpilih</span>
+            </h4>
+            <p style="font-size:12px;color:var(--text-muted);margin-top:2px">
+              Filter raw data berdasarkan Branch/NOP, Status PnL, Priority, atau Kategori Site sebelum mengunduh ke format Excel (<code>.xlsx</code>) maupun <code>.csv</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="dl-custom-grid">
+          <div class="dl-field">
+            <label>1. Pilih Branch / NOP</label>
+            <select id="custom-dl-branch" class="filter-select" onchange="updateCustomDlPreview()">
+              <option value="ALL">Semua Branch R11 (2,791 Site)</option>
+              <option value="AMBON">Branch AMBON (850 Site)</option>
+              <option value="JAYAPURA">Branch JAYAPURA (709 Site)</option>
+              <option value="SORONG">Branch SORONG (656 Site)</option>
+              <option value="TIMIKA">Branch TIMIKA (576 Site)</option>
+            </select>
+          </div>
+
+          <div class="dl-field">
+            <label>2. Status Profit / Loss</label>
+            <select id="custom-dl-pnl" class="filter-select" onchange="updateCustomDlPreview()">
+              <option value="ALL">Semua Status (Profit & Loss)</option>
+              <option value="Loss">Hanya Site Loss (242 Site)</option>
+              <option value="Profit">Hanya Site Profit (2,549 Site)</option>
+            </select>
+          </div>
+
+          <div class="dl-field">
+            <label>3. Filter Site Priority</label>
+            <select id="custom-dl-prio" class="filter-select" onchange="updateCustomDlPreview()">
+              <option value="ALL">Semua Site (Priority & Non-Priority)</option>
+              <option value="ANY_PRIO">⭐ Semua Priority Sales & Net (78)</option>
+              <option value="SALES_PRIO">💼 Hanya Priority Sales (56)</option>
+              <option value="NET_PRIO">📡 Hanya Priority Network (23)</option>
+              <option value="P1_ONLY">🔥 Hanya Priority Tier P1 (42)</option>
+              <option value="P2_ONLY">⚡ Hanya Priority Tier P2 (35)</option>
+            </select>
+          </div>
+
+          <div class="dl-field">
+            <label>4. Kategori Site (Kolom BC / Cek)</label>
+            <select id="custom-dl-cek" class="filter-select" onchange="updateCustomDlPreview()">
+              <option value="ALL">Semua Kategori Site</option>
+              <option value="Reguler">Reguler</option>
+              <option value="Repeater/CDC/IDR/SPS">Repeater/CDC/IDR/SPS</option>
+              <option value="Business & Commercial">Business & Commercial</option>
+              <option value="N3T">N3T</option>
+              <option value="B2B">B2B</option>
+              <option value="VIP">VIP</option>
+              <option value="Public Open Space & Tourism">Public Open Space & Tourism</option>
+              <option value="Public Transportation">Public Transportation</option>
+            </select>
+          </div>
+
+          <div class="dl-field">
+            <label>5. Struktur Urutan Kolom</label>
+            <select id="custom-dl-colmode" class="filter-select" onchange="updateCustomDlPreview()">
+              <option value="55" selected>55 Kolom Persis Sheet Aug 26 (A s/d BC)</option>
+              <option value="44">44 Kolom Urutan Tabel Dashboard</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)">
+          <div style="font-size:12.5px;color:var(--text-muted)" id="custom-dl-summary-text">
+            Siap mengunduh <strong style="color:#34d399">2,791 baris site</strong> dengan struktur <strong style="color:#38bdf8">55 Kolom Asli Excel (A–BC)</strong>.
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-dl-xlsx" style="flex:initial;padding:10px 20px" onclick="triggerCustomDownload('xlsx')">
+              📗 Download Custom Excel (.xlsx)
+            </button>
+            <button class="btn-dl-csv" style="padding:10px 18px" onclick="triggerCustomDownload('csv')">
+              📄 Download Custom CSV (.csv)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download Per Branch Quick Strip -->
+      <div style="background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px 20px">
+        <div style="font-size:12.5px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          <span>⚡ Unduh Cepat Raw File Excel (.XLSX) Per Branch:</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+          <button class="btn-dl-csv" style="justify-content:space-between;border-color:rgba(245,158,11,0.35)" onclick="downloadBranchQuick('AMBON')">
+            <span>🟠 <strong>Branch AMBON</strong> (850 Site / 145 Loss)</span>
+            <span style="color:#fbbf24;font-size:11px">.XLSX ↓</span>
+          </button>
+          <button class="btn-dl-csv" style="justify-content:space-between;border-color:rgba(56,189,248,0.35)" onclick="downloadBranchQuick('JAYAPURA')">
+            <span>🔵 <strong>Branch JAYAPURA</strong> (709 Site / 48 Loss)</span>
+            <span style="color:#38bdf8;font-size:11px">.XLSX ↓</span>
+          </button>
+          <button class="btn-dl-csv" style="justify-content:space-between;border-color:rgba(16,185,129,0.35)" onclick="downloadBranchQuick('SORONG')">
+            <span>🟢 <strong>Branch SORONG</strong> (656 Site / 25 Loss)</span>
+            <span style="color:#34d399;font-size:11px">.XLSX ↓</span>
+          </button>
+          <button class="btn-dl-csv" style="justify-content:space-between;border-color:rgba(168,85,247,0.35)" onclick="downloadBranchQuick('TIMIKA')">
+            <span>🟣 <strong>Branch TIMIKA</strong> (576 Site / 24 Loss)</span>
+            <span style="color:#c084fc;font-size:11px">.XLSX ↓</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -3932,12 +4433,12 @@
         r[29], r[30], r[31],
         r[32], r[33], r[34], r[35],
         r[36], r[37],
-        r[38], r[39]
+        r[38], r[44], r[39], r[43]
       ];
       csv.push(rowVals.map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(','));
     });
 
-    const blob = new Blob([csv.join('\\n')], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\uFEFF' + csv.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `Progress_Action_Tracker_${new Date().toISOString().slice(0,10)}.csv`;
@@ -4215,10 +4716,591 @@
     document.body.removeChild(downloadLink);
   }
 
+
+  // --- RAW FILE 55-COLUMN RECONSTRUCTION & NATIVE .XLSX GENERATOR ---
+  const augRemarksLookup = ["Baseline Jan 2026 (OK)", "New Infra Jan 26", "New Infra Feb 26", "New Infra Mar 26", "New Infra Apr 26", "New Infra May 26", "New Infra Jun 26", "additional - Jun 26 (data tracy)", "New Infra Jul 26", "additional - Jul 26 (data tracy)", "New Infra Aug 26", "additional - Aug 26 (data tracy)"];
+  const augHistCompact = ["0:LL00LLP","0:LLLLLPP","0:LLPPPPP","0:LLLLLLL","0:LLPLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:PLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLPLLLL","0:LLLLLLL","0:LLLLLPL","0:LLLLLLL","0:LLLLLLL","0:LLLLLPP","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLPPPPP","0:LLLLLLL","0:LLLLPPL","0:L0LPPPP","0:LLPLLPP","0:LLLPPPP","0:00LPPPP","0:LLLPPPP","0:PPPLPPP","0:LLLLLLL","0:LLPPPPP","0:LLLLLLL","0:LLLLLLL","0:LLPLPLL","0:LLPPPPP","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:PPPPPPP","0:LLPLLLL","0:LLLLLLL","0:LLLLLLL","0:LLPLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLPPPPP","0:LLLLLLL","0:LLLLLLL","0:PLPPLPP","0:LLLLLLL","0:LLPLLLL","0:LLLLLLL","0:PLPLLLL","0:LLPLLLL","0:LLPLPLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLPPLLL","0:LLLLLLL","0:LLPLLLL","0:LLLLLLL","0:LLLLLLL","0:PLPLLLL","0:LLLLLLL","0:LLPPLLL","0:LLLLLPL","0:LLLLPPP","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:PPPPLLL","0:LLPLLLL","0:LLLLLLL","0:LLLPPPP","0:LLLLLLL","0:LLLLLLL","0:LPLLLLL","0:PPPPPPP","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLPPPL","0:LPPPPPL","0:LLLLLLL","0:LLPLLPP","0:LLLLLLL","0:LLLLLLL","0:LPPLLLL","0:PPLPPPP","0:LLPLLLL","0:PPPPPPP","0:LLLLLLL","0:LLLLLPL","0:LLLLLLL","0:LLLPPPP","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LLLLLLL","0:LPPPLPP","0:LLLLLLL","0:LLLLLPP","0:LLLLLLL","0:LLLLLLL","0:PPPPPPP","0:LLPPLPP","0:LLLLLLL","0:LLLLLLL","0:PPPPPPL","0:PPPLLLP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:LLLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLLPLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLLLPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLPP","0:PPPPPPP","0:PPPPLPP","0:PLLLLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLLPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLLP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPLLPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLLLPPP","0:PPPPPPP","0:PPLPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPL0LPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLLPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PLLLLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLP","0:PPPPPPP","0:PLPPPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPL","0:PLLLLLL","0:PPPPLPL","0:PPPPPPP","0:PPPPPPP","0:PLLLLLL","0:PLPLLPP","0:PLPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLLP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLLLLLL","0:PLPLPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLLL","0:PPPPPPP","0:LLPLLLP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLPP","0:PPPPPPP","0:PPPPPPP","0:PPLLLLL","0:PPPPPPP","0:PLLLLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:LPPPPPL","0:PLPLPLL","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LPPPPPL","0:LPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLL","0:PPPPPPP","0:PPPPPPP","0:LLLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLLPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PLPPPPP","0:PLLLLLL","0:PPPPPPP","0:PPPLPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLPLP","0:PLPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LPPLPPL","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLL","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:LLPLLLL","0:PLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLLLLLL","0:PPPPPPP","0:PPPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPLPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPLPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLLPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPL","0:PPPPPPP","0:LLPPLLL","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPLPL","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:LLLLLLL","0:PPPPPPP","0:PLPPLLL","0:PPPLPPP","0:PLPPLPP","0:PPPPPPP","0:PPPPLPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPLL","0:PPPLLLL","0:PLPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLP","0:PLPPPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLPP","0:PLPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPLLPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PLPLLLL","0:LPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLPP","0:PPPPPPP","0:PPPPPPP","0:PLPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLLL","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PLPPLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PLLLLPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:LLPLLLL","0:PLLPLLL","0:PPPPLLL","0:PPPPPPP","0:PPPLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPLLLLL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPLLLPP","0:PPPPPPL","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","0:PPPPPPP","1:PPLLLLL","1:PPPPPPP","1:PPPPLLL","1:PPPPPPP","1:PPPPPPP","2:0PPPPPP","2:0PPPPPP","2:0LPPPPP","2:0LLPLLL","2:0PPPPPP","2:LPPPLLL","2:0PPPPPP","2:0PPLLLP","2:0LPPPPP","2:0PPPPPP","3:00LPPPP","3:00PPPPP","3:00PPPPP","3:00PLLLL","3:000PPPP","3:00PPPPP","3:000PPPP","4:000PPPP","4:000PPPP","4:000PPPP","4:000PPPP","4:000PPPP","5:0000PPP","5:0000LPP","5:0000LPP","5:0000PPP","5:0000LPP","5:0000LPP","6:00000PP","6:00000PP","6:00000PP","6:00000PP","6:00000PP","6:00000PP","6:00000PP","6:00000PP","6:00000PP","6:00000LP","6:00000PP","6:00000PP","6:00000PL","7:00000PP","7:00000PL","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","7:00000PP","8:000000P","8:000000P","8:000000P","8:000000L","8:000000P","8:000000L","8:000000L","8:000000P","8:000000L","8:000000P","8:000000L","8:000000P","8:000000P","8:000000P","8:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","9:000000P","10:0000000","10:0000000","10:0000000","10:0000000","10:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000","11:0000000"];
+
+  // Row 2 Part Headers (Columns A..BC, 55 cols) matching Sheet 'Aug 26'
+  const AUG26_ROW2_PARTS = [
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+    'part sqa', 'part sqa', 'part sales', 'part sales', 'part NOP', 'part NOP',
+    'part sqa', 'part sqa', 'part sqa', 'part sqa', 'part sqa', 'part sqa', '', 'part sqa',
+    'part MBA', 'part MBA', 'part MBA', 'part MBA',
+    'part NOS', 'part NOS', 'part NOS', ''
+  ];
+
+  // Row 3 Exact Column Headers (Columns A..BC, 55 cols) matching Sheet 'Aug 26'
+  const AUG26_ROW3_HEADERS = [
+    'siteid', 'Sitename', 'Region', 'Area', 'Final Remark',
+    'Total Revenue Aug-26', 'Total Direct Cost Aug-26', 'Margin Aug-26', '% Margin Aug-26', 'Profit n Loss Aug-26',
+    'Inline SGGJ', 'Program Group', 'GAP dist', 'Priority Sales', 'Priority Network',
+    'NOP', 'Branch', 'Kabupaten', 'type site', 'BTS Equipment', 'Site class', 'Status OA',
+    'Profit n Loss Jan-26', 'Profit n Loss Feb-26', 'Profit n Loss Mar-26', 'Profit n Loss Apr-26',
+    'Profit n Loss May-26', 'Profit n Loss Jun-26', 'Profit n Loss Jul-26',
+    'Status (Profit Loss up to Aug 26)', 'Intervention Flag', 'Payload', 'Site loss tracker',
+    'Action to be taken SQA', 'Update action taken SQA',
+    'Action to be taken Sales', 'Update action taken Sales',
+    'Action to be taken NOP', 'Update action taken NOP',
+    'update RHI Week terakhir', 'Root Cause (RHI)', 'propose action (RHI)',
+    'update THI Week terakhir', 'Root Cause (THI)', 'propose action (THI)',
+    'Typer Transport', 'utilisasi average weekly BDBH',
+    'update average status availability', 'plan action availability',
+    'Status PL week terakhir', 'propose action (MBA)',
+    'Breakdown cost terbesar', 'Nilai Cost', 'plan improvement cost terbesar', 'cek'
+  ];
+
+  const DASHBOARD_44_HEADERS = [
+    'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Kelas Site', 'Status OA', 'Type Site', 'BTS Equip',
+    'Revenue Aug-26 (Rp)', 'Direct Cost (Rp)', 'Margin (Rp)', '% Margin', 'Status PnL',
+    'GAP Dist', 'Inline SSGJ', 'Program Group', 'Priority Sales', 'Priority Network', 'Intervention Flag', 'Status Aug', 'Payload',
+    'Action to be taken SQA', 'Update Action SQA',
+    'Action to be taken Sales', 'Update Action Sales',
+    'Action to be taken NOP', 'Update Action NOP',
+    'update RHI Week Terakhir', 'Root Cause RHI', 'propose action RHI',
+    'update THI Week Terakhir', 'Root Cause THI', 'propose action THI',
+    'Typer Transport', 'utilisasi avg weekly BDBH',
+    'update avg status availability', 'plan action availability',
+    'Status PL week terakhir', 'propose action (MBA)',
+    'Breakdown cost terbesar', 'Nilai Cost', 'plan improvement cost terbesar', 'Cek / Kategori Site'
+  ];
+
+  // Build a map from Site ID -> index in augData for O(1) lookup
+  const siteIdToIndexMap = {};
+  augData.forEach((r, idx) => { siteIdToIndexMap[r[0]] = idx; });
+
+  function decodeMonthPnL(ch) {
+    if (ch === 'P') return 'Profit';
+    if (ch === 'L') return 'Loss';
+    return '';
+  }
+
+  function build55ColRow(r) {
+    const idx = siteIdToIndexMap[r[0]] ?? 0;
+    const compact = augHistCompact[idx] || '0:0000000';
+    const [remIdxStr, mStr] = compact.split(':');
+    const finalRemark = augRemarksLookup[parseInt(remIdxStr, 10) || 0] || 'Baseline Jan 2026 (OK)';
+    const m = mStr || '0000000';
+    const nilaiCostNum = (r[44] !== '' && r[44] !== null && r[44] !== undefined && !isNaN(Number(r[44]))) ? Number(r[44]) : '';
+
+    return [
+      r[0],                       // A: siteid
+      r[1],                       // B: Sitename
+      'R11 Papua Maluku',         // C: Region
+      'Area 4',                   // D: Area
+      finalRemark,                // E: Final Remark
+      Math.round(r[9] || 0),      // F: Total Revenue Aug-26
+      Math.round(r[10] || 0),     // G: Total Direct Cost Aug-26
+      Math.round(r[11] || 0),     // H: Margin Aug-26
+      Number(r[12] || 0),         // I: % Margin Aug-26 (in %)
+      r[13],                      // J: Profit n Loss Aug-26
+      r[15],                      // K: Inline SGGJ
+      r[16],                      // L: Program Group
+      r[14],                      // M: GAP dist
+      r[17],                      // N: Priority Sales
+      r[18],                      // O: Priority Network
+      r[2],                       // P: NOP
+      r[3],                       // Q: Branch
+      r[4],                       // R: Kabupaten
+      r[5],                       // S: type site
+      r[6],                       // T: BTS Equipment
+      r[7],                       // U: Site class
+      r[8],                       // V: Status OA
+      decodeMonthPnL(m[0]),       // W: Profit n Loss Jan-26
+      decodeMonthPnL(m[1]),       // X: Profit n Loss Feb-26
+      decodeMonthPnL(m[2]),       // Y: Profit n Loss Mar-26
+      decodeMonthPnL(m[3]),       // Z: Profit n Loss Apr-26
+      decodeMonthPnL(m[4]),       // AA: Profit n Loss May-26
+      decodeMonthPnL(m[5]),       // AB: Profit n Loss Jun-26
+      decodeMonthPnL(m[6]),       // AC: Profit n Loss Jul-26
+      r[40],                      // AD: Status (Profit Loss up to Aug 26)
+      r[41],                      // AE: Intervention Flag
+      r[19],                      // AF: Payload
+      r[42],                      // AG: Site loss tracker
+      r[20],                      // AH: Action to be taken SQA
+      r[21],                      // AI: Update action taken SQA
+      r[22],                      // AJ: Action to be taken Sales
+      r[23],                      // AK: Update action taken Sales
+      r[24],                      // AL: Action to be taken NOP
+      r[25],                      // AM: Update action taken NOP
+      r[26],                      // AN: update RHI Week terakhir
+      r[27],                      // AO: Root Cause (RHI)
+      r[28],                      // AP: propose action (RHI)
+      r[29],                      // AQ: update THI Week terakhir
+      r[30],                      // AR: Root Cause (THI)
+      r[31],                      // AS: propose action (THI)
+      r[32],                      // AT: Typer Transport
+      r[33],                      // AU: utilisasi average weekly BDBH
+      r[34],                      // AV: update average status availability
+      r[35],                      // AW: plan action availability
+      r[36],                      // AX: Status PL week terakhir
+      r[37],                      // AY: propose action (MBA)
+      r[38],                      // AZ: Breakdown cost terbesar
+      nilaiCostNum,               // BA: Nilai Cost
+      r[39],                      // BB: plan improvement cost terbesar
+      r[43]                       // BC: cek
+    ];
+  }
+
+  function build44ColRow(r) {
+    const nilaiCostNum = (r[44] !== '' && r[44] !== null && r[44] !== undefined && !isNaN(Number(r[44]))) ? Number(r[44]) : '';
+    return [
+      r[0], r[1], r[2], r[3], r[4], r[7], r[8], r[5], r[6],
+      Math.round(r[9] || 0), Math.round(r[10] || 0), Math.round(r[11] || 0), Number(r[12] || 0), r[13],
+      r[14], r[15], r[16], r[17], r[18], r[41], r[40], r[19],
+      r[20], r[21], r[22], r[23], r[24], r[25],
+      r[26], r[27], r[28], r[29], r[30], r[31],
+      r[32], r[33], r[34], r[35],
+      r[36], r[37],
+      r[38], nilaiCostNum, r[39], r[43]
+    ];
+  }
+
+  // Pure-JS CRC32 & Uncompressed ZIP Builder for Native OpenXML (.xlsx)
+  const CRC32_TABLE = (() => {
+    const t = new Uint32Array(256);
+    for (let i = 0; i < 256; i++) {
+      let c = i;
+      for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      t[i] = c >>> 0;
+    }
+    return t;
+  })();
+
+  function crc32Bytes(u8) {
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < u8.length; i++) {
+      crc = CRC32_TABLE[(crc ^ u8[i]) & 0xFF] ^ (crc >>> 8);
+    }
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  function createZipBlob(files) {
+    const encoder = new TextEncoder();
+    const fileEntries = files.map(f => {
+      const nameBytes = encoder.encode(f.name);
+      const dataBytes = (typeof f.data === 'string') ? encoder.encode(f.data) : f.data;
+      const crc = crc32Bytes(dataBytes);
+      return { nameBytes, dataBytes, crc };
+    });
+
+    let localSize = 0;
+    let centralSize = 0;
+    fileEntries.forEach(e => {
+      localSize += 30 + e.nameBytes.length + e.dataBytes.length;
+      centralSize += 46 + e.nameBytes.length;
+    });
+
+    const totalSize = localSize + centralSize + 22;
+    const out = new Uint8Array(totalSize);
+    const view = new DataView(out.buffer);
+    let offset = 0;
+
+    fileEntries.forEach(e => {
+      e.localOffset = offset;
+      view.setUint32(offset, 0x04034b50, true); // Local file header signature
+      view.setUint16(offset + 4, 20, true);     // Version needed
+      view.setUint16(offset + 6, 0x0800, true); // UTF-8 flag
+      view.setUint16(offset + 8, 0, true);      // Method: STORE (0)
+      view.setUint16(offset + 10, 0, true);     // Mod time
+      view.setUint16(offset + 12, 0x559d, true);// Mod date
+      view.setUint32(offset + 14, e.crc, true);
+      view.setUint32(offset + 18, e.dataBytes.length, true);
+      view.setUint32(offset + 22, e.dataBytes.length, true);
+      view.setUint16(offset + 26, e.nameBytes.length, true);
+      view.setUint16(offset + 28, 0, true);
+      offset += 30;
+      out.set(e.nameBytes, offset);
+      offset += e.nameBytes.length;
+      out.set(e.dataBytes, offset);
+      offset += e.dataBytes.length;
+    });
+
+    const centralStart = offset;
+    fileEntries.forEach(e => {
+      view.setUint32(offset, 0x02014b50, true); // Central dir signature
+      view.setUint16(offset + 4, 20, true);
+      view.setUint16(offset + 6, 20, true);
+      view.setUint16(offset + 8, 0x0800, true);
+      view.setUint16(offset + 10, 0, true);
+      view.setUint16(offset + 12, 0, true);
+      view.setUint16(offset + 14, 0x559d, true);
+      view.setUint32(offset + 16, e.crc, true);
+      view.setUint32(offset + 20, e.dataBytes.length, true);
+      view.setUint32(offset + 24, e.dataBytes.length, true);
+      view.setUint16(offset + 28, e.nameBytes.length, true);
+      view.setUint16(offset + 30, 0, true);
+      view.setUint16(offset + 32, 0, true);
+      view.setUint16(offset + 34, 0, true);
+      view.setUint16(offset + 36, 0, true);
+      view.setUint32(offset + 38, 0, true);
+      view.setUint32(offset + 42, e.localOffset, true);
+      offset += 46;
+      out.set(e.nameBytes, offset);
+      offset += e.nameBytes.length;
+    });
+
+    const centralLen = offset - centralStart;
+    view.setUint32(offset, 0x06054b50, true); // EOCD signature
+    view.setUint16(offset + 4, 0, true);
+    view.setUint16(offset + 6, 0, true);
+    view.setUint16(offset + 8, fileEntries.length, true);
+    view.setUint16(offset + 10, fileEntries.length, true);
+    view.setUint32(offset + 12, centralLen, true);
+    view.setUint32(offset + 16, centralStart, true);
+    view.setUint16(offset + 20, 0, true);
+
+    return new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  }
+
+  function excelColName(colIdx) {
+    let s = '';
+    let n = colIdx + 1;
+    while (n > 0) {
+      let rem = (n - 1) % 26;
+      s = String.fromCharCode(65 + rem) + s;
+      n = Math.floor((n - 1) / 26);
+    }
+    return s;
+  }
+
+  function escapeXml(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+  }
+
+  function buildWorksheetXml(rows, hasPartRow = false) {
+    const numCols = rows.length > 0 ? rows[0].length : 1;
+    const lastColLetter = excelColName(numCols - 1);
+    const totalRows = rows.length;
+    const filterStartRow = hasPartRow ? 2 : 1;
+
+    let xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n`;
+    xml += `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">`;
+    xml += `<sheetViews><sheetView workbookViewId="0"><pane ySplit="${filterStartRow}" topLeftCell="A${filterStartRow + 1}" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>`;
+    xml += `<cols><col min="1" max="${numCols}" width="18" customWidth="1"/></cols>`;
+    xml += `<sheetData>`;
+
+    for (let rIdx = 0; rIdx < totalRows; rIdx++) {
+      const row = rows[rIdx];
+      const rNum = rIdx + 1;
+      const isHeader = (hasPartRow && (rNum === 1 || rNum === 2)) || (!hasPartRow && rNum === 1);
+      const styleAttr = isHeader ? (rNum === 1 && hasPartRow ? ' s="2"' : ' s="1"') : '';
+      xml += `<row r="${rNum}">`;
+      for (let cIdx = 0; cIdx < row.length; cIdx++) {
+        const val = row[cIdx];
+        if (val === '' || val === null || val === undefined) continue;
+        const cellRef = excelColName(cIdx) + rNum;
+        if (!isHeader && typeof val === 'number' && isFinite(val)) {
+          const numStyle = Number.isInteger(val) && Math.abs(val) >= 1000 ? ' s="3"' : '';
+          xml += `<c r="${cellRef}"${numStyle}><v>${val}</v></c>`;
+        } else {
+          xml += `<c r="${cellRef}" t="inlineStr"${styleAttr}><is><t>${escapeXml(val)}</t></is></c>`;
+        }
+      }
+      xml += `</row>`;
+    }
+
+    xml += `</sheetData>`;
+    if (totalRows >= filterStartRow) {
+      xml += `<autoFilter ref="A${filterStartRow}:${lastColLetter}${totalRows}"/>`;
+    }
+    xml += `</worksheet>`;
+    return xml;
+  }
+
+  function generateXlsxWorkbookBlob(sheets) {
+    // sheets = [{ name: 'Aug 26', rows: [...], hasPartRow: true }, ...]
+    const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+  <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+  ${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('\n  ')}
+</Types>`;
+
+    const rootRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`;
+
+    const workbookXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheets>
+    ${sheets.map((s, i) => `<sheet name="${escapeXml(s.name.slice(0, 31))}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('\n    ')}
+  </sheets>
+</workbook>`;
+
+    const workbookRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  ${sheets.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('\n  ')}
+  <Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`;
+
+    const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  <numFmts count="1">
+    <numFmt numFmtId="164" formatCode="#,##0"/>
+  </numFmts>
+  <fonts count="3">
+    <font><sz val="10"/><name val="Calibri"/></font>
+    <font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>
+    <font><b/><sz val="10"/><color rgb="FFFCD34D"/><name val="Calibri"/></font>
+  </fonts>
+  <fills count="4">
+    <fill><patternFill patternType="none"/></fill>
+    <fill><patternFill patternType="gray125"/></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FF0F172A"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FF1E293B"/></patternFill></fill>
+  </fills>
+  <borders count="1">
+    <border><left/><right/><top/><bottom/><diagonal/></border>
+  </borders>
+  <cellStyleXfs count="1">
+    <xf numFmtId="0" fontId="0" fillId="0" borderId="0"/>
+  </cellStyleXfs>
+  <cellXfs count="4">
+    <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+    <xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>
+    <xf numFmtId="0" fontId="2" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1"/>
+    <xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+  </cellXfs>
+</styleSheet>`;
+
+    const zipFiles = [
+      { name: '[Content_Types].xml', data: contentTypes },
+      { name: '_rels/.rels', data: rootRels },
+      { name: 'xl/workbook.xml', data: workbookXml },
+      { name: 'xl/_rels/workbook.xml.rels', data: workbookRels },
+      { name: 'xl/styles.xml', data: stylesXml }
+    ];
+
+    sheets.forEach((s, i) => {
+      zipFiles.push({
+        name: `xl/worksheets/sheet${i + 1}.xml`,
+        data: buildWorksheetXml(s.rows, !!s.hasPartRow)
+      });
+    });
+
+    return createZipBlob(zipFiles);
+  }
+
+  function triggerBlobDownload(blob, filename) {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(link.href);
+      document.body.removeChild(link);
+    }, 300);
+  }
+
+  function downloadRowsAsCSV(rows, filename) {
+    const csvLines = rows.map(r =>
+      r.map(val => `"${String(val ?? '').replace(/"/g, '""')}"`).join(',')
+    );
+    const blob = new Blob(['\uFEFF' + csvLines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    triggerBlobDownload(blob, filename);
+  }
+
+  function getFilteredRawRows(presetOrOpts) {
+    let branch = 'ALL', pnl = 'ALL', prio = 'ALL', cek = 'ALL';
+    if (typeof presetOrOpts === 'string') {
+      if (presetOrOpts === 'LOSS') pnl = 'Loss';
+      else if (presetOrOpts === 'PROFIT') pnl = 'Profit';
+      else if (presetOrOpts === 'PRIORITY') prio = 'ANY_PRIO';
+    } else if (presetOrOpts && typeof presetOrOpts === 'object') {
+      branch = presetOrOpts.branch || 'ALL';
+      pnl = presetOrOpts.pnl || 'ALL';
+      prio = presetOrOpts.prio || 'ALL';
+      cek = presetOrOpts.cek || 'ALL';
+    }
+
+    return augData.filter(r => {
+      if (branch !== 'ALL' && r[3] !== branch) return false;
+      if (pnl !== 'ALL' && r[13] !== pnl) return false;
+      if (cek !== 'ALL' && r[43] !== cek) return false;
+
+      if (prio !== 'ALL') {
+        const isSales = (r[17] === 'P1' || r[17] === 'P2' || r[17] === 'P3');
+        const isNet = (r[18] === 'P1' || r[18] === 'P2' || r[18] === 'P3');
+        if (prio === 'ANY_PRIO' && !isSales && !isNet) return false;
+        if (prio === 'SALES_PRIO' && !isSales) return false;
+        if (prio === 'NET_PRIO' && !isNet) return false;
+        if (prio === 'P1_ONLY' && r[17] !== 'P1' && r[18] !== 'P1') return false;
+        if (prio === 'P2_ONLY' && r[17] !== 'P2' && r[18] !== 'P2') return false;
+      }
+      return true;
+    });
+  }
+
+  function downloadRawDataset(preset, format = 'xlsx', colMode = '55', customNamePrefix = '') {
+    const matched = getFilteredRawRows(preset);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    let label = 'Full_2791_Sites';
+    if (preset === 'LOSS') label = 'Site_Loss_242_Sites';
+    else if (preset === 'PRIORITY') label = 'Priority_78_Sites';
+    else if (customNamePrefix) label = customNamePrefix;
+
+    let sheetRows = [];
+    let hasPartRow = false;
+    if (colMode === '55') {
+      hasPartRow = true;
+      sheetRows.push(AUG26_ROW2_PARTS);
+      sheetRows.push(AUG26_ROW3_HEADERS);
+      matched.forEach(r => sheetRows.push(build55ColRow(r)));
+    } else {
+      sheetRows.push(DASHBOARD_44_HEADERS);
+      matched.forEach(r => sheetRows.push(build44ColRow(r)));
+    }
+
+    if (format === 'xlsx') {
+      const fname = `Raw_Data_Aug26_${label}_${dateStr}.xlsx`;
+      const blob = generateXlsxWorkbookBlob([{ name: 'Aug 26', rows: sheetRows, hasPartRow }]);
+      triggerBlobDownload(blob, fname);
+      showToast(`✅ Mengunduh ${fname} (${matched.length.toLocaleString()} site)...`, true);
+    } else {
+      const fname = `Raw_Data_Aug26_${label}_${dateStr}.csv`;
+      downloadRowsAsCSV(sheetRows, fname);
+      showToast(`✅ Mengunduh ${fname} (${matched.length.toLocaleString()} site)...`, true);
+    }
+  }
+
+  function downloadMultiSheetWorkbook() {
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const allRows = [AUG26_ROW2_PARTS, AUG26_ROW3_HEADERS, ...augData.map(build55ColRow)];
+    const lossRows = [AUG26_ROW2_PARTS, AUG26_ROW3_HEADERS, ...augData.filter(r => r[13] === 'Loss').map(build55ColRow)];
+    const prioRows = [
+      AUG26_ROW2_PARTS,
+      AUG26_ROW3_HEADERS,
+      ...augData.filter(r => ['P1','P2','P3'].includes(r[17]) || ['P1','P2','P3'].includes(r[18])).map(build55ColRow)
+    ];
+
+    const kabHeaders = [
+      'No', 'Kabupaten / Kota', 'Branch Induk', 'Total Site', 'Profit Site', 'Loss Site',
+      '% Loss Ratio', '% Profit Ratio', 'Tier <3 Mio', 'Tier 3-5 Mio', 'Tier 5-10 Mio', 'Tier >10 Mio',
+      'Total Revenue (Rp)', 'Total Cost (Rp)', 'Total Margin (Rp)'
+    ];
+    const kabSheetRows = [kabHeaders];
+    kabData.forEach((k, idx) => {
+      kabSheetRows.push([
+        idx + 1, k.kabupaten, k.branch, k.total, k.profit, k.loss,
+        k.pct_loss, k.pct_profit, k.tier_lt3, k.tier_3_5, k.tier_5_10, k.tier_gt10,
+        Math.round(k.rev), Math.round(k.cost), Math.round(k.margin)
+      ]);
+    });
+
+    const blob = generateXlsxWorkbookBlob([
+      { name: 'Aug 26 (2791 Sites)', rows: allRows, hasPartRow: true },
+      { name: 'Site Loss Only (242)', rows: lossRows, hasPartRow: true },
+      { name: 'Site Priority (78)', rows: prioRows, hasPartRow: true },
+      { name: 'Rekap Kabupaten (57)', rows: kabSheetRows, hasPartRow: false }
+    ]);
+
+    const fname = `SQA_PUMA_Master_Raw_Workbook_Aug26_${dateStr}.xlsx`;
+    triggerBlobDownload(blob, fname);
+    showToast(`📚 Mengunduh Workbook 4-Sheet: ${fname}`, true);
+  }
+
+  function updateCustomDlPreview() {
+    const branch = document.getElementById('custom-dl-branch')?.value || 'ALL';
+    const pnl = document.getElementById('custom-dl-pnl')?.value || 'ALL';
+    const prio = document.getElementById('custom-dl-prio')?.value || 'ALL';
+    const cek = document.getElementById('custom-dl-cek')?.value || 'ALL';
+    const colMode = document.getElementById('custom-dl-colmode')?.value || '55';
+
+    const matched = getFilteredRawRows({ branch, pnl, prio, cek });
+    const badge = document.getElementById('custom-dl-count-badge');
+    if (badge) badge.innerText = `${matched.length.toLocaleString()} Site Terpilih`;
+
+    const summary = document.getElementById('custom-dl-summary-text');
+    if (summary) {
+      const colText = colMode === '55' ? '55 Kolom Asli Excel (A–BC)' : '44 Kolom Urutan Tabel Dashboard';
+      summary.innerHTML = `Siap mengunduh <strong style="color:#34d399">${matched.length.toLocaleString()} baris site</strong> dengan struktur <strong style="color:#38bdf8">${colText}</strong>.`;
+    }
+  }
+
+  function triggerCustomDownload(format) {
+    const branch = document.getElementById('custom-dl-branch')?.value || 'ALL';
+    const pnl = document.getElementById('custom-dl-pnl')?.value || 'ALL';
+    const prio = document.getElementById('custom-dl-prio')?.value || 'ALL';
+    const cek = document.getElementById('custom-dl-cek')?.value || 'ALL';
+    const colMode = document.getElementById('custom-dl-colmode')?.value || '55';
+
+    const matched = getFilteredRawRows({ branch, pnl, prio, cek });
+    const parts = [branch === 'ALL' ? 'R11' : branch];
+    if (pnl !== 'ALL') parts.push(pnl);
+    if (prio !== 'ALL') parts.push(prio);
+    parts.push(`${matched.length}Sites`);
+    downloadRawDataset({ branch, pnl, prio, cek }, format, colMode, parts.join('_'));
+  }
+
+  function downloadBranchQuick(branchName) {
+    const matched = getFilteredRawRows({ branch: branchName, pnl: 'ALL', prio: 'ALL', cek: 'ALL' });
+    downloadRawDataset({ branch: branchName, pnl: 'ALL', prio: 'ALL', cek: 'ALL' }, 'xlsx', '55', `Branch_${branchName}_${matched.length}Sites`);
+  }
+
+  function exportFilteredAugToXLSX() {
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const sheetRows = [AUG26_ROW2_PARTS, AUG26_ROW3_HEADERS, ...filteredAugRows.map(build55ColRow)];
+    const blob = generateXlsxWorkbookBlob([{ name: 'Aug 26 Filtered', rows: sheetRows, hasPartRow: true }]);
+    const fname = `Database_Site_Aug26_Filtered_${filteredAugRows.length}Sites_${dateStr}.xlsx`;
+    triggerBlobDownload(blob, fname);
+    showToast(`📗 Mengunduh ${fname}`, true);
+  }
+
+  function exportProgressToXLSX() {
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const sheetRows = [AUG26_ROW2_PARTS, AUG26_ROW3_HEADERS, ...filteredProgRows.map(build55ColRow)];
+    const blob = generateXlsxWorkbookBlob([{ name: 'Action Tracker', rows: sheetRows, hasPartRow: true }]);
+    const fname = `Progress_Action_Tracker_${filteredProgRows.length}Sites_${dateStr}.xlsx`;
+    triggerBlobDownload(blob, fname);
+    showToast(`📗 Mengunduh ${fname}`, true);
+  }
+
+  function toggleRawDlMenu(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('header-raw-dl-menu');
+    if (menu) menu.classList.toggle('open');
+  }
+
+  function closeRawDlMenu() {
+    const menu = document.getElementById('header-raw-dl-menu');
+    if (menu) menu.classList.remove('open');
+  }
+
+  function openDownloadTabFromHeader() {
+    closeRawDlMenu();
+    document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    const tabBtn = document.getElementById('tab-btn-download-raw');
+    const tabPane = document.getElementById('tab-download-raw');
+    if (tabBtn) tabBtn.classList.add('active');
+    if (tabPane) {
+      tabPane.classList.add('active');
+      tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    updateCustomDlPreview();
+  }
+
+  document.addEventListener('click', (e) => {
+    const wrap = document.getElementById('header-raw-dl-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      closeRawDlMenu();
+    }
+  });
+
   // --- REAL-TIME AUTO-REFRESH & MANUAL REFRESH (WIT) ---
   let refreshCountdown = 30;
   let isRefreshing = false;
-  const currentVersionHash = "1793240303";
+  const currentVersionHash = "1793251570";
 
   function manualTriggerRefresh() {
     if (isRefreshing) return;
