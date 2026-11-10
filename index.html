@@ -1537,7 +1537,7 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 18:46 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 18:47 WIT</div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -4219,7 +4219,19 @@
   let refreshCountdown = 30;
   let isRefreshing = false;
   let isLocalEngine = false;
-  const currentVersionHash = "1794303970";
+  const currentVersionHash = "1794304073";
+
+  function canAutoReload() {
+    const lastReload = parseInt(sessionStorage.getItem('last_auto_reload') || '0', 10);
+    return (Date.now() - lastReload) > 10000;
+  }
+
+  function triggerReloadWithBust() {
+    sessionStorage.setItem('last_auto_reload', Date.now());
+    const url = new URL(window.location.href);
+    url.searchParams.set('t', Date.now());
+    window.location.href = url.toString();
+  }
 
   function detectLocalEngine() {
     fetch('http://127.0.0.1:8092/api/version', { cache: 'no-store', signal: AbortSignal.timeout(600) })
@@ -4235,13 +4247,11 @@
           if (localBtn && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
             localBtn.style.display = 'inline-flex';
           }
-          if (data.version !== currentVersionHash) {
-            showToast('⚡ Data Excel baru terdeteksi di sistem lokal! Memperbarui...', true);
-            setTimeout(() => {
-              const url = new URL(window.location.href);
-              url.searchParams.set('t', Date.now());
-              window.location.href = url.toString();
-            }, 300);
+          // Only auto-reload locally if user is browsing localhost directly
+          const isLocalPage = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          if (isLocalPage && data.version !== currentVersionHash && canAutoReload()) {
+            showToast('⚡ Data Excel baru terdeteksi! Memperbarui...', true);
+            setTimeout(triggerReloadWithBust, 300);
           }
         }
       })
@@ -4257,59 +4267,46 @@
     const icon = document.getElementById('refresh-icon');
     if (icon) icon.classList.add('spin');
 
-    // If on localhost/127.0.0.1 or local engine detected
-    if (isLocalEngine || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    const isLocalPage = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+    if (isLocalPage) {
       showToast('⚡ Memperbarui data langsung dari Excel (0s delay)...', false);
       fetch('http://127.0.0.1:8092/api/trigger-sync')
         .then(() => {
-          setTimeout(() => {
-            const url = new URL(window.location.href);
-            url.searchParams.set('t', Date.now());
-            window.location.href = url.toString();
-          }, 400);
+          setTimeout(triggerReloadWithBust, 400);
         })
         .catch(() => {
-          const url = new URL(window.location.href);
-          url.searchParams.set('t', Date.now());
-          window.location.href = url.toString();
+          triggerReloadWithBust();
         });
       return;
     }
 
     // Cloud GitHub Pages mode
-    showToast('🔄 Memperbarui dashboard...', false);
+    showToast('🔄 Mengecek data versi terbaru...', false);
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
       .then(res => res.json())
       .then(data => {
         if (data && data.version && data.version !== currentVersionHash) {
           showToast('✨ Memuat data versi terbaru...', true);
-          setTimeout(() => {
-            const url = new URL(window.location.href);
-            url.searchParams.set('t', Date.now());
-            window.location.href = url.toString();
-          }, 300);
+          setTimeout(triggerReloadWithBust, 300);
         } else {
-          showToast('Data sudah versi terkini. Bila baru saja disimpan di SharePoint, tunggu beberapa detik untuk sinkronisasi cloud.', true);
+          showToast('Data di web ini sudah paling update. Bila baru saja save di Excel, tunggu sebentar (cloud build ±30s) atau buka Mode 0s Delay.', true);
           setTimeout(() => {
             if (icon) icon.classList.remove('spin');
             isRefreshing = false;
-          }, 1000);
+          }, 1200);
         }
       })
       .catch(() => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('t', Date.now());
-        window.location.href = url.toString();
+        triggerReloadWithBust();
       });
   }
 
   function initAutoRefresh() {
-    // Poll local engine frequently (every 2 seconds) for instant updates
-    setInterval(() => {
-      detectLocalEngine();
-    }, 2000);
+    // Check local engine every 5 seconds
+    setInterval(detectLocalEngine, 5000);
 
-    // Countdown and cloud poll
+    // Countdown and cloud poll every 30s
     setInterval(() => {
       refreshCountdown--;
       const timerElem = document.getElementById('refresh-timer');
@@ -4318,9 +4315,7 @@
       }
       if (refreshCountdown <= 0) {
         refreshCountdown = 30;
-        if (!isLocalEngine) {
-          checkAutoUpdates();
-        }
+        checkAutoUpdates();
       }
     }, 1000);
 
@@ -4336,13 +4331,9 @@
           return res.json();
         })
         .then(data => {
-          if (data && data.version && data.version !== currentVersionHash) {
+          if (data && data.version && data.version !== currentVersionHash && canAutoReload()) {
             showToast('✨ Data Excel terbaru terdeteksi! Memperbarui...', true);
-            setTimeout(() => {
-              const url = new URL(window.location.href);
-              url.searchParams.set('t', Date.now());
-              window.location.href = url.toString();
-            }, 800);
+            setTimeout(triggerReloadWithBust, 800);
           }
         })
         .catch(() => {});
