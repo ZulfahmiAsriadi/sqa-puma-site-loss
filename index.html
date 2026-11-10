@@ -1537,7 +1537,7 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 18:54 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 19:06 WIT</div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -1929,7 +1929,7 @@
                 <span class="badge badge-info" id="prog-chart-badge" style="font-size:11px;margin-left:6px">242 Loss Sites</span>
               </div>
               <p style="font-size:12px;color:var(--text-muted);margin-top:4px">
-                Visualisasi pemenuhan & distribusi update action plan yang telah diisi per domain PIC (NOP, Sales, RHI, MBA, Availability, NOS) dan status per Branch.
+                Visualisasi hitungan progres 8 kolom aksi: SQA (AI), Sales (AK), NOP (AM), RHI (AP), THI (AS), Availability (AW), PL (AY), dan NOS (BB).
               </p>
             </div>
             <div class="prog-kpi-chips" id="prog-kpi-chips">
@@ -1938,11 +1938,11 @@
           </div>
 
           <div class="prog-charts-grid">
-            <!-- Diagram Batang 1: Pemenuhan per Domain PIC -->
+            <!-- Diagram Batang 1: Hitungan 8 Kolom Aksi -->
             <div class="prog-chart-box">
               <div class="prog-chart-title">
-                <span>📈 Distribusi Aksi per Unit / Domain PIC</span>
-                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">% dari populasi filter</span>
+                <span>📈 Hitungan Input Action Plan (8 Kolom Aksi)</span>
+                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Jumlah terisi & % populasi filter</span>
               </div>
               <div id="prog-domain-bars" style="display:flex;flex-direction:column;gap:11px;margin-top:6px">
                 <!-- Injected dynamically by renderProgCharts() -->
@@ -3740,32 +3740,48 @@
       return;
     }
 
-    let nopCnt = 0, salesCnt = 0, rhiCnt = 0, thiCnt = 0;
-    let mbaCnt = 0, availCnt = 0, sqaCnt = 0, nosCnt = 0;
-    let plClearCnt = 0, anyActionCnt = 0;
+    // Count the exact 8 action items specified by user:
+    // 1. Update action taken SQA: Kolom AI (index 21)
+    // 2. Update action taken Sales: Kolom AK (index 23)
+    // 3. Update action taken NOP: Kolom AM (index 25)
+    // 4. propose action RHI: Kolom AP (index 28)
+    // 5. propose action THI: Kolom AS (index 31)
+    // 6. plan action availability: Kolom AW (index 35)
+    // 7. propose action PL: Kolom AY (index 37)
+    // 8. plan improvement cost terbesar: Kolom BB (index 39)
+    let sqaCnt = 0;
+    let salesCnt = 0;
+    let nopCnt = 0;
+    let rhiCnt = 0;
+    let thiCnt = 0;
+    let availCnt = 0;
+    let plCnt = 0;
+    let nosCnt = 0;
+    let plClearCnt = 0;
+    let anyActionCnt = 0;
 
     filteredProgRows.forEach(r => {
-      const hasNop = isFilledVal(r[24]) || isFilledVal(r[25]);
-      const hasSales = isFilledVal(r[22]) || isFilledVal(r[23]);
-      const hasRhi = isFilledVal(r[27]) || isFilledVal(r[28]);
-      const hasThi = isFilledVal(r[30]) || isFilledVal(r[31]);
-      const hasMba = isFilledVal(r[37]);
+      const hasSqa = isFilledVal(r[21]);
+      const hasSales = isFilledVal(r[23]);
+      const hasNop = isFilledVal(r[25]);
+      const hasRhi = isFilledVal(r[28]);
+      const hasThi = isFilledVal(r[31]);
       const hasAvail = isFilledVal(r[35]);
-      const hasSqa = isFilledVal(r[20]) || isFilledVal(r[21]);
-      const hasNos = isFilledVal(r[38]) || isFilledVal(r[39]);
-      const isPlClear = (r[36] === 'CLEAR');
+      const hasPl = isFilledVal(r[37]);
+      const hasNos = isFilledVal(r[39]);
+      const isPlClear = (String(r[36]).trim() === 'CLEAR');
 
-      if (hasNop) nopCnt++;
+      if (hasSqa) sqaCnt++;
       if (hasSales) salesCnt++;
+      if (hasNop) nopCnt++;
       if (hasRhi) rhiCnt++;
       if (hasThi) thiCnt++;
-      if (hasMba) mbaCnt++;
       if (hasAvail) availCnt++;
-      if (hasSqa) sqaCnt++;
+      if (hasPl) plCnt++;
       if (hasNos) nosCnt++;
       if (isPlClear) plClearCnt++;
 
-      if (hasNop || hasSales || hasRhi || hasThi || hasMba || hasAvail || hasSqa || hasNos) {
+      if (hasSqa || hasSales || hasNop || hasRhi || hasThi || hasAvail || hasPl || hasNos) {
         anyActionCnt++;
       }
     });
@@ -3779,26 +3795,42 @@
         <strong style="color:#34d399">${anyActionCnt}</strong>
         <span style="font-size:11px;color:var(--text-muted)">(${anyPct}%)</span>
       </div>
+      <div class="prog-chip" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25)">
+        <span style="color:#f87171">SQA (AI):</span>
+        <strong style="color:#f87171">${sqaCnt}</strong>
+      </div>
+      <div class="prog-chip" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.25)">
+        <span style="color:#fbbf24">Sales (AK):</span>
+        <strong style="color:#fbbf24">${salesCnt}</strong>
+      </div>
+      <div class="prog-chip" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.25)">
+        <span style="color:#34d399">NOP (AM):</span>
+        <strong style="color:#34d399">${nopCnt}</strong>
+      </div>
+      <div class="prog-chip" style="background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.25)">
+        <span style="color:#c084fc">RHI (AP):</span>
+        <strong style="color:#c084fc">${rhiCnt}</strong>
+      </div>
+      <div class="prog-chip" style="background:rgba(236,72,153,0.12);border-color:rgba(236,72,153,0.25)">
+        <span style="color:#f472b6">THI (AS):</span>
+        <strong style="color:#f472b6">${thiCnt}</strong>
+      </div>
+      <div class="prog-chip" style="background:rgba(234,179,8,0.12);border-color:rgba(234,179,8,0.25)">
+        <span style="color:#fde047">Avail (AW):</span>
+        <strong style="color:#fde047">${availCnt}</strong>
+      </div>
+      <div class="prog-chip" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.25)">
+        <span style="color:#60a5fa">PL (AY):</span>
+        <strong style="color:#60a5fa">${plCnt}</strong>
+      </div>
+      <div class="prog-chip" style="background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.25)">
+        <span style="color:#38bdf8">NOS (BB):</span>
+        <strong style="color:#38bdf8">${nosCnt}</strong>
+      </div>
       <div class="prog-chip" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3)">
         <span style="color:#60a5fa">🔌 Status PL CLEAR:</span>
         <strong style="color:#60a5fa">${plClearCnt}</strong>
         <span style="font-size:11px;color:var(--text-muted)">(${plClearPct}%)</span>
-      </div>
-      <div class="prog-chip">
-        <span style="color:#94a3b8">🏢 NOP:</span>
-        <strong>${nopCnt}</strong>
-      </div>
-      <div class="prog-chip">
-        <span style="color:#94a3b8">💼 Sales:</span>
-        <strong>${salesCnt}</strong>
-      </div>
-      <div class="prog-chip">
-        <span style="color:#94a3b8">📡 RHI:</span>
-        <strong>${rhiCnt}</strong>
-      </div>
-      <div class="prog-chip">
-        <span style="color:#94a3b8">⚡ Avail:</span>
-        <strong>${availCnt}</strong>
       </div>
       <div class="prog-chip" style="cursor:pointer;background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25)" onclick="setProgOAFilter('Not OA')" title="Klik untuk filter site Not OA">
         <span style="color:#f87171">⚠️ Not OA:</span>
@@ -3806,33 +3838,35 @@
       </div>
     `;
 
+    // 8 Items Bar Chart as requested by user
     const domainData = [
-      { name: 'Action to be taken NOP', count: nopCnt, color: '#10b981', gradient: 'linear-gradient(90deg, #10b981, #059669)', dot: '#10b981' },
-      { name: 'Action to be taken Sales', count: salesCnt, color: '#f59e0b', gradient: 'linear-gradient(90deg, #f59e0b, #d97706)', dot: '#f59e0b' },
-      { name: 'RHI Root Cause & Action', count: rhiCnt, color: '#8b5cf6', gradient: 'linear-gradient(90deg, #a78bfa, #7c3aed)', dot: '#8b5cf6' },
-      { name: 'Propose Action (MBA)', count: mbaCnt, color: '#3b82f6', gradient: 'linear-gradient(90deg, #60a5fa, #2563eb)', dot: '#3b82f6' },
-      { name: 'Plan Action Availability', count: availCnt, color: '#eab308', gradient: 'linear-gradient(90deg, #fde047, #ca8a04)', dot: '#eab308' },
-      { name: 'Action to be taken SQA', count: sqaCnt, color: '#ef4444', gradient: 'linear-gradient(90deg, #f87171, #dc2626)', dot: '#ef4444' },
-      { name: 'Plan Improvement (NOS)', count: nosCnt, color: '#06b6d4', gradient: 'linear-gradient(90deg, #38bdf8, #0284c7)', dot: '#06b6d4' }
+      { name: 'Update action taken SQA (Kolom AI)', count: sqaCnt, color: '#ef4444', gradient: 'linear-gradient(90deg, #f87171, #dc2626)', dot: '#ef4444' },
+      { name: 'Update action taken Sales (Kolom AK)', count: salesCnt, color: '#f59e0b', gradient: 'linear-gradient(90deg, #fcd34d, #d97706)', dot: '#f59e0b' },
+      { name: 'Update action taken NOP (Kolom AM)', count: nopCnt, color: '#10b981', gradient: 'linear-gradient(90deg, #34d399, #059669)', dot: '#10b981' },
+      { name: 'propose action RHI (Kolom AP)', count: rhiCnt, color: '#8b5cf6', gradient: 'linear-gradient(90deg, #a78bfa, #7c3aed)', dot: '#8b5cf6' },
+      { name: 'propose action THI (Kolom AS)', count: thiCnt, color: '#ec4899', gradient: 'linear-gradient(90deg, #f472b6, #db2777)', dot: '#ec4899' },
+      { name: 'plan action availability (Kolom AW)', count: availCnt, color: '#eab308', gradient: 'linear-gradient(90deg, #fde047, #ca8a04)', dot: '#eab308' },
+      { name: 'propose action PL (Kolom AY)', count: plCnt, color: '#3b82f6', gradient: 'linear-gradient(90deg, #60a5fa, #2563eb)', dot: '#3b82f6' },
+      { name: 'plan improvement cost terbesar (Kolom BB)', count: nosCnt, color: '#06b6d4', gradient: 'linear-gradient(90deg, #38bdf8, #0891b2)', dot: '#06b6d4' }
     ];
 
     let domainHtml = '';
     domainData.forEach(d => {
-      const pct = (d.count / total * 100).toFixed(1);
+      const pct = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
       const isZero = (d.count === 0);
       domainHtml += `
         <div class="hbar-item">
           <div class="hbar-header">
             <span class="hbar-label">
-              <span style="width:7px;height:7px;border-radius:50%;background:${d.dot};display:inline-block"></span>
+              <span style="width:8px;height:8px;border-radius:50%;background:${d.dot};display:inline-block"></span>
               ${d.name}
             </span>
-            <span class="hbar-value" style="color:${isZero ? 'var(--text-dim)' : d.color}">
-              ${d.count} <span style="font-size:11px;color:var(--text-dim);font-weight:normal">(${pct}%)</span>
+            <span class="hbar-value" style="color:${isZero ? 'var(--text-dim)' : d.color};font-weight:700">
+              ${d.count.toLocaleString()} <span style="font-size:11px;color:var(--text-dim);font-weight:normal">(${pct}%)</span>
             </span>
           </div>
           <div class="hbar-track">
-            <div class="hbar-fill" style="width:${Math.max(pct, isZero ? 0 : 2)}%;background:${d.gradient};opacity:${isZero ? 0.3 : 1}"></div>
+            <div class="hbar-fill" style="width:${Math.max(parseFloat(pct), isZero ? 0 : 2)}%;background:${d.gradient};opacity:${isZero ? 0.25 : 1}"></div>
           </div>
         </div>
       `;
@@ -3851,14 +3885,16 @@
       const bRows = filteredProgRows.filter(r => r[3] === b.name);
       const bTotal = bRows.length;
       let bWithAction = 0;
-      let bNop = 0;
-      let bSales = 0;
+      let bSqa = 0, bSales = 0, bNop = 0;
       bRows.forEach(r => {
-        const hasNop = isFilledVal(r[24]) || isFilledVal(r[25]);
-        const hasSales = isFilledVal(r[22]) || isFilledVal(r[23]);
-        if (hasNop) bNop++;
+        const hasSqa = isFilledVal(r[21]);
+        const hasSales = isFilledVal(r[23]);
+        const hasNop = isFilledVal(r[25]);
+        const hasOther = isFilledVal(r[28]) || isFilledVal(r[31]) || isFilledVal(r[35]) || isFilledVal(r[37]) || isFilledVal(r[39]);
+        if (hasSqa) bSqa++;
         if (hasSales) bSales++;
-        if (hasNop || hasSales) {
+        if (hasNop) bNop++;
+        if (hasSqa || hasSales || hasNop || hasOther) {
           bWithAction++;
         }
       });
@@ -3872,7 +3908,7 @@
           </div>
           <div class="branch-bar-track-wrap">
             <div class="branch-bar-meta">
-              <span><strong>${bWithAction}</strong> dari ${bTotal} site terisi (NOP: ${bNop} | Sales: ${bSales})</span>
+              <span><strong>${bWithAction}</strong> dari ${bTotal} site terisi action (SQA: ${bSqa} | Sales: ${bSales} | NOP: ${bNop})</span>
               <span>${bTotal - bWithAction} belum terisi</span>
             </div>
             <div class="branch-bar-track">
@@ -3887,6 +3923,7 @@
     });
     branchContainer.innerHTML = branchHtml;
   }
+
 
   function setProgBranchFilter(branchName) {
     const select = document.getElementById('prog-filter-nop');
@@ -4219,7 +4256,7 @@
   let refreshCountdown = 30;
   let isRefreshing = false;
   let isLocalEngine = false;
-  const currentVersionHash = "1794304490";
+  const currentVersionHash = "1794305191";
 
   function canAutoReload() {
     const lastReload = parseInt(sessionStorage.getItem('last_auto_reload') || '0', 10);
