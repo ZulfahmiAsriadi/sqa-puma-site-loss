@@ -1537,7 +1537,7 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 19:06 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 19:13 WIT</div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -1929,7 +1929,7 @@
                 <span class="badge badge-info" id="prog-chart-badge" style="font-size:11px;margin-left:6px">242 Loss Sites</span>
               </div>
               <p style="font-size:12px;color:var(--text-muted);margin-top:4px">
-                Visualisasi hitungan progres 8 kolom aksi: SQA (AI), Sales (AK), NOP (AM), RHI (AP), THI (AS), Availability (AW), PL (AY), dan NOS (BB).
+                Komparasi Rencana Aksi (Action to be Taken) vs Realisasi Progres (Update Action Taken) dan pemenuhan per Branch.
               </p>
             </div>
             <div class="prog-kpi-chips" id="prog-kpi-chips">
@@ -1938,26 +1938,37 @@
           </div>
 
           <div class="prog-charts-grid">
-            <!-- Diagram Batang 1: Hitungan 8 Kolom Aksi -->
+            <!-- Diagram Batang 1: Rencana Aksi (Action to be Taken) -->
             <div class="prog-chart-box">
               <div class="prog-chart-title">
-                <span>📈 Hitungan Input Action Plan (8 Kolom Aksi)</span>
-                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Jumlah terisi & % populasi filter</span>
+                <span>📋 Rencana Aksi (Action to be Taken)</span>
+                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Jumlah site rencana yang perlu aksi</span>
+              </div>
+              <div id="prog-plan-bars" style="display:flex;flex-direction:column;gap:11px;margin-top:6px">
+                <!-- Injected dynamically by renderProgCharts() -->
+              </div>
+            </div>
+
+            <!-- Diagram Batang 2: Realisasi Progres (Update Action Taken) -->
+            <div class="prog-chart-box">
+              <div class="prog-chart-title">
+                <span>✅ Realisasi Progres (Update Action Taken)</span>
+                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Jumlah site yang sudah action / update</span>
               </div>
               <div id="prog-domain-bars" style="display:flex;flex-direction:column;gap:11px;margin-top:6px">
                 <!-- Injected dynamically by renderProgCharts() -->
               </div>
             </div>
+          </div>
 
-            <!-- Diagram Batang 2: Komparasi per Branch -->
-            <div class="prog-chart-box">
-              <div class="prog-chart-title">
-                <span>🏙️ Pemenuhan Action Plan (NOP & Sales) per Branch</span>
-                <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Berdasarkan input Kolom AJ-AM (Sales & NOP) • Klik bar untuk filter</span>
-              </div>
-              <div id="prog-branch-bars" style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
-                <!-- Injected dynamically by renderProgCharts() -->
-              </div>
+          <!-- Diagram Batang 3: Komparasi per Branch -->
+          <div class="prog-chart-box" style="margin-top:16px">
+            <div class="prog-chart-title">
+              <span>🏙️ Pemenuhan Action Plan per Branch</span>
+              <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Site yang memiliki aksi terisi • Klik bar untuk filter tabel</span>
+            </div>
+            <div id="prog-branch-bars" style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+              <!-- Injected dynamically by renderProgCharts() -->
             </div>
           </div>
         </div>
@@ -3728,60 +3739,75 @@
       badge.innerText = `${total.toLocaleString()} Sites Filtered`;
     }
 
+    const planContainer = document.getElementById('prog-plan-bars');
     const domainContainer = document.getElementById('prog-domain-bars');
     const branchContainer = document.getElementById('prog-branch-bars');
     const chipsContainer = document.getElementById('prog-kpi-chips');
     if (!domainContainer || !branchContainer || !chipsContainer) return;
 
     if (total === 0) {
+      if (planContainer) planContainer.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:15px;text-align:center">Tidak ada data untuk ditampilkan</div>';
       domainContainer.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:15px;text-align:center">Tidak ada data untuk ditampilkan</div>';
       branchContainer.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:15px;text-align:center">Tidak ada data untuk ditampilkan</div>';
       chipsContainer.innerHTML = '';
       return;
     }
 
-    // Count the exact 8 action items specified by user:
-    // 1. Update action taken SQA: Kolom AI (index 21)
-    // 2. Update action taken Sales: Kolom AK (index 23)
-    // 3. Update action taken NOP: Kolom AM (index 25)
-    // 4. propose action RHI: Kolom AP (index 28)
-    // 5. propose action THI: Kolom AS (index 31)
-    // 6. plan action availability: Kolom AW (index 35)
-    // 7. propose action PL: Kolom AY (index 37)
-    // 8. plan improvement cost terbesar: Kolom BB (index 39)
-    let sqaCnt = 0;
-    let salesCnt = 0;
-    let nopCnt = 0;
-    let rhiCnt = 0;
-    let thiCnt = 0;
-    let availCnt = 0;
-    let plCnt = 0;
-    let nosCnt = 0;
+    // 1. Rencana Aksi (Action to be taken)
+    let planSqa = 0, planSales = 0, planNop = 0, planRhi = 0;
+    let planThi = 0, planAvail = 0, planPl = 0, planNos = 0;
+
+    // 2. Realisasi Progres (Update action taken & propose action)
+    let doneSqa = 0, doneSales = 0, doneNop = 0, doneRhi = 0;
+    let doneThi = 0, doneAvail = 0, donePl = 0, doneNos = 0;
+
     let plClearCnt = 0;
     let anyActionCnt = 0;
 
     filteredProgRows.forEach(r => {
-      const hasSqa = isFilledVal(r[21]);
-      const hasSales = isFilledVal(r[23]);
-      const hasNop = isFilledVal(r[25]);
-      const hasRhi = isFilledVal(r[28]);
-      const hasThi = isFilledVal(r[31]);
-      const hasAvail = isFilledVal(r[35]);
-      const hasPl = isFilledVal(r[37]);
-      const hasNos = isFilledVal(r[39]);
-      const isPlClear = (String(r[36]).trim() === 'CLEAR');
+      // Plan counts
+      const hasPlanSqa = isFilledVal(r[20]);   // Col AH: Action to be taken SQA
+      const hasPlanSales = isFilledVal(r[22]); // Col AJ: Action to be taken Sales
+      const hasPlanNop = isFilledVal(r[24]);   // Col AL: Action to be taken NOP
+      const hasPlanRhi = isFilledVal(r[27]);   // Col AO: Root Cause RHI
+      const hasPlanThi = isFilledVal(r[30]);   // Col AR: Root Cause THI
+      const hasPlanAvail = isFilledVal(r[34]); // Col AV: update average status availability
+      const hasPlanPl = isFilledVal(r[36]);    // Col AX: Status PL week terakhir
+      const hasPlanNos = isFilledVal(r[38]);   // Col AZ: Breakdown cost terbesar
 
-      if (hasSqa) sqaCnt++;
-      if (hasSales) salesCnt++;
-      if (hasNop) nopCnt++;
-      if (hasRhi) rhiCnt++;
-      if (hasThi) thiCnt++;
-      if (hasAvail) availCnt++;
-      if (hasPl) plCnt++;
-      if (hasNos) nosCnt++;
+      if (hasPlanSqa) planSqa++;
+      if (hasPlanSales) planSales++;
+      if (hasPlanNop) planNop++;
+      if (hasPlanRhi) planRhi++;
+      if (hasPlanThi) planThi++;
+      if (hasPlanAvail) planAvail++;
+      if (hasPlanPl) planPl++;
+      if (hasPlanNos) planNos++;
+
+      // Realisasi / Done counts (User requested 8 items)
+      const hasDoneSqa = isFilledVal(r[21]);   // Col AI: Update action taken SQA
+      const hasDoneSales = isFilledVal(r[23]); // Col AK: Update action taken Sales
+      const hasDoneNop = isFilledVal(r[25]);   // Col AM: Update action taken NOP
+      const hasDoneRhi = isFilledVal(r[28]);   // Col AP: propose action RHI
+      const hasDoneThi = isFilledVal(r[31]);   // Col AS: propose action THI
+      const hasDoneAvail = isFilledVal(r[35]); // Col AW: plan action availability
+      const hasDonePl = isFilledVal(r[37]);    // Col AY: propose action PL
+      const hasDoneNos = isFilledVal(r[39]);   // Col BB: plan improvement cost terbesar
+
+      if (hasDoneSqa) doneSqa++;
+      if (hasDoneSales) doneSales++;
+      if (hasDoneNop) doneNop++;
+      if (hasDoneRhi) doneRhi++;
+      if (hasDoneThi) doneThi++;
+      if (hasDoneAvail) doneAvail++;
+      if (hasDonePl) donePl++;
+      if (hasDoneNos) doneNos++;
+
+      const isPlClear = (String(r[36]).trim() === 'CLEAR');
       if (isPlClear) plClearCnt++;
 
-      if (hasSqa || hasSales || hasNop || hasRhi || hasThi || hasAvail || hasPl || hasNos) {
+      if (hasDoneSqa || hasDoneSales || hasDoneNop || hasDoneRhi || hasDoneThi || hasDoneAvail || hasDonePl || hasDoneNos ||
+          hasPlanSqa || hasPlanSales || hasPlanNop || hasPlanRhi || hasPlanThi || hasPlanAvail || hasPlanPl || hasPlanNos) {
         anyActionCnt++;
       }
     });
@@ -3789,6 +3815,7 @@
     const anyPct = (anyActionCnt / total * 100).toFixed(1);
     const plClearPct = (plClearCnt / total * 100).toFixed(1);
 
+    // KPI Chips with clean labels (without parentheses)
     chipsContainer.innerHTML = `
       <div class="prog-chip" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3)">
         <span style="color:#34d399">🎯 Action Plan Terisi:</span>
@@ -3796,36 +3823,39 @@
         <span style="font-size:11px;color:var(--text-muted)">(${anyPct}%)</span>
       </div>
       <div class="prog-chip" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25)">
-        <span style="color:#f87171">SQA (AI):</span>
-        <strong style="color:#f87171">${sqaCnt}</strong>
+        <span style="color:#f87171">SQA:</span>
+        <strong style="color:#f87171">${doneSqa}</strong>
+        <span style="font-size:10.5px;color:var(--text-dim)">/${planSqa} plan</span>
       </div>
       <div class="prog-chip" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.25)">
-        <span style="color:#fbbf24">Sales (AK):</span>
-        <strong style="color:#fbbf24">${salesCnt}</strong>
+        <span style="color:#fbbf24">Sales:</span>
+        <strong style="color:#fbbf24">${doneSales}</strong>
+        <span style="font-size:10.5px;color:var(--text-dim)">/${planSales} plan</span>
       </div>
       <div class="prog-chip" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.25)">
-        <span style="color:#34d399">NOP (AM):</span>
-        <strong style="color:#34d399">${nopCnt}</strong>
+        <span style="color:#34d399">NOP:</span>
+        <strong style="color:#34d399">${doneNop}</strong>
+        <span style="font-size:10.5px;color:var(--text-dim)">/${planNop} plan</span>
       </div>
       <div class="prog-chip" style="background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.25)">
-        <span style="color:#c084fc">RHI (AP):</span>
-        <strong style="color:#c084fc">${rhiCnt}</strong>
+        <span style="color:#c084fc">RHI:</span>
+        <strong style="color:#c084fc">${doneRhi}</strong>
       </div>
       <div class="prog-chip" style="background:rgba(236,72,153,0.12);border-color:rgba(236,72,153,0.25)">
-        <span style="color:#f472b6">THI (AS):</span>
-        <strong style="color:#f472b6">${thiCnt}</strong>
+        <span style="color:#f472b6">THI:</span>
+        <strong style="color:#f472b6">${doneThi}</strong>
       </div>
       <div class="prog-chip" style="background:rgba(234,179,8,0.12);border-color:rgba(234,179,8,0.25)">
-        <span style="color:#fde047">Avail (AW):</span>
-        <strong style="color:#fde047">${availCnt}</strong>
+        <span style="color:#fde047">Avail:</span>
+        <strong style="color:#fde047">${doneAvail}</strong>
       </div>
       <div class="prog-chip" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.25)">
-        <span style="color:#60a5fa">PL (AY):</span>
-        <strong style="color:#60a5fa">${plCnt}</strong>
+        <span style="color:#60a5fa">PL:</span>
+        <strong style="color:#60a5fa">${donePl}</strong>
       </div>
       <div class="prog-chip" style="background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.25)">
-        <span style="color:#38bdf8">NOS (BB):</span>
-        <strong style="color:#38bdf8">${nosCnt}</strong>
+        <span style="color:#38bdf8">NOS:</span>
+        <strong style="color:#38bdf8">${doneNos}</strong>
       </div>
       <div class="prog-chip" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3)">
         <span style="color:#60a5fa">🔌 Status PL CLEAR:</span>
@@ -3838,16 +3868,53 @@
       </div>
     `;
 
-    // 8 Items Bar Chart as requested by user
+    // 1. Box Rencana Aksi (Action to be taken)
+    const planData = [
+      { name: 'Action to be taken SQA', count: planSqa, color: '#ef4444', gradient: 'linear-gradient(90deg, #f87171, #dc2626)', dot: '#ef4444' },
+      { name: 'Action to be taken Sales', count: planSales, color: '#f59e0b', gradient: 'linear-gradient(90deg, #fcd34d, #d97706)', dot: '#f59e0b' },
+      { name: 'Action to be taken NOP', count: planNop, color: '#10b981', gradient: 'linear-gradient(90deg, #34d399, #059669)', dot: '#10b981' },
+      { name: 'RHI Root Cause', count: planRhi, color: '#8b5cf6', gradient: 'linear-gradient(90deg, #a78bfa, #7c3aed)', dot: '#8b5cf6' },
+      { name: 'THI Root Cause', count: planThi, color: '#ec4899', gradient: 'linear-gradient(90deg, #f472b6, #db2777)', dot: '#ec4899' },
+      { name: 'Status Availability', count: planAvail, color: '#eab308', gradient: 'linear-gradient(90deg, #fde047, #ca8a04)', dot: '#eab308' },
+      { name: 'Status PL week terakhir', count: planPl, color: '#3b82f6', gradient: 'linear-gradient(90deg, #60a5fa, #2563eb)', dot: '#3b82f6' },
+      { name: 'Breakdown cost terbesar', count: planNos, color: '#06b6d4', gradient: 'linear-gradient(90deg, #38bdf8, #0891b2)', dot: '#06b6d4' }
+    ];
+
+    if (planContainer) {
+      let planHtml = '';
+      planData.forEach(d => {
+        const pct = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+        const isZero = (d.count === 0);
+        planHtml += `
+          <div class="hbar-item">
+            <div class="hbar-header">
+              <span class="hbar-label">
+                <span style="width:8px;height:8px;border-radius:50%;background:${d.dot};display:inline-block"></span>
+                ${d.name}
+              </span>
+              <span class="hbar-value" style="color:${isZero ? 'var(--text-dim)' : d.color};font-weight:700">
+                ${d.count.toLocaleString()} <span style="font-size:11px;color:var(--text-dim);font-weight:normal">(${pct}%)</span>
+              </span>
+            </div>
+            <div class="hbar-track">
+              <div class="hbar-fill" style="width:${Math.max(parseFloat(pct), isZero ? 0 : 2)}%;background:${d.gradient};opacity:${isZero ? 0.25 : 1}"></div>
+            </div>
+          </div>
+        `;
+      });
+      planContainer.innerHTML = planHtml;
+    }
+
+    // 2. Box Realisasi Progres (Update action taken & propose action) - CLEAN WITHOUT PARENTHESES
     const domainData = [
-      { name: 'Update action taken SQA (Kolom AI)', count: sqaCnt, color: '#ef4444', gradient: 'linear-gradient(90deg, #f87171, #dc2626)', dot: '#ef4444' },
-      { name: 'Update action taken Sales (Kolom AK)', count: salesCnt, color: '#f59e0b', gradient: 'linear-gradient(90deg, #fcd34d, #d97706)', dot: '#f59e0b' },
-      { name: 'Update action taken NOP (Kolom AM)', count: nopCnt, color: '#10b981', gradient: 'linear-gradient(90deg, #34d399, #059669)', dot: '#10b981' },
-      { name: 'propose action RHI (Kolom AP)', count: rhiCnt, color: '#8b5cf6', gradient: 'linear-gradient(90deg, #a78bfa, #7c3aed)', dot: '#8b5cf6' },
-      { name: 'propose action THI (Kolom AS)', count: thiCnt, color: '#ec4899', gradient: 'linear-gradient(90deg, #f472b6, #db2777)', dot: '#ec4899' },
-      { name: 'plan action availability (Kolom AW)', count: availCnt, color: '#eab308', gradient: 'linear-gradient(90deg, #fde047, #ca8a04)', dot: '#eab308' },
-      { name: 'propose action PL (Kolom AY)', count: plCnt, color: '#3b82f6', gradient: 'linear-gradient(90deg, #60a5fa, #2563eb)', dot: '#3b82f6' },
-      { name: 'plan improvement cost terbesar (Kolom BB)', count: nosCnt, color: '#06b6d4', gradient: 'linear-gradient(90deg, #38bdf8, #0891b2)', dot: '#06b6d4' }
+      { name: 'Update action taken SQA', count: doneSqa, color: '#ef4444', gradient: 'linear-gradient(90deg, #f87171, #dc2626)', dot: '#ef4444' },
+      { name: 'Update action taken Sales', count: doneSales, color: '#f59e0b', gradient: 'linear-gradient(90deg, #fcd34d, #d97706)', dot: '#f59e0b' },
+      { name: 'Update action taken NOP', count: doneNop, color: '#10b981', gradient: 'linear-gradient(90deg, #34d399, #059669)', dot: '#10b981' },
+      { name: 'propose action RHI', count: doneRhi, color: '#8b5cf6', gradient: 'linear-gradient(90deg, #a78bfa, #7c3aed)', dot: '#8b5cf6' },
+      { name: 'propose action THI', count: doneThi, color: '#ec4899', gradient: 'linear-gradient(90deg, #f472b6, #db2777)', dot: '#ec4899' },
+      { name: 'plan action availability', count: doneAvail, color: '#eab308', gradient: 'linear-gradient(90deg, #fde047, #ca8a04)', dot: '#eab308' },
+      { name: 'propose action PL', count: donePl, color: '#3b82f6', gradient: 'linear-gradient(90deg, #60a5fa, #2563eb)', dot: '#3b82f6' },
+      { name: 'plan improvement cost terbesar', count: doneNos, color: '#06b6d4', gradient: 'linear-gradient(90deg, #38bdf8, #0891b2)', dot: '#06b6d4' }
     ];
 
     let domainHtml = '';
@@ -3873,6 +3940,7 @@
     });
     domainContainer.innerHTML = domainHtml;
 
+    // 3. Branch Breakdown
     const branchConfigs = [
       { name: 'AMBON', label: 'Ambon', color: '#f59e0b', gradient: 'linear-gradient(90deg, #f59e0b, #d97706)' },
       { name: 'JAYAPURA', label: 'Jayapura', color: '#38bdf8', gradient: 'linear-gradient(90deg, #38bdf8, #0284c7)' },
@@ -4256,7 +4324,7 @@
   let refreshCountdown = 30;
   let isRefreshing = false;
   let isLocalEngine = false;
-  const currentVersionHash = "1794305191";
+  const currentVersionHash = "1794305601";
 
   function canAutoReload() {
     const lastReload = parseInt(sessionStorage.getItem('last_auto_reload') || '0', 10);
