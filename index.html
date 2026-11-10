@@ -1537,7 +1537,7 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 18:25 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 10 Nov 2026, 18:42 WIT</div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -4215,10 +4215,40 @@
     document.body.removeChild(downloadLink);
   }
 
-  // --- REAL-TIME AUTO-REFRESH & MANUAL REFRESH (WIT) ---
+  // --- REAL-TIME AUTO-REFRESH & INSTANT LOCAL ENGINE (0s DELAY) ---
   let refreshCountdown = 30;
   let isRefreshing = false;
-  const currentVersionHash = "1794302748";
+  let isLocalEngine = false;
+  const currentVersionHash = "1794303740";
+
+  function detectLocalEngine() {
+    fetch('http://127.0.0.1:8092/api/version', { cache: 'no-store', signal: AbortSignal.timeout(600) })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.version) {
+          isLocalEngine = true;
+          const statusElem = document.getElementById('sync-status-label');
+          if (statusElem) {
+            statusElem.innerHTML = `⚡ <strong style="color:#10b981">Local Engine (0s Delay)</strong>`;
+          }
+          const localBtn = document.getElementById('btn-local-mode');
+          if (localBtn && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            localBtn.style.display = 'inline-flex';
+          }
+          if (data.version !== currentVersionHash) {
+            showToast('⚡ Data Excel baru terdeteksi di sistem lokal! Memperbarui...', true);
+            setTimeout(() => {
+              const url = new URL(window.location.href);
+              url.searchParams.set('t', Date.now());
+              window.location.href = url.toString();
+            }, 300);
+          }
+        }
+      })
+      .catch(() => {
+        isLocalEngine = false;
+      });
+  }
 
   function manualTriggerRefresh() {
     if (isRefreshing) return;
@@ -4226,28 +4256,76 @@
 
     const icon = document.getElementById('refresh-icon');
     if (icon) icon.classList.add('spin');
-    
-    showToast('🔄 Memperbarui data dashboard...', false);
-    
-    setTimeout(() => {
-      const url = new URL(window.location.href);
-      url.searchParams.set('t', Date.now());
-      window.location.href = url.toString();
-    }, 400);
+
+    // If on localhost/127.0.0.1 or local engine detected
+    if (isLocalEngine || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      showToast('⚡ Memperbarui data langsung dari Excel (0s delay)...', false);
+      fetch('http://127.0.0.1:8092/api/trigger-sync')
+        .then(() => {
+          setTimeout(() => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('t', Date.now());
+            window.location.href = url.toString();
+          }, 400);
+        })
+        .catch(() => {
+          const url = new URL(window.location.href);
+          url.searchParams.set('t', Date.now());
+          window.location.href = url.toString();
+        });
+      return;
+    }
+
+    // Cloud GitHub Pages mode
+    showToast('🔄 Memperbarui dashboard...', false);
+    fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.version && data.version !== currentVersionHash) {
+          showToast('✨ Memuat data versi terbaru...', true);
+          setTimeout(() => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('t', Date.now());
+            window.location.href = url.toString();
+          }, 300);
+        } else {
+          showToast('Data sudah versi terkini. Bila baru saja disimpan di SharePoint, tunggu beberapa detik untuk sinkronisasi cloud.', true);
+          setTimeout(() => {
+            if (icon) icon.classList.remove('spin');
+            isRefreshing = false;
+          }, 1000);
+        }
+      })
+      .catch(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('t', Date.now());
+        window.location.href = url.toString();
+      });
   }
 
   function initAutoRefresh() {
+    // Poll local engine frequently (every 2 seconds) for instant updates
+    setInterval(() => {
+      detectLocalEngine();
+    }, 2000);
+
+    // Countdown and cloud poll
     setInterval(() => {
       refreshCountdown--;
       const timerElem = document.getElementById('refresh-timer');
-      if (timerElem) {
+      if (timerElem && !isLocalEngine) {
         timerElem.innerText = `${refreshCountdown}s`;
       }
       if (refreshCountdown <= 0) {
         refreshCountdown = 30;
-        checkAutoUpdates();
+        if (!isLocalEngine) {
+          checkAutoUpdates();
+        }
       }
     }, 1000);
+
+    // Initial check
+    detectLocalEngine();
   }
 
   function checkAutoUpdates() {
@@ -4264,7 +4342,7 @@
               const url = new URL(window.location.href);
               url.searchParams.set('t', Date.now());
               window.location.href = url.toString();
-            }, 1200);
+            }, 800);
           }
         })
         .catch(() => {});
