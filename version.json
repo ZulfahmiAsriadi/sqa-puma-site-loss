@@ -1,5 +1,11 @@
 {
-  "version": "1794380476",
-  "last_sync": "2026-11-11 16:01:16 WIT",
-  "build_by": "Antigravity Auto Sync"
+  "version": "1794380493",
+  "last_updated": "11 Nov 2026, 16:01 WIT",
+  "rows": 2791,
+  "branches": [
+    "AMBON",
+    "JAYAPURA",
+    "SORONG",
+    "TIMIKA"
+  ]
 }
