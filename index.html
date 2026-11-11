@@ -1537,7 +1537,7 @@
         <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         <span>Refresh</span>
       </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 11 Nov 2026, 09:02 WIT</div>
+      <div class="meta-tag" id="last-updated-badge">Update: 11 Nov 2026, 16:00 WIT</div>
       <button class="btn-action" onclick="window.print()">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
         Print / PDF
@@ -2089,6 +2089,25 @@
               <option value="TTC/MSC/STO">TTC/MSC/STO</option>
             </select>
 
+            <!-- Filter Kolom AG: Site Loss Tracker -->
+            <select id="prog-filter-ag" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(234,179,8,0.45);background:rgba(234,179,8,0.1);color:#fde047;font-weight:600">
+              <option value="ALL">Semua Site Loss Tracker (Kolom AG)</option>
+              <option value="Program H2">Program H2 (32 Site Loss)</option>
+              <option value="0">0 (Non Program H2)</option>
+              <option value="#N/A">#N/A</option>
+            </select>
+
+            <!-- Fitur Sort Besar ke Kecil (Shorting) -->
+            <select id="prog-sort-select" class="filter-select" onchange="onProgSortChange(this.value)" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.12);color:#38bdf8;font-weight:700">
+              <option value="NONE">⚡ Urutkan: Default</option>
+              <option value="DEFISIT_DESC">🔻 Defisit Terbesar (Besar ke Kecil)</option>
+              <option value="DEFISIT_ASC">🔺 Defisit Terkecil (Kecil ke Besar)</option>
+              <option value="COST_DESC">🔻 Cost Terbesar (Besar ke Kecil)</option>
+              <option value="REV_DESC">🔻 Revenue Terbesar (Besar ke Kecil)</option>
+              <option value="NILAI_COST_DESC">🔻 Nilai Cost Terbesar (Kolom BA)</option>
+              <option value="SITE_ID_ASC">🔤 Site ID (A - Z)</option>
+            </select>
+
             <select id="prog-page-size" class="filter-select" onchange="changeProgPageSize(this.value)">
               <option value="25">25 per hal</option>
               <option value="50" selected>50 per hal</option>
@@ -2109,13 +2128,16 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>Site ID</th>
-                <th>Site Name</th>
-                <th>Branch</th>
-                <th>Kabupaten</th>
-                <th>Status PnL</th>
+                <th onclick="sortProgTable('site_id')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Site ID">Site ID <span id="th-sort-prog-site_id" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
+                <th onclick="sortProgTable('site_name')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Site Name">Site Name <span id="th-sort-prog-site_name" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
+                <th onclick="sortProgTable('branch')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Branch">Branch <span id="th-sort-prog-branch" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
+                <th onclick="sortProgTable('kabupaten')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Kabupaten">Kabupaten <span id="th-sort-prog-kabupaten" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
+                <th onclick="sortProgTable('pnl')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Status PnL">Status PnL <span id="th-sort-prog-pnl" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
+                <th onclick="sortProgTable('defisit')" style="cursor:pointer;user-select:none;background:rgba(239,68,68,0.2) !important;color:#fca5a5 !important" title="Klik untuk mengurutkan Defisit Terbesar (Besar ke Kecil)">Defisit / Margin (Rp) <span id="th-sort-prog-defisit" style="font-size:10px;color:#fca5a5">⬍</span></th>
+                <th onclick="sortProgTable('cost')" style="cursor:pointer;user-select:none;background:rgba(245,158,11,0.18) !important;color:#fcd34d !important" title="Klik untuk mengurutkan Cost Terbesar (Besar ke Kecil)">Cost (Rp) <span id="th-sort-prog-cost" style="font-size:10px;color:#fcd34d">⬍</span></th>
                 <th>Kelas Site</th>
                 <th>Status OA</th>
+                <th onclick="sortProgTable('ag')" style="cursor:pointer;user-select:none;background:rgba(234,179,8,0.25) !important;color:#fde047 !important" title="Klik untuk mengurutkan Kolom AG (Site Loss Tracker)">Site Loss Tracker (AG) <span id="th-sort-prog-ag" style="font-size:10px;color:#fde047">⬍</span></th>
                 <th class="new-col-th" style="background:rgba(245,158,11,0.25) !important;color:#fcd34d !important">Priority Sales</th>
                 <th class="new-col-th" style="background:rgba(56,189,248,0.25) !important;color:#7dd3fc !important">Priority Network</th>
                 <th class="new-col-th" style="background:rgba(239,68,68,0.2) !important;color:#fca5a5 !important">Action to be taken SQA</th>
@@ -2137,7 +2159,7 @@
                 <th class="new-col-th" style="background:rgba(59,130,246,0.25) !important;color:#93c5fd !important">Status PL week terakhir</th>
                 <th class="new-col-th" style="background:rgba(59,130,246,0.18) !important;color:#93c5fd !important">propose action (MBA)</th>
                 <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Breakdown cost terbesar</th>
-                <th class="new-col-th" style="background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important">Nilai Cost</th>
+                <th class="new-col-th" onclick="sortProgTable('nilai_cost')" style="cursor:pointer;user-select:none;background:rgba(14,165,233,0.2) !important;color:#7dd3fc !important" title="Klik untuk mengurutkan Nilai Cost Terbesar">Nilai Cost <span id="th-sort-prog-nilai_cost" style="font-size:10px;color:#7dd3fc">⬍</span></th>
                 <th class="new-col-th" style="background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important">plan improvement cost terbesar</th>
                 <th class="new-col-th" style="background:rgba(6,182,212,0.2) !important;color:#67e8f9 !important">Cek / Kategori Site</th>
               </tr>
@@ -2347,6 +2369,25 @@
             <option value="TTC/MSC/STO">TTC/MSC/STO</option>
           </select>
 
+          <!-- Filter Kolom AG: Site Loss Tracker -->
+          <select id="aug-filter-ag" class="filter-select" onchange="applyAugFilters()" style="border-color:rgba(234,179,8,0.45);background:rgba(234,179,8,0.1);color:#fde047;font-weight:600">
+            <option value="ALL">Semua Site Loss Tracker (Kolom AG)</option>
+            <option value="Program H2">Program H2 (34 Site)</option>
+            <option value="0">0 (Non Program H2)</option>
+            <option value="#N/A">#N/A</option>
+          </select>
+
+          <!-- Fitur Sort Besar ke Kecil (Shorting) -->
+          <select id="aug-sort-select" class="filter-select" onchange="onAugSortChange(this.value)" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.12);color:#38bdf8;font-weight:700">
+            <option value="NONE">⚡ Urutkan: Default</option>
+            <option value="DEFISIT_DESC">🔻 Defisit Terbesar (Besar ke Kecil)</option>
+            <option value="DEFISIT_ASC">🔺 Defisit Terkecil (Kecil ke Besar)</option>
+            <option value="COST_DESC">🔻 Cost Terbesar (Besar ke Kecil)</option>
+            <option value="REV_DESC">🔻 Revenue Terbesar (Besar ke Kecil)</option>
+            <option value="NILAI_COST_DESC">🔻 Nilai Cost Terbesar (Kolom BA)</option>
+            <option value="SITE_ID_ASC">🔤 Site ID (A - Z)</option>
+          </select>
+
           <select id="aug-page-size" class="filter-select" onchange="changePageSize(this.value)">
             <option value="25">25 per hal</option>
             <option value="50" selected>50 per hal</option>
@@ -2383,6 +2424,7 @@
               <th class="new-col-th" style="background:rgba(56,189,248,0.25) !important;color:#7dd3fc !important">Priority Network</th>
               <th>Intervention Flag</th>
               <th>Status Aug</th>
+              <th onclick="sortAugTable('ag')" style="cursor:pointer;user-select:none;background:rgba(234,179,8,0.25) !important;color:#fde047 !important" title="Klik untuk mengurutkan Kolom AG">Site Loss Tracker (AG) <span id="th-sort-aug-ag" style="font-size:10px;color:#fde047">⬍</span></th>
               <th>Payload</th>
               <!-- NEW COLUMNS HEADERS -->
               <th class="new-col-th" style="background:rgba(239,68,68,0.2) !important;color:#fca5a5 !important">Action to be taken SQA</th>
@@ -3268,6 +3310,133 @@
     applyProgFilters();
   }
 
+  // --- GLOBAL SORTING STATE & ENGINE (SHORT BESAR KE KECIL) ---
+  let progSortCol = null;
+  let progSortDir = 'DESC'; // 'DESC' (Besar ke Kecil) or 'ASC' (Kecil ke Besar)
+
+  let augSortCol = null;
+  let augSortDir = 'DESC';
+
+  function sortRows(rows, col, dir) {
+    if (!col || col === 'NONE') return rows;
+    const sorted = [...rows];
+    sorted.sort((a, b) => {
+      let va, vb;
+      if (col === 'defisit') {
+        // Defisit Terbesar (Besar ke Kecil): Magnitude kerugian Math.abs(margin)
+        va = Math.abs(Number(a[11]) || 0);
+        vb = Math.abs(Number(b[11]) || 0);
+        return dir === 'DESC' ? (vb - va) : (va - vb);
+      } else if (col === 'margin') {
+        va = Number(a[11]) || 0;
+        vb = Number(b[11]) || 0;
+        return dir === 'DESC' ? (vb - va) : (va - vb);
+      } else if (col === 'cost') {
+        va = Number(a[10]) || 0;
+        vb = Number(b[10]) || 0;
+        return dir === 'DESC' ? (vb - va) : (va - vb);
+      } else if (col === 'rev') {
+        va = Number(a[9]) || 0;
+        vb = Number(b[9]) || 0;
+        return dir === 'DESC' ? (vb - va) : (va - vb);
+      } else if (col === 'nilai_cost') {
+        va = Number(a[44]) || 0;
+        vb = Number(b[44]) || 0;
+        return dir === 'DESC' ? (vb - va) : (va - vb);
+      } else if (col === 'site_id') {
+        va = String(a[0] || '').toLowerCase();
+        vb = String(b[0] || '').toLowerCase();
+        return dir === 'DESC' ? vb.localeCompare(va) : va.localeCompare(vb);
+      } else if (col === 'site_name') {
+        va = String(a[1] || '').toLowerCase();
+        vb = String(b[1] || '').toLowerCase();
+        return dir === 'DESC' ? vb.localeCompare(va) : va.localeCompare(vb);
+      } else if (col === 'branch') {
+        va = String(a[3] || '').toLowerCase();
+        vb = String(b[3] || '').toLowerCase();
+        return dir === 'DESC' ? vb.localeCompare(va) : va.localeCompare(vb);
+      } else if (col === 'kabupaten') {
+        va = String(a[4] || '').toLowerCase();
+        vb = String(b[4] || '').toLowerCase();
+        return dir === 'DESC' ? vb.localeCompare(va) : va.localeCompare(vb);
+      } else if (col === 'pnl') {
+        va = String(a[13] || '').toLowerCase();
+        vb = String(b[13] || '').toLowerCase();
+        return dir === 'DESC' ? vb.localeCompare(va) : va.localeCompare(vb);
+      } else if (col === 'ag') {
+        va = String(a[42] || '').toLowerCase();
+        vb = String(b[42] || '').toLowerCase();
+        return dir === 'DESC' ? vb.localeCompare(va) : va.localeCompare(vb);
+      }
+      return 0;
+    });
+    return sorted;
+  }
+
+  function updateSortIndicators(prefix, col, dir) {
+    const arrow = dir === 'DESC' ? '▼' : '▲';
+    const cols = ['defisit', 'cost', 'rev', 'nilai_cost', 'site_id', 'site_name', 'branch', 'kabupaten', 'pnl', 'ag'];
+    cols.forEach(c => {
+      const el = document.getElementById(`th-sort-${prefix}-${c}`);
+      if (el) {
+        if (c === col) {
+          el.innerText = arrow;
+          el.style.color = '#38bdf8';
+          el.style.fontWeight = 'bold';
+        } else {
+          el.innerText = '⬍';
+          el.style.color = 'var(--text-dim)';
+          el.style.fontWeight = 'normal';
+        }
+      }
+    });
+  }
+
+  function onProgSortChange(val) {
+    if (val === 'NONE') {
+      progSortCol = null;
+      progSortDir = 'DESC';
+    } else if (val === 'DEFISIT_DESC') {
+      progSortCol = 'defisit';
+      progSortDir = 'DESC';
+    } else if (val === 'DEFISIT_ASC') {
+      progSortCol = 'defisit';
+      progSortDir = 'ASC';
+    } else if (val === 'COST_DESC') {
+      progSortCol = 'cost';
+      progSortDir = 'DESC';
+    } else if (val === 'REV_DESC') {
+      progSortCol = 'rev';
+      progSortDir = 'DESC';
+    } else if (val === 'NILAI_COST_DESC') {
+      progSortCol = 'nilai_cost';
+      progSortDir = 'DESC';
+    } else if (val === 'SITE_ID_ASC') {
+      progSortCol = 'site_id';
+      progSortDir = 'ASC';
+    }
+    applyProgFilters();
+  }
+
+  function sortProgTable(colKey) {
+    if (progSortCol === colKey) {
+      progSortDir = (progSortDir === 'DESC') ? 'ASC' : 'DESC';
+    } else {
+      progSortCol = colKey;
+      progSortDir = 'DESC'; // Default to Besar ke Kecil!
+    }
+    const sel = document.getElementById('prog-sort-select');
+    if (sel) {
+      if (colKey === 'defisit') sel.value = progSortDir === 'DESC' ? 'DEFISIT_DESC' : 'DEFISIT_ASC';
+      else if (colKey === 'cost') sel.value = 'COST_DESC';
+      else if (colKey === 'rev') sel.value = 'REV_DESC';
+      else if (colKey === 'nilai_cost') sel.value = 'NILAI_COST_DESC';
+      else if (colKey === 'site_id') sel.value = 'SITE_ID_ASC';
+      else sel.value = 'NONE';
+    }
+    applyProgFilters();
+  }
+
   function onProgSearch() {
     applyProgFilters();
   }
@@ -3279,6 +3448,7 @@
     const plweekVal = document.getElementById('prog-filter-plweek').value;
     const transVal = document.getElementById('prog-filter-transport').value;
     const oaVal = document.getElementById('prog-filter-oa') ? document.getElementById('prog-filter-oa').value : 'ALL';
+    const agVal = document.getElementById('prog-filter-ag') ? document.getElementById('prog-filter-ag').value : 'ALL';
     const salesPrioVal = document.getElementById('prog-filter-priority-sales') ? document.getElementById('prog-filter-priority-sales').value : 'ALL';
     const netPrioVal = document.getElementById('prog-filter-priority-net') ? document.getElementById('prog-filter-priority-net').value : 'ALL';
     const netPartVal = document.getElementById('prog-filter-net-part') ? document.getElementById('prog-filter-net-part').value : 'ALL';
@@ -3351,8 +3521,18 @@
         if (oaVal === 'Not OA' && r[8] === 'OA') return false;
       }
       if (transVal !== 'ALL' && r[32] !== transVal) return false;
+      if (agVal !== 'ALL') {
+        if (agVal === 'Program H2' && r[42] !== 'Program H2') return false;
+        if (agVal === '0' && r[42] !== '0') return false;
+        if (agVal === '#N/A' && r[42] !== '#N/A') return false;
+      }
       return true;
     });
+
+    // Apply Sorting (Besar ke Kecil / Shorting)
+    if (progSortCol && progSortCol !== 'NONE') {
+      filteredProgRows = sortRows(filteredProgRows, progSortCol, progSortDir);
+    }
 
     curProgPage = 1;
     renderProgTable();
@@ -3462,8 +3642,11 @@
         <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#94a3b8">${r[3]}</span></td>
         <td>${r[4]}</td>
         <td>${pnlBadge}</td>
+        <td style="text-align:right;color:${r[11] < 0 ? '#f87171' : '#34d399'};font-weight:700;font-family:'JetBrains Mono'">${Math.round(r[11]).toLocaleString()}</td>
+        <td style="text-align:right;font-family:'JetBrains Mono'">${Math.round(r[10]).toLocaleString()}</td>
         <td>${classBadge}</td>
         <td>${oaBadge}</td>
+        <td class="new-col-td">${r[42] === 'Program H2' ? '<span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)">Program H2</span>' : (r[42] || '-')}</td>
         <!-- Priority Sales & Priority Network BADGES -->
         <td>${getPriorityBadge(r[17], 'sales')}</td>
         <td>${getPriorityBadge(r[18], 'net')}</td>
@@ -3503,6 +3686,7 @@
     }
 
     tbody.innerHTML = rowsHtml;
+    updateSortIndicators('prog', progSortCol, progSortDir);
     renderProgCharts();
     renderPriorityCharts();
   }
@@ -4011,7 +4195,9 @@
 
   function exportProgressToCSV() {
     const headers = [
-      'Site ID', 'Site Name', 'Branch', 'Kabupaten', 'Status PnL', 'Site Class', 'Status OA',
+      'Site ID', 'Site Name', 'Branch', 'Kabupaten', 'Status PnL',
+      'Defisit / Margin (Rp)', 'Cost (Rp)',
+      'Site Class', 'Status OA', 'Site Loss Tracker (Kolom AG)',
       'Priority Sales', 'Priority Network',
       'Action to be taken SQA', 'Update action taken sqa',
       'Action to be taken Sales', 'Update action taken sales',
@@ -4030,14 +4216,17 @@
 
     filteredProgRows.forEach(r => {
       const rowVals = [
-        r[0], r[1], r[3], r[4], r[13], r[7], r[8],
+        r[0], r[1], r[3], r[4], r[13],
+        r[11], r[10],
+        r[7], r[8], r[42],
         r[17], r[18],
         r[20], r[21], r[22], r[23], r[24], r[25],
         r[26], r[27], r[28],
         r[29], r[30], r[31],
         r[32], r[33], r[34], r[35],
         r[36], r[37],
-        r[38], r[39]
+        r[38], r[44], r[39],
+        r[43]
       ];
       csv.push(rowVals.map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(','));
     });
@@ -4058,12 +4247,58 @@
     applyAugFilters();
   }
 
+  function onAugSortChange(val) {
+    if (val === 'NONE') {
+      augSortCol = null;
+      augSortDir = 'DESC';
+    } else if (val === 'DEFISIT_DESC') {
+      augSortCol = 'defisit';
+      augSortDir = 'DESC';
+    } else if (val === 'DEFISIT_ASC') {
+      augSortCol = 'defisit';
+      augSortDir = 'ASC';
+    } else if (val === 'COST_DESC') {
+      augSortCol = 'cost';
+      augSortDir = 'DESC';
+    } else if (val === 'REV_DESC') {
+      augSortCol = 'rev';
+      augSortDir = 'DESC';
+    } else if (val === 'NILAI_COST_DESC') {
+      augSortCol = 'nilai_cost';
+      augSortDir = 'DESC';
+    } else if (val === 'SITE_ID_ASC') {
+      augSortCol = 'site_id';
+      augSortDir = 'ASC';
+    }
+    applyAugFilters();
+  }
+
+  function sortAugTable(colKey) {
+    if (augSortCol === colKey) {
+      augSortDir = (augSortDir === 'DESC') ? 'ASC' : 'DESC';
+    } else {
+      augSortCol = colKey;
+      augSortDir = 'DESC';
+    }
+    const sel = document.getElementById('aug-sort-select');
+    if (sel) {
+      if (colKey === 'defisit') sel.value = augSortDir === 'DESC' ? 'DEFISIT_DESC' : 'DEFISIT_ASC';
+      else if (colKey === 'cost') sel.value = 'COST_DESC';
+      else if (colKey === 'rev') sel.value = 'REV_DESC';
+      else if (colKey === 'nilai_cost') sel.value = 'NILAI_COST_DESC';
+      else if (colKey === 'site_id') sel.value = 'SITE_ID_ASC';
+      else sel.value = 'NONE';
+    }
+    applyAugFilters();
+  }
+
   function applyAugFilters() {
     const q = (document.getElementById('aug-search-input').value || '').toLowerCase().trim();
     const nopVal = document.getElementById('aug-filter-nop').value;
     const pnlVal = document.getElementById('aug-filter-pnl').value;
     const classVal = document.getElementById('aug-filter-class').value;
     const oaVal = document.getElementById('aug-filter-oa').value;
+    const agVal = document.getElementById('aug-filter-ag') ? document.getElementById('aug-filter-ag').value : 'ALL';
     const gapVal = document.getElementById('aug-filter-gap').value;
     const salesPrioVal = document.getElementById('aug-filter-priority-sales') ? document.getElementById('aug-filter-priority-sales').value : 'ALL';
     const netPrioVal = document.getElementById('aug-filter-priority-net') ? document.getElementById('aug-filter-priority-net').value : 'ALL';
@@ -4096,9 +4331,19 @@
         if (netPrioVal === 'PRIORITY_ONLY' && !isNetPrio) return false;
         if (netPrioVal !== 'PRIORITY_ONLY' && row[18] !== netPrioVal) return false;
       }
+      if (agVal !== 'ALL') {
+        if (agVal === 'Program H2' && row[42] !== 'Program H2') return false;
+        if (agVal === '0' && row[42] !== '0') return false;
+        if (agVal === '#N/A' && row[42] !== '#N/A') return false;
+      }
 
       return true;
     });
+
+    // Apply Sorting (Besar ke Kecil / Shorting)
+    if (augSortCol && augSortCol !== 'NONE') {
+      filteredAugRows = sortRows(filteredAugRows, augSortCol, augSortDir);
+    }
 
     curPage = 1;
     renderAugTable();
@@ -4223,6 +4468,7 @@
         <td>${getPriorityBadge(r[18], 'net')}</td>
         <td>${intervBadge}</td>
         <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#94a3b8">${r[40] || '-'}</span></td>
+        <td>${r[42] === 'Program H2' ? '<span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)">Program H2</span>' : (r[42] || '-')}</td>
         <td style="font-family:'JetBrains Mono'">${r[19] || '-'}</td>
         <!-- 18 ACTION / TRACKING COLUMNS (AF to AW) -->
         <td class="new-col-td" style="color:#fca5a5">${r[20] || '-'}</td>
@@ -4253,6 +4499,7 @@
     }
 
     tbody.innerHTML = rowsHtml;
+    updateSortIndicators('aug', augSortCol, augSortDir);
   }
 
   // Export Filtered Aug 26 To CSV
@@ -4324,7 +4571,7 @@
   let refreshCountdown = 30;
   let isRefreshing = false;
   let isLocalEngine = false;
-  const currentVersionHash = "1794355375";
+  const currentVersionHash = "1794380421";
 
   function canAutoReload() {
     const lastReload = parseInt(sessionStorage.getItem('last_auto_reload') || '0', 10);
