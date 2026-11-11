@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slide Executive Summary 16:9 - SQA Puma Site Loss</title>
+  <title>Executive Summary 16:9 - SQA Puma Site Loss</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #060911;
-      color: #f1f5f9;
+      color: #f8fafc;
       margin: 0;
       padding: 16px;
       display: flex;
@@ -23,13 +23,13 @@
     }
     .slide-wrapper {
       width: 100%;
-      max-width: 1440px;
+      max-width: 1400px;
       aspect-ratio: 16 / 9;
-      background: radial-gradient(circle at 15% 15%, rgba(30, 41, 59, 0.45) 0%, rgba(9, 13, 22, 0.98) 100%), #090d16;
+      background: radial-gradient(circle at 10% 10%, rgba(30, 41, 59, 0.4) 0%, rgba(9, 13, 22, 0.98) 100%), #090d16;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(239, 68, 68, 0.05);
-      padding: 32px 40px;
+      border-radius: 18px;
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(239, 68, 68, 0.06);
+      padding: 28px 36px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -46,18 +46,16 @@
       height: 4px;
       background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #10b981 100%);
     }
-    .font-mono-num {
+    .font-num {
       font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.5px;
     }
-    .card-glass {
-      background: rgba(17, 24, 39, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    }
-    .card-glass:hover {
-      border-color: rgba(255, 255, 255, 0.12);
+    .glass-card {
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
     .btn-action {
       background: rgba(255, 255, 255, 0.06);
@@ -65,7 +63,7 @@
       color: #e2e8f0;
       padding: 6px 14px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -100,11 +98,11 @@
 <body>
 
   <!-- Controls Bar (No Print) -->
-  <div class="no-print w-full max-w-[1440px] flex items-center justify-between pb-3 text-xs text-slate-400">
+  <div class="no-print w-full max-w-[1400px] flex items-center justify-between pb-2.5 text-xs text-slate-400">
     <div class="flex items-center gap-2">
       <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span class="font-medium text-slate-300">Slide PPT Format 16:9 (Widescreen Ready)</span>
-      <span class="text-slate-500">• Standar Presentasi Microsoft PowerPoint & Keynote</span>
+      <span class="font-semibold text-slate-200">Slide 16:9 Executive Summary (Clean Visual Presentation)</span>
+      <span class="text-slate-500">• Siap Digunakan untuk Paparan PowerPoint</span>
     </div>
     <div class="flex items-center gap-2">
       <button onclick="toggleFullScreen()" class="btn-action">
@@ -121,301 +119,369 @@
   <!-- THE 16:9 SLIDE CONTAINER -->
   <div id="slide-container" class="slide-wrapper">
 
-    <!-- HEADER SECTION -->
-    <div class="flex items-start justify-between border-b border-white/5 pb-3">
+    <!-- HEADER: CLEAN & EXECUTIVE -->
+    <div class="flex items-center justify-between pb-3 border-b border-white/5">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-red-600/20 border border-red-500/30 flex items-center justify-center font-extrabold text-red-500 text-sm tracking-wider shadow-lg shadow-red-500/10">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-red-500 to-rose-700 flex items-center justify-center font-extrabold text-white text-base shadow-lg shadow-red-500/25 tracking-wider">
           SQA
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-lg font-bold text-white tracking-tight">EXECUTIVE SUMMARY: TRACKING PROFITABILITY & ACTION PLAN SITE LOSS</h1>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">AREA 4</span>
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-xl font-extrabold text-white tracking-tight">TRACKING PROFITABILITY & ACTION PLAN SITE LOSS</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10.5px] font-bold bg-red-500/15 text-red-400 border border-red-500/30">AREA 4 PUMA</span>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">
-            Regional 11 Papua Maluku • Baseline Agustus 2026 • Monitoring Terpadu Lintas Fungsi SQA, Sales, NOP & NOS
+          <p class="text-xs text-slate-400 mt-0.5 font-medium">
+            Regional 11 Papua Maluku • Baseline Agustus 2026 • Monitoring Terpadu SQA, Sales, NOP & NOS
           </p>
         </div>
       </div>
-      <div class="text-right flex flex-col items-end gap-1">
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-          <span>Target H2: 93.0% (Aktual: 91.33%)</span>
+      
+      <!-- Right Target Pill Gauge -->
+      <div class="flex items-center gap-3 bg-slate-900/80 border border-white/10 px-3.5 py-1.5 rounded-xl shadow-inner">
+        <div>
+          <div class="text-[9.5px] text-slate-400 font-semibold uppercase tracking-wider">Target H2 Regional</div>
+          <div class="flex items-baseline gap-1.5">
+            <span class="text-base font-extrabold text-amber-400 font-num">93.0%</span>
+            <span class="text-xs text-slate-300 font-medium">(Aktual: <strong class="text-emerald-400 font-num">91.33%</strong>)</span>
+          </div>
         </div>
-        <span class="text-[10.5px] text-slate-400">Update Data: 11 Nov 2026 WIT • Source: SharePoint</span>
+        <div class="w-px h-7 bg-white/10"></div>
+        <div class="text-right">
+          <div class="text-[9.5px] text-slate-400 font-semibold uppercase tracking-wider">Defisit Gap</div>
+          <span class="text-sm font-extrabold text-rose-400 font-num">-47 Sites</span>
+        </div>
       </div>
     </div>
 
-    <!-- ROW 1: 4 TOP KPI CARDS -->
+    <!-- ROW 1: 4 HERO METRIC CARDS (HIGH CONTRAST, MINIMAL TEXT) -->
     <div class="grid grid-cols-4 gap-3.5 my-3">
       
       <!-- Card 1 -->
-      <div class="card-glass p-3.5 border-l-4 border-l-sky-500">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Active Sites</div>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-extrabold text-sky-400 font-mono-num">2,791</span>
-          <span class="text-[11px] text-slate-400">sites</span>
+      <div class="glass-card p-3.5 border-t-2 border-t-sky-500 relative overflow-hidden">
+        <div class="flex justify-between items-center text-[11px] font-bold text-slate-400 tracking-wider uppercase">
+          <span>Total Populasi</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] bg-sky-500/10 text-sky-400 font-num">+51 MoM</span>
         </div>
-        <div class="text-[10.5px] text-emerald-400 mt-1 flex items-center gap-1">
-          <span>▲ +51 site vs Juli (2,740)</span>
-        </div>
+        <div class="text-3xl font-extrabold text-white font-num mt-1">2,791</div>
+        <div class="text-[11px] text-slate-400 mt-1">Total active on-air sites Papua Maluku</div>
       </div>
 
       <!-- Card 2 -->
-      <div class="card-glass p-3.5 border-l-4 border-l-emerald-500">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Profit Sites (Aug 26)</div>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-extrabold text-emerald-400 font-mono-num">2,549</span>
-          <span class="text-[11px] text-slate-400">sites</span>
+      <div class="glass-card p-3.5 border-t-2 border-t-emerald-500 relative overflow-hidden">
+        <div class="flex justify-between items-center text-[11px] font-bold text-slate-400 tracking-wider uppercase">
+          <span>Profit Sites</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 font-num font-bold">91.33%</span>
         </div>
-        <div class="text-[10.5px] text-slate-400 mt-1">
-          <strong class="text-emerald-400 font-mono-num">91.33%</strong> rasio profitabilitas regional
-        </div>
+        <div class="text-3xl font-extrabold text-emerald-400 font-num mt-1">2,549</div>
+        <div class="text-[11px] text-slate-400 mt-1">Site dalam zona margin positif</div>
       </div>
 
       <!-- Card 3 -->
-      <div class="card-glass p-3.5 border-l-4 border-l-rose-500">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Site Loss / Non-Profit</div>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-extrabold text-rose-400 font-mono-num">242</span>
-          <span class="text-[11px] text-slate-400">sites</span>
+      <div class="glass-card p-3.5 border-t-2 border-t-rose-500 relative overflow-hidden">
+        <div class="flex justify-between items-center text-[11px] font-bold text-slate-400 tracking-wider uppercase">
+          <span>Non-Profit / Loss</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] bg-rose-500/15 text-rose-400 font-num font-bold">8.67%</span>
         </div>
-        <div class="text-[10.5px] text-rose-400/90 mt-1">
-          <strong class="font-mono-num">8.67%</strong> rasio defisit operasional
-        </div>
+        <div class="text-3xl font-extrabold text-rose-400 font-num mt-1">242</div>
+        <div class="text-[11px] text-rose-300/80 mt-1">Site defisit perlu intervensi aksi</div>
       </div>
 
       <!-- Card 4 -->
-      <div class="card-glass p-3.5 border-l-4 border-l-amber-500">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">H2 Recovery Target Gap</div>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-extrabold text-amber-400 font-mono-num">-47</span>
-          <span class="text-[11px] text-slate-400">sites</span>
+      <div class="glass-card p-3.5 border-t-2 border-t-amber-500 relative overflow-hidden">
+        <div class="flex justify-between items-center text-[11px] font-bold text-slate-400 tracking-wider uppercase">
+          <span>Gap Recovery H2</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] bg-amber-500/15 text-amber-400 font-bold">Target 93%</span>
         </div>
-        <div class="text-[10.5px] text-amber-400/90 mt-1">
-          Perlu diselamatkan menuju target <strong>93.0%</strong>
-        </div>
+        <div class="text-3xl font-extrabold text-amber-400 font-num mt-1">-47</div>
+        <div class="text-[11px] text-slate-400 mt-1">Site perlu diselamatkan ke zona profit</div>
       </div>
 
     </div>
 
-    <!-- ROW 2: 3 COLUMNS DEEP DIVE -->
+    <!-- ROW 2: 3 BALANCED VISUAL CARDS -->
     <div class="grid grid-cols-3 gap-3.5 flex-1 min-h-0">
 
-      <!-- COLUMN 1: DISTRIBUSI LOSS PER BRANCH & WILAYAH KRITIS -->
-      <div class="card-glass p-3.5 flex flex-col justify-between">
+      <!-- COLUMN 1: DISTRIBUSI LOSS PER BRANCH (VISUAL BARS) -->
+      <div class="glass-card p-4 flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between pb-2 border-b border-white/5">
-            <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
               <h2 class="text-xs font-bold text-white uppercase tracking-wider">Distribusi Loss per Branch</h2>
             </div>
-            <span class="text-[10px] text-slate-400">242 Site Loss</span>
+            <span class="px-2 py-0.5 rounded text-[10.5px] bg-slate-800 text-slate-300 font-num font-bold">242 Sites</span>
           </div>
 
-          <!-- Branch Bars -->
-          <div class="space-y-2 mt-2.5">
+          <!-- Progress Bars per Branch -->
+          <div class="space-y-3 mt-3">
+            
             <!-- Ambon -->
             <div>
-              <div class="flex justify-between text-[11px] mb-1">
-                <span class="font-semibold text-rose-400">Ambon (Critical Area)</span>
-                <span class="font-mono-num text-rose-300 font-bold">145 site <span class="text-[9.5px] text-slate-400 font-normal">(17.1% loss)</span></span>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="font-bold text-rose-400">Ambon</span>
+                <div class="flex items-center gap-1.5 font-num">
+                  <span class="font-extrabold text-rose-300">145</span>
+                  <span class="text-[10px] text-slate-400">(60.0% loss)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9.5px] bg-rose-500/20 text-rose-400 font-bold">🚨 Kritis</span>
+                </div>
               </div>
-              <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div class="bg-gradient-to-r from-rose-500 to-red-600 h-2 rounded-full" style="width: 60%"></div>
+              <div class="w-full bg-slate-800/80 rounded-full h-2.5 p-0.5">
+                <div class="bg-gradient-to-r from-rose-500 to-red-600 h-1.5 rounded-full" style="width: 60%"></div>
               </div>
-              <span class="text-[9.5px] text-slate-400">Total populasi 850 site • Kontribusi 59.9% dari total loss</span>
+              <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                <span>Populasi: 850 site</span>
+                <span>Rasio loss: 17.1%</span>
+              </div>
             </div>
 
             <!-- Jayapura -->
             <div>
-              <div class="flex justify-between text-[11px] mb-1">
-                <span class="font-semibold text-amber-400">Jayapura</span>
-                <span class="font-mono-num text-amber-300 font-bold">49 site <span class="text-[9.5px] text-slate-400 font-normal">(6.9% loss)</span></span>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="font-bold text-amber-400">Jayapura</span>
+                <div class="flex items-center gap-1.5 font-num">
+                  <span class="font-extrabold text-amber-300">49</span>
+                  <span class="text-[10px] text-slate-400">(20.2% loss)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9.5px] bg-amber-500/20 text-amber-400 font-bold">⚠️ Sedang</span>
+                </div>
               </div>
-              <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div class="bg-gradient-to-r from-amber-500 to-amber-600 h-2 rounded-full" style="width: 20.2%"></div>
+              <div class="w-full bg-slate-800/80 rounded-full h-2.5 p-0.5">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-600 h-1.5 rounded-full" style="width: 20.2%"></div>
               </div>
-              <span class="text-[9.5px] text-slate-400">Total populasi 710 site • 20.2% dari total loss</span>
+              <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                <span>Populasi: 710 site</span>
+                <span>Rasio loss: 6.9%</span>
+              </div>
             </div>
 
             <!-- Sorong -->
             <div>
-              <div class="flex justify-between text-[11px] mb-1">
-                <span class="font-semibold text-emerald-400">Sorong</span>
-                <span class="font-mono-num text-emerald-300 font-bold">24 site <span class="text-[9.5px] text-slate-400 font-normal">(3.7% loss)</span></span>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="font-bold text-emerald-400">Sorong</span>
+                <div class="flex items-center gap-1.5 font-num">
+                  <span class="font-extrabold text-emerald-300">24</span>
+                  <span class="text-[10px] text-slate-400">(9.9% loss)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9.5px] bg-emerald-500/20 text-emerald-400 font-bold">✔ Aman</span>
+                </div>
               </div>
-              <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 h-2 rounded-full" style="width: 9.9%"></div>
+              <div class="w-full bg-slate-800/80 rounded-full h-2.5 p-0.5">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 h-1.5 rounded-full" style="width: 9.9%"></div>
               </div>
-              <span class="text-[9.5px] text-slate-400">Total populasi 655 site • Terkendali</span>
+              <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                <span>Populasi: 655 site</span>
+                <span>Rasio loss: 3.7%</span>
+              </div>
             </div>
 
             <!-- Timika -->
             <div>
-              <div class="flex justify-between text-[11px] mb-1">
-                <span class="font-semibold text-purple-400">Timika</span>
-                <span class="font-mono-num text-purple-300 font-bold">24 site <span class="text-[9.5px] text-slate-400 font-normal">(4.2% loss)</span></span>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="font-bold text-purple-400">Timika</span>
+                <div class="flex items-center gap-1.5 font-num">
+                  <span class="font-extrabold text-purple-300">24</span>
+                  <span class="text-[10px] text-slate-400">(9.9% loss)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9.5px] bg-purple-500/20 text-purple-400 font-bold">✔ Aman</span>
+                </div>
               </div>
-              <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2 rounded-full" style="width: 9.9%"></div>
+              <div class="w-full bg-slate-800/80 rounded-full h-2.5 p-0.5">
+                <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-1.5 rounded-full" style="width: 9.9%"></div>
               </div>
-              <span class="text-[9.5px] text-slate-400">Total populasi 576 site • Terkendali</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Top Kab Box -->
-        <div class="p-2 rounded-lg bg-white/5 border border-white/5 text-[10.5px] mt-2">
-          <div class="font-bold text-amber-400 mb-1">Top 3 Kabupaten Defisit:</div>
-          <div class="space-y-0.5 text-slate-300">
-            <div>1. <strong>Maluku Tengah</strong>: 38 Site Loss (15.7%)</div>
-            <div>2. <strong>Kota Ambon</strong>: 27 Site Loss (11.2%)</div>
-            <div>3. <strong>Seram Bagian Timur</strong>: 18 Site Loss (7.4%)</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- COLUMN 2: KOMPARASI RENCANA VS REALISASI AKSI (8 PARAMETER) -->
-      <div class="card-glass p-3.5 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between pb-2 border-b border-white/5">
-            <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-              <h2 class="text-xs font-bold text-white uppercase tracking-wider">Pemenuhan Action Plan (Plan vs Done)</h2>
-            </div>
-            <span class="text-[10px] text-sky-400 font-semibold font-mono-num">8 Parameter Aksi</span>
-          </div>
-
-          <!-- Action Items Comparison -->
-          <div class="space-y-1.5 mt-2 text-[10.5px]">
-            
-            <div class="flex items-center justify-between p-1.5 rounded bg-white/[0.03]">
-              <span class="text-slate-300">Update action taken SQA</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-num font-bold text-emerald-400">242 / 242</span>
-                <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">100%</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between p-1.5 rounded bg-white/[0.03]">
-              <span class="text-slate-300">Update action taken Sales</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-num font-bold text-amber-400">22 / 45</span>
-                <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">48.9%</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between p-1.5 rounded bg-white/[0.03]">
-              <span class="text-slate-300">Update action taken NOP</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-num font-bold text-rose-400">10 / 118</span>
-                <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-bold">8.5%</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between p-1.5 rounded bg-white/[0.03]">
-              <span class="text-slate-300">propose action RHI</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-num font-bold text-purple-400">47 / 47</span>
-                <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-bold">100%</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between p-1.5 rounded bg-white/[0.03]">
-              <span class="text-slate-300">plan action availability</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-num font-bold text-yellow-400">11 / 242</span>
-                <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-yellow-500/20 text-yellow-300 font-bold">4.5%</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between p-1.5 rounded bg-white/[0.03]">
-              <span class="text-slate-300">propose action PL</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-num font-bold text-blue-400">14 / 224</span>
-                <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 font-bold">6.2%</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between p-1.5 rounded bg-white/[0.03]">
-              <span class="text-slate-300">plan improvement cost terbesar</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-num font-bold text-cyan-400">1 / 25</span>
-                <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-bold">4.0%</span>
+              <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                <span>Populasi: 576 site</span>
+                <span>Rasio loss: 4.2%</span>
               </div>
             </div>
 
           </div>
         </div>
 
-        <!-- Takeaway Mini -->
-        <div class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[10.5px] text-emerald-300 mt-2 flex items-center justify-between">
-          <span>✔ Status PL CLEAR: <strong>5 / 5 Sites (100%)</strong> pada priority</span>
-          <span class="text-[10px] text-slate-400">Target H2 SQA</span>
+        <!-- Top Kabupaten Chips -->
+        <div class="pt-2.5 border-t border-white/5">
+          <div class="text-[10.5px] font-bold text-slate-300 mb-1.5">Top 3 Kabupaten Defisit Terbesar:</div>
+          <div class="flex flex-wrap gap-1.5 text-[10.5px]">
+            <span class="px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/20 text-rose-300">
+              Maluku Tengah: <strong class="font-num text-white">38</strong> (15.7%)
+            </span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300">
+              Kota Ambon: <strong class="font-num text-white">27</strong> (11.2%)
+            </span>
+            <span class="px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-purple-300">
+              SBT: <strong class="font-num text-white">18</strong> (7.4%)
+            </span>
+          </div>
         </div>
       </div>
 
-      <!-- COLUMN 3: STRATEGIC RECOMMENDATIONS & NEXT ACTIONS -->
-      <div class="card-glass p-3.5 flex flex-col justify-between">
+      <!-- COLUMN 2: ACTION TRACKER EXECUTION (VISUAL GAUGES - NO CLUTTER) -->
+      <div class="glass-card p-4 flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between pb-2 border-b border-white/5">
-            <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-              <h2 class="text-xs font-bold text-white uppercase tracking-wider">3 Rekomendasi Strategis H2</h2>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+              <h2 class="text-xs font-bold text-white uppercase tracking-wider">Pemenuhan Action Tracker</h2>
             </div>
-            <span class="text-[10px] text-amber-400 font-semibold">Priority Focus</span>
+            <span class="px-2 py-0.5 rounded text-[10.5px] bg-sky-500/15 text-sky-300 font-num font-bold">Plan vs Done</span>
           </div>
 
-          <!-- 3 Recommendations -->
-          <div class="space-y-2.5 mt-2.5 text-[11px]">
-            
-            <div class="p-2.5 rounded-lg bg-red-500/10 border border-red-500/20">
-              <div class="font-bold text-red-400 flex items-center gap-1">
-                <span>1. Akselerasi Sales & NOP di 78 Priority Sites</span>
+          <!-- Action Progress Bars -->
+          <div class="space-y-2 mt-2.5 text-[11px]">
+
+            <!-- SQA -->
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-medium text-slate-300">Update Action SQA</span>
+                <span class="font-num font-bold text-emerald-400">242 / 242 <strong class="text-[10px] text-emerald-300 font-bold ml-1">100%</strong></span>
               </div>
-              <p class="text-[10px] text-slate-300 mt-1 leading-relaxed">
-                Prioritaskan eksekusi program CVM & cluster drive pada <strong>23 site Sales</strong> dan penuntasan perbaikan teknis pada <strong>108 site NOP</strong> yang belum ter-update untuk memangkas gap recovery -47 site.
-              </p>
+              <div class="w-full bg-slate-800 rounded-full h-1.5">
+                <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 100%"></div>
+              </div>
             </div>
 
-            <div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
-              <div class="font-bold text-amber-400 flex items-center gap-1">
-                <span>2. Recovery Availability di Branch Ambon</span>
+            <!-- RHI -->
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-medium text-slate-300">Propose Action RHI</span>
+                <span class="font-num font-bold text-purple-400">47 / 47 <strong class="text-[10px] text-purple-300 font-bold ml-1">100%</strong></span>
               </div>
-              <p class="text-[10px] text-slate-300 mt-1 leading-relaxed">
-                Ambon menyumbang <strong>60% total site loss regional (145 site)</strong>. Diperlukan gugus tugas khusus untuk pasokan genset, baterai cadangan, dan stabilisasi link transport radio di Maluku Tengah & Kota Ambon.
-              </p>
+              <div class="w-full bg-slate-800 rounded-full h-1.5">
+                <div class="bg-purple-500 h-1.5 rounded-full" style="width: 100%"></div>
+              </div>
             </div>
 
-            <div class="p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-              <div class="font-bold text-cyan-400 flex items-center gap-1">
-                <span>3. Rasionalisasi Biaya Sewa Menara (NOS)</span>
+            <!-- Sales -->
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-medium text-slate-300">Update Action Sales</span>
+                <span class="font-num font-bold text-amber-400">22 / 45 <strong class="text-[10px] text-amber-300 font-bold ml-1">48.9%</strong></span>
               </div>
-              <p class="text-[10px] text-slate-300 mt-1 leading-relaxed">
-                Segera tuntaskan rencana perbaikan biaya pada <strong>25 site dengan breakdown cost terbesar</strong>. Lakukan renegosiasi kontrak sewa lahan/menara dan efisiensi daya listrik PLN.
-              </p>
+              <div class="w-full bg-slate-800 rounded-full h-1.5">
+                <div class="bg-amber-500 h-1.5 rounded-full" style="width: 48.9%"></div>
+              </div>
+            </div>
+
+            <!-- NOP -->
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-medium text-slate-300">Update Action NOP</span>
+                <span class="font-num font-bold text-rose-400">10 / 118 <strong class="text-[10px] text-rose-300 font-bold ml-1">8.5%</strong></span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5">
+                <div class="bg-rose-500 h-1.5 rounded-full" style="width: 8.5%"></div>
+              </div>
+            </div>
+
+            <!-- Availability -->
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-medium text-slate-300">Plan Action Availability</span>
+                <span class="font-num font-bold text-yellow-400">11 / 242 <strong class="text-[10px] text-yellow-300 font-bold ml-1">4.5%</strong></span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5">
+                <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 4.5%"></div>
+              </div>
+            </div>
+
+            <!-- Status PL -->
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-medium text-slate-300">Propose Action Status PL</span>
+                <span class="font-num font-bold text-blue-400">14 / 224 <strong class="text-[10px] text-blue-300 font-bold ml-1">6.2%</strong></span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5">
+                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 6.2%"></div>
+              </div>
+            </div>
+
+            <!-- NOS -->
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-medium text-slate-300">Plan Improvement NOS (Cost)</span>
+                <span class="font-num font-bold text-cyan-400">1 / 25 <strong class="text-[10px] text-cyan-300 font-bold ml-1">4.0%</strong></span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5">
+                <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 4.0%"></div>
+              </div>
             </div>
 
           </div>
         </div>
 
-        <div class="text-[9.5px] text-slate-500 text-center mt-1">
-          Internal Telkomsel • SQA PUMA Area 4 • Strictly Confidential
+        <!-- Highlight Badge -->
+        <div class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-xs text-emerald-300">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Status PL CLEAR: <strong>5 / 5 Sites</strong></span>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">100% On-Track</span>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: 3 STRATEGIC ACTION CARDS (ZERO WALL-OF-TEXT) -->
+      <div class="glass-card p-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-2 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <h2 class="text-xs font-bold text-white uppercase tracking-wider">3 Prioritas Eksekusi H2</h2>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10.5px] bg-amber-500/15 text-amber-300 font-bold">Action Plan</span>
+          </div>
+
+          <!-- 3 Visual Action Cards -->
+          <div class="space-y-2.5 mt-2.5">
+            
+            <!-- Action 1 -->
+            <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-rose-400">1. Push Sales & NOP Prioritas</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-num font-bold">78 Sites</span>
+              </div>
+              <div class="text-[11px] text-slate-300 mt-1 leading-snug">
+                Fokus CVM & cluster drive pada <strong>sisa 23 Sales</strong> dan perbaikan teknis pada <strong>sisa 108 NOP</strong> untuk memangkas gap recovery -47 site.
+              </div>
+            </div>
+
+            <!-- Action 2 -->
+            <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-400">2. Recovery Availability Ambon</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-num font-bold">60% Loss</span>
+              </div>
+              <div class="text-[11px] text-slate-300 mt-1 leading-snug">
+                Gugus tugas khusus pasokan genset, baterai, & link transport radio di Maluku Tengah & Kota Ambon (kontributor 44% total loss regional).
+              </div>
+            </div>
+
+            <!-- Action 3 -->
+            <div class="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-cyan-400">3. Rasionalisasi Biaya Sewa (NOS)</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-num font-bold">25 Sites</span>
+              </div>
+              <div class="text-[11px] text-slate-300 mt-1 leading-snug">
+                Renegosiasi kontrak sewa menara/lahan dan optimasi daya PLN pada 25 site dengan breakdown cost tertinggi untuk menekan direct cost.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-slate-400">
+          <span>Target H2: <strong>93.0%</strong></span>
+          <span class="text-emerald-400 font-semibold">Area 4 PUMA Regional 11</span>
         </div>
       </div>
 
     </div>
 
     <!-- FOOTER BAR -->
-    <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10.5px] text-slate-400">
+    <div class="flex items-center justify-between pt-2.5 border-t border-white/5 text-[11px] text-slate-400">
       <div class="flex items-center gap-3">
-        <span>Dashboard Online: <strong class="text-sky-400">zulfahmiasriadi.github.io/sqa-puma-site-loss/</strong></span>
+        <span>Dashboard Online: <strong class="text-sky-400 font-num">zulfahmiasriadi.github.io/sqa-puma-site-loss/</strong></span>
         <span>•</span>
-        <span>Local Engine: <strong class="text-emerald-400">http://localhost:8092</strong></span>
+        <span>Local Engine: <strong class="text-emerald-400 font-num">http://localhost:8092</strong></span>
       </div>
       <div>
-        <span>Slide 1 of 1 • 16:9 Executive Presentation</span>
+        <span class="px-2 py-0.5 rounded bg-white/5 text-slate-400 font-semibold">16:9 Presentation Format</span>
       </div>
     </div>
 
