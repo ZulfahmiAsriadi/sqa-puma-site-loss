@@ -1486,12 +1486,16 @@ html_template = f"""<!DOCTYPE html>
       flex-wrap: wrap;
     }}
     .controls-filters-grid {{
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       width: 100%;
       padding-top: 10px;
       border-top: 1px dashed rgba(255, 255, 255, 0.09);
+    }}
+    .controls-filters-grid .filter-select {{
+      flex: 1 1 195px;
+      min-width: 195px;
     }}
     .filter-count-pill {{
       height: 36px;
@@ -1995,8 +1999,9 @@ html_template = f"""<!DOCTYPE html>
         align-items: stretch;
         gap: 10px;
       }}
-      .controls-filters-grid {{
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .controls-filters-grid .filter-select {{
+        flex: 1 1 calc(50% - 4px);
+        min-width: 140px;
       }}
       .controls-primary-actions {{
         width: 100%;
@@ -2674,6 +2679,11 @@ html_template = f"""<!DOCTYPE html>
       background: #ecfdf5 !important;
       border-color: #059669 !important;
       color: #047857 !important;
+    }}
+    html[data-theme="light"] select.filter-select[style*="color:#f472b6"] {{
+      background: #fdf2f8 !important;
+      border-color: #ec4899 !important;
+      color: #be185d !important;
     }}
     html[data-theme="light"] select.filter-select[style*="color:#67e8f9"] {{
       background: #ecfeff !important;
@@ -3633,6 +3643,15 @@ html_template = f"""<!DOCTYPE html>
               <option value="Profit">Profit Sites Only ({sep_meta['branchStats']['ALL']['profit']})</option>
             </select>
 
+            <select id="prog-filter-gap" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(244,114,182,0.4);background:rgba(244,114,182,0.08);color:#f472b6">
+              <option value="ALL">Semua GAP Dist</option>
+              <option value="<3 Mio">&lt; 3 Mio ({sep_meta['gapMatrix']['TOTAL']['lt3']})</option>
+              <option value="3-5 Mio">3-5 Mio ({sep_meta['gapMatrix']['TOTAL']['m3_5']})</option>
+              <option value="5-10 Mio">5-10 Mio ({sep_meta['gapMatrix']['TOTAL']['m5_10']})</option>
+              <option value=">10 Mio">&gt; 10 Mio ({sep_meta['gapMatrix']['TOTAL']['gt10']})</option>
+              <option value="Profit">Profit ({sep_meta['branchStats']['ALL']['profit']})</option>
+            </select>
+
             <select id="prog-filter-oa" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(16,185,129,0.35);background:rgba(16,185,129,0.06);color:#34d399">
               <option value="ALL">Semua Status OA</option>
               <option value="OA">OA Only</option>
@@ -3715,6 +3734,7 @@ html_template = f"""<!DOCTYPE html>
                 <th onclick="sortProgTable('branch')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Branch">Branch <span id="th-sort-prog-branch" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
                 <th onclick="sortProgTable('kabupaten')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Kabupaten">Kabupaten <span id="th-sort-prog-kabupaten" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
                 <th onclick="sortProgTable('pnl')" style="cursor:pointer;user-select:none" title="Klik untuk mengurutkan Status PnL">Status PnL <span id="th-sort-prog-pnl" style="font-size:10px;color:var(--text-dim)">⬍</span></th>
+                <th>GAP Dist</th>
                 <th onclick="sortProgTable('defisit')" style="cursor:pointer;user-select:none;background:rgba(239,68,68,0.2);color:#fca5a5" title="Klik untuk mengurutkan Defisit Terbesar (Besar ke Kecil)">Defisit / Margin (Rp) <span id="th-sort-prog-defisit" style="font-size:10px;color:#fca5a5">⬍</span></th>
                 <th onclick="sortProgTable('cost')" style="cursor:pointer;user-select:none;background:rgba(245,158,11,0.18);color:#fcd34d" title="Klik untuk mengurutkan Cost Terbesar (Besar ke Kecil)">Cost (Rp) <span id="th-sort-prog-cost" style="font-size:10px;color:#fcd34d">⬍</span></th>
                 <th>Kelas Site</th>
@@ -4778,6 +4798,20 @@ html_template = f"""<!DOCTYPE html>
       augOa.options[1].text = `OA (${{ds.oaCount.toLocaleString()}})`;
       augOa.options[2].text = `Not OA (${{ds.notOaCount.toLocaleString()}})`;
     }}
+    const syncGapSelect = (selId) => {{
+      const gSel = document.getElementById(selId);
+      if (!gSel || !gm || !gm.TOTAL) return;
+      const gt = gm.TOTAL;
+      Array.from(gSel.options).forEach(opt => {{
+        if (opt.value === '<3 Mio') opt.text = `< 3 Mio (${{gt.lt3}})`;
+        else if (opt.value === '3-5 Mio') opt.text = `3-5 Mio (${{gt.m3_5}})`;
+        else if (opt.value === '5-10 Mio') opt.text = `5-10 Mio (${{gt.m5_10}})`;
+        else if (opt.value === '>10 Mio') opt.text = `> 10 Mio (${{gt.gt10}})`;
+        else if (opt.value === 'Profit') opt.text = `Profit (${{bs.ALL.profit}})`;
+      }});
+    }};
+    syncGapSelect('prog-filter-gap');
+    syncGapSelect('aug-filter-gap');
 
     // 4. Executive Takeaways / Insights Box
     const insTitle = document.getElementById('insights-main-title');
@@ -5218,6 +5252,7 @@ html_template = f"""<!DOCTYPE html>
     const defaults = {{
       'prog-filter-nop': 'ALL',
       'prog-filter-pnl': 'Loss',
+      'prog-filter-gap': 'ALL',
       'prog-filter-oa': 'ALL',
       'prog-filter-priority-sales': 'ALL',
       'prog-filter-priority-net': 'ALL',
@@ -5374,6 +5409,7 @@ html_template = f"""<!DOCTYPE html>
     const q = (document.getElementById('prog-search-input').value || '').toLowerCase().trim();
     const branchVal = document.getElementById('prog-filter-nop').value;
     const pnlVal = document.getElementById('prog-filter-pnl').value;
+    const gapVal = document.getElementById('prog-filter-gap') ? document.getElementById('prog-filter-gap').value : 'ALL';
     const plweekVal = document.getElementById('prog-filter-plweek').value;
     const transVal = document.getElementById('prog-filter-transport').value;
     const oaVal = document.getElementById('prog-filter-oa') ? document.getElementById('prog-filter-oa').value : 'ALL';
@@ -5386,13 +5422,17 @@ html_template = f"""<!DOCTYPE html>
     filteredProgRows = augData.filter(r => {{
       // 1. Text Search across identifiers, priorities and action columns
       if (q) {{
-        const text = (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + r[3] + ' ' + r[4] + ' ' + r[17] + ' ' + r[18] + ' ' + r[20] + ' ' + r[21] + ' ' + r[22] + ' ' + r[23] + ' ' + r[24] + ' ' + r[25] + ' ' + r[26] + ' ' + r[27] + ' ' + r[28] + ' ' + r[29] + ' ' + r[30] + ' ' + r[31] + ' ' + r[32] + ' ' + r[33] + ' ' + r[34] + ' ' + r[35] + ' ' + r[36] + ' ' + r[37] + ' ' + r[38] + ' ' + r[39] + ' ' + (r[43] || '')).toLowerCase();
+        const text = (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + r[3] + ' ' + r[4] + ' ' + (r[14] || '') + ' ' + r[17] + ' ' + r[18] + ' ' + r[20] + ' ' + r[21] + ' ' + r[22] + ' ' + r[23] + ' ' + r[24] + ' ' + r[25] + ' ' + r[26] + ' ' + r[27] + ' ' + r[28] + ' ' + r[29] + ' ' + r[30] + ' ' + r[31] + ' ' + r[32] + ' ' + r[33] + ' ' + r[34] + ' ' + r[35] + ' ' + r[36] + ' ' + r[37] + ' ' + r[38] + ' ' + r[39] + ' ' + (r[43] || '')).toLowerCase();
         if (!text.includes(q)) return false;
       }}
 
-      // 2. Branch & PnL
+      // 2. Branch, PnL & GAP Dist
       if (branchVal !== 'ALL' && r[3] !== branchVal) return false;
       if (pnlVal !== 'ALL' && r[13] !== pnlVal) return false;
+      if (gapVal !== 'ALL') {{
+        if (gapVal === 'Profit' && r[14] !== 'Profit') return false;
+        if (gapVal !== 'Profit' && r[14] !== gapVal) return false;
+      }}
       if (cekVal !== 'ALL' && r[43] !== cekVal) return false;
 
       // 3. Priority Checks
@@ -5523,7 +5563,7 @@ html_template = f"""<!DOCTYPE html>
       : `Menampilkan ${{startIdx + 1}} - ${{endIdx}} dari ${{total.toLocaleString()}} site`;
 
     if (total === 0) {{
-      tbody.innerHTML = `<tr><td colspan="35" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="36" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
       renderProgCharts();
       renderPriorityCharts();
       return;
@@ -5536,6 +5576,12 @@ html_template = f"""<!DOCTYPE html>
       const pnlBadge = isLoss 
         ? `<span class="badge badge-danger">Loss</span>` 
         : `<span class="badge badge-success">Profit</span>`;
+
+      let gapBadge = r[14] || '-';
+      if (r[14] === '>10 Mio') gapBadge = `<span class="badge badge-danger">&gt;10 Mio</span>`;
+      else if (r[14] === '5-10 Mio') gapBadge = `<span class="badge badge-warning">5-10 Mio</span>`;
+      else if (r[14] === '3-5 Mio' || r[14] === '<3 Mio') gapBadge = `<span class="badge badge-info">${{r[14]}}</span>`;
+      else if (r[14] === 'Profit') gapBadge = `<span class="badge badge-success">Profit</span>`;
 
       const sClass = r[7] || '-';
       let classBadge = `<span class="badge badge-silver">${{sClass}}</span>`;
@@ -5572,6 +5618,7 @@ html_template = f"""<!DOCTYPE html>
         <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#94a3b8">${{r[3]}}</span></td>
         <td>${{r[4]}}</td>
         <td>${{pnlBadge}}</td>
+        <td>${{gapBadge}}</td>
         <td style="text-align:right;color:${{r[11] < 0 ? '#f87171' : '#34d399'}};font-weight:700;font-family:'JetBrains Mono'">${{Math.round(r[11]).toLocaleString()}}</td>
         <td style="text-align:right;font-family:'JetBrains Mono'">${{Math.round(r[10]).toLocaleString()}}</td>
         <td>${{classBadge}}</td>
@@ -6142,7 +6189,7 @@ html_template = f"""<!DOCTYPE html>
   function exportProgressToCSV() {{
     const isSep = (activePeriod === 'SEP26');
     const headers = [
-      'Site ID', 'Site Name', 'Branch', 'Kabupaten', 'Status PnL',
+      'Site ID', 'Site Name', 'Branch', 'Kabupaten', 'Status PnL', 'GAP Dist',
       'Defisit / Margin (Rp)', 'Cost (Rp)',
       'Site Class', 'Status OA', 'Site Loss Tracker',
       'Priority Sales', 'Priority Network',
@@ -6163,7 +6210,7 @@ html_template = f"""<!DOCTYPE html>
 
     filteredProgRows.forEach(r => {{
       const rowVals = [
-        r[0], r[1], r[3], r[4], r[13],
+        r[0], r[1], r[3], r[4], r[13], r[14],
         r[11], r[10],
         r[7], r[8], r[42],
         r[17], r[18],
