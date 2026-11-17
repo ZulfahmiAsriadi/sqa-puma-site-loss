@@ -157,11 +157,12 @@ def parse_sheet_dataset(sheet_path, fallback_aug_raw=None, prefix_kab_map=None):
                 elem.clear()
 
     is_compact_sep = (len(headers_r3) <= 30 and 'kabupaten' not in headers_r3.values())
+    is_w_appended_sep = (headers_r3.get('w') == 'branch' and 'revenue' in headers_r3.get('e', ''))
 
-    col_breakdown = 'AZ'
-    col_nilai_cost = None
-    col_plan_improv = 'BA'
-    col_cek = 'BB'
+    col_breakdown = 'BB' if is_w_appended_sep else 'AZ'
+    col_nilai_cost = 'BC' if is_w_appended_sep else None
+    col_plan_improv = 'BD' if is_w_appended_sep else 'BA'
+    col_cek = 'BE' if is_w_appended_sep else 'BB'
 
     for let, text in headers_r3.items():
         if 'breakdown cost' in text:
@@ -175,8 +176,8 @@ def parse_sheet_dataset(sheet_path, fallback_aug_raw=None, prefix_kab_map=None):
 
     col_letters = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-        'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK',
         'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS',
         'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', 'BA',
         'BB', 'BC', 'BD', 'BE', 'BF', 'BG'
@@ -258,6 +259,53 @@ def parse_sheet_dataset(sheet_path, fallback_aug_raw=None, prefix_kab_map=None):
                                 p_net = old_pn if old_pn in ('P1', 'P2', 'P3') else eval_priority_net(gap, fb.get('AN'), fb.get('AT'), fb.get('AV'), fb.get('AX'))
                             status_period = c_dict.get('T') or fb.get('AD', '')
                             src_dict = fb
+                        elif is_w_appended_sep:
+                            rev = to_int(c_dict.get('E'))
+                            cost = to_int(c_dict.get('F'))
+                            margin = to_int(c_dict.get('G'))
+                            margin_pct = to_pct(c_dict.get('H'))
+                            pnl = c_dict.get('I', 'Profit')
+                            nop = c_dict.get('J') or fb.get('P', '-')
+                            branch = c_dict.get('W') or fb.get('Q') or nop.replace('NOP ', '').strip() or 'Unknown'
+                            kab = c_dict.get('X') or fb.get('R') or SPECIAL_KAB_MAP.get(sid) or 'Unknown'
+                            gap = c_dict.get('Y', '')
+                            p_sales = c_dict.get('Z', 'Not Priority')
+                            p_net = c_dict.get('AA', 'Not Priority')
+                            inline_ssgj = c_dict.get('AB', '')
+                            prog_group = c_dict.get('AC', '')
+                            type_site = c_dict.get('K', '')
+                            bts_equip = c_dict.get('AD', '')
+                            site_class = c_dict.get('AE', '-')
+                            status_oa = c_dict.get('AF', '-')
+                            status_period = c_dict.get('T', '')
+                            # Remap W..BF to standard AH..BD keys so the rest of row extraction works identically
+                            src_dict = {
+                                'AE': c_dict.get('AG', ''),
+                                'AF': c_dict.get('AH', ''),
+                                'AG': c_dict.get('AI', ''),
+                                'AH': c_dict.get('AJ', ''),
+                                'AI': c_dict.get('AK', ''),
+                                'AJ': c_dict.get('AL', ''),
+                                'AK': c_dict.get('AM', ''),
+                                'AL': c_dict.get('AN', ''),
+                                'AM': c_dict.get('AO', ''),
+                                'AN': c_dict.get('AP', ''),
+                                'AO': c_dict.get('AQ', ''),
+                                'AP': c_dict.get('AR', ''),
+                                'AQ': c_dict.get('AS', ''),
+                                'AR': c_dict.get('AT', ''),
+                                'AS': c_dict.get('AU', ''),
+                                'AT': c_dict.get('AV', ''),
+                                'AU': c_dict.get('AW', ''),
+                                'AV': c_dict.get('AX', ''),
+                                'AW': c_dict.get('AY', ''),
+                                'AX': c_dict.get('AZ', ''),
+                                'AY': c_dict.get('BA', ''),
+                                col_breakdown: c_dict.get('BB', ''),
+                                (col_nilai_cost or 'BA'): c_dict.get('BC', ''),
+                                col_plan_improv: c_dict.get('BD', ''),
+                                col_cek: c_dict.get('BE', ''),
+                            }
                         else:
                             rev = to_int(c_dict.get('F'))
                             cost = to_int(c_dict.get('G'))
