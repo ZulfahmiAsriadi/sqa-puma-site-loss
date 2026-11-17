@@ -157,12 +157,24 @@ def parse_sheet_dataset(sheet_path, fallback_aug_raw=None, prefix_kab_map=None):
                 elem.clear()
 
     is_compact_sep = (len(headers_r3) <= 30 and 'kabupaten' not in headers_r3.values())
-    is_w_appended_sep = (headers_r3.get('w') == 'branch' and 'revenue' in headers_r3.get('e', ''))
+    is_user_sep26 = ('revenue' in headers_r3.get('E', '') and headers_r3.get('AC', '').startswith('action to be taken sqa'))
+    is_w_appended_sep = (headers_r3.get('W') == 'branch' and 'revenue' in headers_r3.get('E', ''))
 
-    col_breakdown = 'BB' if is_w_appended_sep else 'AZ'
-    col_nilai_cost = 'BC' if is_w_appended_sep else None
-    col_plan_improv = 'BD' if is_w_appended_sep else 'BA'
-    col_cek = 'BE' if is_w_appended_sep else 'BB'
+    if is_user_sep26:
+        col_breakdown = 'AU'
+        col_nilai_cost = 'AV'
+        col_plan_improv = 'AW'
+        col_cek = 'AX'
+    elif is_w_appended_sep:
+        col_breakdown = 'BB'
+        col_nilai_cost = 'BC'
+        col_plan_improv = 'BD'
+        col_cek = 'BE'
+    else:
+        col_breakdown = 'AZ'
+        col_nilai_cost = None
+        col_plan_improv = 'BA'
+        col_cek = 'BB'
 
     for let, text in headers_r3.items():
         if 'breakdown cost' in text:
@@ -222,7 +234,75 @@ def parse_sheet_dataset(sheet_path, fallback_aug_raw=None, prefix_kab_map=None):
                         fb = (fallback_aug_raw or {}).get(sid, {})
                         s_ssgj = ssgj_lookup.get(sid, {})
 
-                        if is_compact_sep:
+                        if is_user_sep26:
+                            # User's manual SEP '26 layout (A..AY):
+                            # E:Rev, F:Cost, G:Margin, H:%Margin, I:PnL, J:Inline SGGJ, K:Program Group,
+                            # L:GAP dist, M:Priority Sales, N:Priority Network, O:NOP, P:type site,
+                            # Y:Status up to Sep 26, Z:status site Regional, AA:BS Program, AB:Site loss tracker,
+                            # AC:Action SQA, AD:Update SQA, AE:Action Sales, AF:Update Sales, AG:Action NOP, AH:Update NOP,
+                            # AI:RHI Week, AJ:Root Cause RHI, AK:propose RHI, AL:THI Week, AM:Root Cause THI, AN:propose THI,
+                            # AO:Typer Transport, AP:BDBH, AQ:Avail, AR:plan Avail, AS:Status PL, AT:propose PL,
+                            # AU:Breakdown cost, AV:Nilai Cost, AW:plan improvement, AX:cek, AY:Part CDC Cut Off
+                            rev = to_int(c_dict.get('E'))
+                            cost = to_int(c_dict.get('F'))
+                            margin = to_int(c_dict.get('G'))
+                            margin_pct = to_pct(c_dict.get('H'))
+                            pnl = c_dict.get('I', 'Profit')
+                            inline_ssgj = c_dict.get('J') or fb.get('K') or ('Inline' if sid in ssgj_lookup else 'Not Inline')
+                            prog_group = c_dict.get('K') or fb.get('L') or s_ssgj.get('C', '')
+                            gap = c_dict.get('L', '')
+                            if not gap:
+                                if pnl == 'Profit':
+                                    gap = 'Profit'
+                                else:
+                                    am = abs(margin)
+                                    if am < 3000000: gap = '<3 Mio'
+                                    elif am < 5000000: gap = '3-5 Mio'
+                                    elif am < 10000000: gap = '5-10 Mio'
+                                    else: gap = '>10 Mio'
+                            p_sales = c_dict.get('M', 'Not Priority')
+                            p_net = c_dict.get('N', 'Not Priority')
+                            nop = c_dict.get('O') or fb.get('P', '-')
+                            branch = nop.replace('NOP ', '').strip() if nop.startswith('NOP ') else (fb.get('Q') or s_ssgj.get('AE') or 'Unknown')
+                            kab = fb.get('R') or s_ssgj.get('AG') or SPECIAL_KAB_MAP.get(sid)
+                            if not kab and prefix_kab_map:
+                                mc = prefix_kab_map.get((sid[:3], nop), Counter()).most_common(1)
+                                kab = mc[0][0] if mc else 'KOTA AMBON'
+                            kab = kab or 'Unknown'
+                            type_site = c_dict.get('P') or fb.get('S', '')
+                            bts_equip = fb.get('T') or ('Combat' if type_site == 'Combat' else 'Macro')
+                            site_class = fb.get('U', 'BRONZE')
+                            status_oa = fb.get('V', 'OA')
+                            status_period = c_dict.get('Y', '')
+                            cek_from_sep = c_dict.get('AX') or fb.get('BC', '')
+                            src_dict = {
+                                'AE': fb.get('AE', 'Non Intervention'),
+                                'AF': fb.get('AF', ''),
+                                'AG': c_dict.get('AB', ''),
+                                'AH': c_dict.get('AC', ''),
+                                'AI': c_dict.get('AD', ''),
+                                'AJ': c_dict.get('AE', ''),
+                                'AK': c_dict.get('AF', ''),
+                                'AL': c_dict.get('AG', ''),
+                                'AM': c_dict.get('AH', ''),
+                                'AN': c_dict.get('AI', ''),
+                                'AO': c_dict.get('AJ', ''),
+                                'AP': c_dict.get('AK', ''),
+                                'AQ': c_dict.get('AL', ''),
+                                'AR': c_dict.get('AM', ''),
+                                'AS': c_dict.get('AN', ''),
+                                'AT': c_dict.get('AO', ''),
+                                'AU': c_dict.get('AP', ''),
+                                'AV': c_dict.get('AQ', ''),
+                                'AW': c_dict.get('AR', ''),
+                                'AX': c_dict.get('AS', ''),
+                                'AY': c_dict.get('AT', ''),
+                                col_breakdown: c_dict.get('AU', ''),
+                                (col_nilai_cost or 'BA'): c_dict.get('AV', ''),
+                                col_plan_improv: c_dict.get('AW', ''),
+                                col_cek: cek_from_sep,
+                            }
+                        elif is_compact_sep:
                             rev = to_int(c_dict.get('E'))
                             cost = to_int(c_dict.get('F'))
                             margin = to_int(c_dict.get('G'))
@@ -560,8 +640,14 @@ def build_period_meta(p_rows, p_kabs, period_key):
     }
     oa_count = sum(1 for r in p_rows if r[8] == 'OA')
     not_oa_count = tot_all - oa_count
-    h2_all = sum(1 for r in p_rows if r[42] == 'Program H2')
-    h2_loss = sum(1 for r in p_rows if r[13] == 'Loss' and r[42] == 'Program H2')
+    h2_all = sum(1 for r in p_rows if r[42] in ('Program H2', 'Inline'))
+    h2_loss = sum(1 for r in p_rows if r[13] == 'Loss' and r[42] in ('Program H2', 'Inline'))
+    tracker_all = dict(Counter((r[42] or '').strip() for r in p_rows))
+    tracker_loss = dict(Counter((r[42] or '').strip() for r in p_rows if r[13] == 'Loss'))
+    prio_sales_all = {p: sum(1 for r in p_rows if r[17] == p) for p in ('P1', 'P2', 'P3')}
+    prio_sales_loss = {p: sum(1 for r in p_rows if r[13] == 'Loss' and r[17] == p) for p in ('P1', 'P2', 'P3')}
+    prio_net_all = {p: sum(1 for r in p_rows if r[18] == p) for p in ('P1', 'P2', 'P3')}
+    prio_net_loss = {p: sum(1 for r in p_rows if r[13] == 'Loss' and r[18] == p) for p in ('P1', 'P2', 'P3')}
     return {
         'periodKey': period_key,
         'rows': p_rows,
@@ -572,7 +658,13 @@ def build_period_meta(p_rows, p_kabs, period_key):
         'oaCount': oa_count,
         'notOaCount': not_oa_count,
         'h2AllCount': h2_all,
-        'h2LossCount': h2_loss
+        'h2LossCount': h2_loss,
+        'trackerAll': tracker_all,
+        'trackerLoss': tracker_loss,
+        'prioSalesAll': prio_sales_all,
+        'prioSalesLoss': prio_sales_loss,
+        'prioNetAll': prio_net_all,
+        'prioNetLoss': prio_net_loss
     }
 
 aug_rows, aug_kab_list, aug_branch_kab_summary, aug_raw_by_sid = parse_sheet_dataset(sheet_aug_path)
@@ -593,6 +685,19 @@ sep_meta = build_period_meta(sep_rows, sep_kab_list, 'SEP26')
 sep_meta['branchKabSummary'] = sep_branch_kab_summary
 aug_meta = build_period_meta(aug_rows, aug_kab_list, 'AUG26')
 aug_meta['branchKabSummary'] = aug_branch_kab_summary
+
+def fmt_mov_badge(diff, suffix=''):
+    if diff < 0:
+        return f'<span class="badge badge-success">↓ {diff}{suffix} (Membaik)</span>'
+    if diff > 0:
+        return f'<span class="badge badge-danger">↑ +{diff}{suffix} (Naik)</span>'
+    return f'<span class="badge badge-info">= 0{suffix} (Stabil)</span>'
+
+mov_ambon = sep_meta['branchStats']['AMBON']['loss_num'] - aug_meta['branchStats']['AMBON']['loss_num']
+mov_jayapura = sep_meta['branchStats']['JAYAPURA']['loss_num'] - aug_meta['branchStats']['JAYAPURA']['loss_num']
+mov_sorong = sep_meta['branchStats']['SORONG']['loss_num'] - aug_meta['branchStats']['SORONG']['loss_num']
+mov_timika = sep_meta['branchStats']['TIMIKA']['loss_num'] - aug_meta['branchStats']['TIMIKA']['loss_num']
+mov_all = sep_meta['branchStats']['ALL']['loss_num'] - aug_meta['branchStats']['ALL']['loss_num']
 
 # Default active dataset on load is SEP '26
 rows = sep_rows
@@ -3024,7 +3129,7 @@ html_template = f"""<!DOCTYPE html>
       </button>
       <button class="tab-btn" id="tab-btn-target" onclick="switchTab('tab-target')">🎯 Target vs Realisasi September 2026</button>
       <button class="tab-btn" id="tab-btn-db" onclick="switchTab('tab-aug-db')" style="background:rgba(6,182,212,0.15);color:#38bdf8;border-color:rgba(6,182,212,0.4)">
-        <span id="tab-btn-db-label">📋 Database Site Sheet SEP '26</span> <span class="badge badge-info" style="font-size:10px;margin-left:4px">Lengkap 58 Kolom (Termasuk Breakdown, Nilai Cost, Plan Improv, Kategori)</span>
+        <span id="tab-btn-db-label">📋 Database Site Sheet SEP '26</span> <span class="badge badge-info" id="tab-btn-db-badge" style="font-size:10px;margin-left:4px">Lengkap 51 Kolom (Termasuk Breakdown, Nilai Cost, Plan Improv, Kategori)</span>
       </button>
       <button class="tab-btn" id="tab-btn-movement" onclick="switchTab('tab-movement')">📅 Pergerakan Bulanan (Jan – Sep 2026)</button>
       <button class="tab-btn" onclick="switchTab('tab-gap')">📊 Matriks Defisit Gap (<3M s/d >10M)</button>
@@ -3615,7 +3720,7 @@ html_template = f"""<!DOCTYPE html>
       <div class="card-title-bar">
         <div>
           <h3 style="font-size:16px;color:#fff;display:flex;align-items:center;gap:10px;">
-            <span id="db-tab-title">Database Site Sheet SEP '26 (Lengkap 58 Kolom)</span>
+            <span id="db-tab-title">Database Site Sheet SEP '26 (Lengkap 51 Kolom)</span>
             <span class="badge badge-info" style="font-size:11px" id="db-tab-badge">{sep_meta['branchStats']['ALL']['total']} Sites</span>
           </h3>
           <p style="font-size:12px;color:var(--text-muted)" id="db-tab-desc">
@@ -3849,9 +3954,9 @@ html_template = f"""<!DOCTYPE html>
               <td>123</td>
               <td>119</td>
               <td>147</td>
-              <td>145</td>
+              <td>{aug_meta['branchStats']['AMBON']['loss']}</td>
               <td><strong style="color:#38bdf8">{sep_meta['branchStats']['AMBON']['loss']}</strong></td>
-              <td><span class="badge badge-success">↓ -14 (Membaik)</span></td>
+              <td>{fmt_mov_badge(mov_ambon)}</td>
             </tr>
             <tr>
               <td><strong style="color:#38bdf8">JAYAPURA</strong></td>
@@ -3863,9 +3968,9 @@ html_template = f"""<!DOCTYPE html>
               <td>54</td>
               <td>36</td>
               <td>41</td>
-              <td>48</td>
+              <td>{aug_meta['branchStats']['JAYAPURA']['loss']}</td>
               <td><strong style="color:#38bdf8">{sep_meta['branchStats']['JAYAPURA']['loss']}</strong></td>
-              <td><span class="badge badge-info">= 0 (Stabil)</span></td>
+              <td>{fmt_mov_badge(mov_jayapura)}</td>
             </tr>
             <tr>
               <td><strong style="color:#10b981">SORONG</strong></td>
@@ -3877,9 +3982,9 @@ html_template = f"""<!DOCTYPE html>
               <td>28</td>
               <td>23</td>
               <td>31</td>
-              <td>25</td>
+              <td>{aug_meta['branchStats']['SORONG']['loss']}</td>
               <td><strong style="color:#38bdf8">{sep_meta['branchStats']['SORONG']['loss']}</strong></td>
-              <td><span class="badge badge-success">↓ -4 (Membaik)</span></td>
+              <td>{fmt_mov_badge(mov_sorong)}</td>
             </tr>
             <tr>
               <td><strong style="color:#a855f7">TIMIKA</strong></td>
@@ -3891,9 +3996,9 @@ html_template = f"""<!DOCTYPE html>
               <td>28</td>
               <td>20</td>
               <td>21</td>
-              <td>24</td>
+              <td>{aug_meta['branchStats']['TIMIKA']['loss']}</td>
               <td><strong style="color:#38bdf8">{sep_meta['branchStats']['TIMIKA']['loss']}</strong></td>
-              <td><span class="badge badge-success">↓ -7 (Membaik)</span></td>
+              <td>{fmt_mov_badge(mov_timika)}</td>
             </tr>
             <tr class="total-row">
               <td><strong>TOTAL REGIONAL</strong></td>
@@ -3905,9 +4010,9 @@ html_template = f"""<!DOCTYPE html>
               <td><strong>233</strong></td>
               <td><strong>198</strong></td>
               <td><strong>240</strong></td>
-              <td><strong>242</strong></td>
+              <td><strong>{aug_meta['branchStats']['ALL']['loss']}</strong></td>
               <td><strong style="color:#38bdf8">{sep_meta['branchStats']['ALL']['loss']}</strong></td>
-              <td><span class="badge badge-success">↓ -25 Site (Membaik)</span></td>
+              <td>{fmt_mov_badge(mov_all, ' Site')}</td>
             </tr>
           </tbody>
         </table>
@@ -4449,12 +4554,15 @@ html_template = f"""<!DOCTYPE html>
     }}
 
     // 3. Database Tab Labels & Dropdowns
+    const colLabel = isSep ? '51 Kolom' : '58 Kolom';
     const tabBtnTarget = document.getElementById('tab-btn-target');
     if (tabBtnTarget) tabBtnTarget.innerText = `🎯 Target vs Realisasi ${{pLabel}}`;
     const tabBtnDbLabel = document.getElementById('tab-btn-db-label');
     if (tabBtnDbLabel) tabBtnDbLabel.innerText = `📋 Database Site ${{sLabel}}`;
+    const tabBtnDbBadge = document.getElementById('tab-btn-db-badge');
+    if (tabBtnDbBadge) tabBtnDbBadge.innerText = `Lengkap ${{colLabel}} (Termasuk Breakdown, Nilai Cost, Plan Improv, Kategori)`;
     const dbTitle = document.getElementById('db-tab-title');
-    if (dbTitle) dbTitle.innerText = `Database Site ${{sLabel}} (Lengkap 58 Kolom)`;
+    if (dbTitle) dbTitle.innerText = `Database Site ${{sLabel}} (Lengkap ${{colLabel}})`;
     const dbBadge = document.getElementById('db-tab-badge');
     if (dbBadge) dbBadge.innerText = `${{bs.ALL.total}} Sites`;
     const dbDesc = document.getElementById('db-tab-desc');
@@ -4464,16 +4572,52 @@ html_template = f"""<!DOCTYPE html>
     const thSt = document.getElementById('th-db-status');
     if (thSt) thSt.innerText = isSep ? 'Status Sep' : 'Status Aug';
 
-    // Update NOP, PnL, OA, AG dropdown option texts
+    // Update NOP, PnL, OA, Priority & Site Loss Tracker dropdown option texts
     const progPnl = document.getElementById('prog-filter-pnl');
     if (progPnl && progPnl.options.length >= 3) {{
       progPnl.options[0].text = `Loss Sites Only (${{bs.ALL.loss}})`;
       progPnl.options[2].text = `Profit Sites Only (${{bs.ALL.profit}})`;
     }}
-    const progAg = document.getElementById('prog-filter-ag');
-    if (progAg && progAg.options.length >= 2) {{
-      progAg.options[1].text = `Program H2 (${{ds.h2LossCount}} Site Loss)`;
-    }}
+    const syncPriorityDropdown = (selId, countsMap, teamLabel) => {{
+      const sel = document.getElementById(selId);
+      if (!sel || !countsMap) return;
+      Array.from(sel.options).forEach(opt => {{
+        if (opt.value === 'P1' || opt.value === 'P2' || opt.value === 'P3') {{
+          opt.text = `${{opt.value}} ${{teamLabel}} Priority (${{countsMap[opt.value] || 0}})`;
+        }}
+      }});
+    }};
+    syncPriorityDropdown('prog-filter-priority-sales', ds.prioSalesLoss, 'Sales');
+    syncPriorityDropdown('prog-filter-priority-net', ds.prioNetLoss, 'Network');
+    syncPriorityDropdown('aug-filter-priority-sales', ds.prioSalesAll, 'Sales');
+    syncPriorityDropdown('aug-filter-priority-net', ds.prioNetAll, 'Network');
+
+    const populateTrackerSelect = (selId, countsMap, defaultLabel, unitLabel) => {{
+      const sel = document.getElementById(selId);
+      if (!sel || !countsMap) return;
+      const prevVal = sel.value || 'ALL';
+      const preferredOrder = isSep ? ['Inline', 'Not Inline'] : ['Program H2', '0', '#N/A'];
+      const seen = new Set();
+      const keys = [];
+      preferredOrder.forEach(k => {{
+        if (Object.prototype.hasOwnProperty.call(countsMap, k) && k) {{
+          keys.push(k);
+          seen.add(k);
+        }}
+      }});
+      Object.keys(countsMap).forEach(k => {{
+        if (k && !seen.has(k)) keys.push(k);
+      }});
+      sel.innerHTML = `<option value="ALL">${{defaultLabel}}</option>` + keys.map(k => {{
+        const c = countsMap[k] || 0;
+        const label = k === '0' ? `0 (Non Program H2)` : k;
+        return `<option value="${{k}}">${{label}} (${{c}} ${{unitLabel}})</option>`;
+      }}).join('');
+      sel.value = keys.includes(prevVal) ? prevVal : 'ALL';
+    }};
+    populateTrackerSelect('prog-filter-ag', ds.trackerLoss, 'Semua Site Loss Tracker', 'Site Loss');
+    populateTrackerSelect('aug-filter-ag', ds.trackerAll, 'Semua Site Loss Tracker', 'Site');
+
     const augNop = document.getElementById('aug-filter-nop');
     if (augNop && augNop.options.length >= 5) {{
       augNop.options[1].text = `NOP AMBON (${{ds.nopCounts['NOP AMBON']}})`;
@@ -4491,9 +4635,48 @@ html_template = f"""<!DOCTYPE html>
       augOa.options[1].text = `OA (${{ds.oaCount.toLocaleString()}})`;
       augOa.options[2].text = `Not OA (${{ds.notOaCount.toLocaleString()}})`;
     }}
-    const augAg = document.getElementById('aug-filter-ag');
-    if (augAg && augAg.options.length >= 2) {{
-      augAg.options[1].text = `Program H2 (${{ds.h2AllCount}} Site)`;
+
+    // 4. Executive Takeaways / Insights Box
+    const insTitle = document.getElementById('insights-main-title');
+    if (insTitle) insTitle.innerText = `Executive Takeaways & Rencana Aksi Tim SQA PUMA (Update ${{pLabel}})`;
+    const insList = document.getElementById('insights-list-body');
+    if (insList) {{
+      const brNames = ['AMBON', 'JAYAPURA', 'SORONG', 'TIMIKA'];
+      const achieved = brNames
+        .filter(b => bs[b].pPctNum >= 93.0)
+        .sort((a, b) => bs[b].pPctNum - bs[a].pPctNum);
+      const achText = achieved.length
+        ? achieved.map(b => `NOP ${{b.charAt(0) + b.slice(1).toLowerCase()}} (<strong>${{bs[b].pPct}}</strong>)`).join(', ')
+        : 'Belum ada branch mencapai >= 93%';
+      let deltaLine = '';
+      if (isSep && periodDatasets.AUG26) {{
+        const augLossAll = periodDatasets.AUG26.branchStats.ALL.loss_num;
+        const diffLoss = bs.ALL.loss_num - augLossAll;
+        const diffLabel = diffLoss <= 0 ? `turun <strong>${{diffLoss}} site</strong>` : `naik <strong>+${{diffLoss}} site</strong>`;
+        deltaLine = `Total site loss Regional ${{diffLabel}} (dari ${{augLossAll}} di Agustus menjadi <strong>${{bs.ALL.loss}} site loss</strong> di September, capaian R11 di <strong>${{bs.ALL.pPct}}</strong>).`;
+      }} else {{
+        deltaLine = `Total site loss Regional tercatat <strong>${{bs.ALL.loss}} site loss</strong> dengan capaian profitabilitas R11 di <strong>${{bs.ALL.pPct}}</strong> (target H2 93.0%).`;
+      }}
+      const fmtTopKabs = (brKey, limit) => {{
+        const ks = (ds.branchKabSummary[brKey] && ds.branchKabSummary[brKey].kabs) ? ds.branchKabSummary[brKey].kabs.slice(0, limit) : [];
+        if (!ks.length) return '-';
+        return ks.map(k => `<strong>${{k.name}} (${{k.loss}} site loss)</strong>`).join(', ');
+      }};
+      insList.innerHTML = `
+        <li>
+          <strong>${{achieved.length}} Branch Berhasil Melampaui Target 93% (${{pLabel}}):</strong> ${{achText}} melampaui target H2. ${{deltaLine}}
+        </li>
+        <li>
+          <strong>Konsentrasi Site Loss per Kabupaten (${{pLabel}}):</strong>
+          <br>• <em>Branch Ambon (${{bs.AMBON.loss}} Loss):</em> ${{fmtTopKabs('AMBON', 5)}}.
+          <br>• <em>Branch Jayapura (${{bs.JAYAPURA.loss}} Loss):</em> ${{fmtTopKabs('JAYAPURA', 3)}}.
+          <br>• <em>Branch Sorong (${{bs.SORONG.loss}} Loss):</em> ${{fmtTopKabs('SORONG', 3)}}.
+          <br>• <em>Branch Timika (${{bs.TIMIKA.loss}} Loss):</em> ${{fmtTopKabs('TIMIKA', 3)}}.
+        </li>
+        <li>
+          <strong>Switch Periode & Action Tracking Real-Time:</strong> Gunakan tombol <strong>Periode Data (Agustus '26 / September '26)</strong> di bagian atas untuk membandingkan data bulan Agustus dan September secara instan. Seluruh keterangan lapangan tersinkronisasi langsung dengan sheet <code>SEP '26</code> dan <code>Aug 26</code>.
+        </li>
+      `;
     }}
   }}
 
@@ -5117,9 +5300,7 @@ html_template = f"""<!DOCTYPE html>
       }}
       if (transVal !== 'ALL' && r[32] !== transVal) return false;
       if (agVal !== 'ALL') {{
-        if (agVal === 'Program H2' && r[42] !== 'Program H2') return false;
-        if (agVal === '0' && r[42] !== '0') return false;
-        if (agVal === '#N/A' && r[42] !== '#N/A') return false;
+        if ((r[42] || '').trim() !== agVal) return false;
       }}
       return true;
     }});
@@ -5241,7 +5422,7 @@ html_template = f"""<!DOCTYPE html>
         <td style="text-align:right;font-family:'JetBrains Mono'">${{Math.round(r[10]).toLocaleString()}}</td>
         <td>${{classBadge}}</td>
         <td>${{oaBadge}}</td>
-        <td class="new-col-td">${{r[42] === 'Program H2' ? '<span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)">Program H2</span>' : (r[42] || '-')}}</td>
+        <td class="new-col-td">${{(r[42] === 'Program H2' || r[42] === 'Inline') ? `<span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)">${{r[42]}}</span>` : (r[42] || '-')}}</td>
         <!-- Priority Sales & Priority Network BADGES -->
         <td>${{getPriorityBadge(r[17], 'sales')}}</td>
         <td>${{getPriorityBadge(r[18], 'net')}}</td>
@@ -5838,10 +6019,11 @@ html_template = f"""<!DOCTYPE html>
   }}
 
   function exportProgressToCSV() {{
+    const isSep = (activePeriod === 'SEP26');
     const headers = [
       'Site ID', 'Site Name', 'Branch', 'Kabupaten', 'Status PnL',
       'Defisit / Margin (Rp)', 'Cost (Rp)',
-      'Site Class', 'Status OA', 'Site Loss Tracker (Kolom AG)',
+      'Site Class', 'Status OA', 'Site Loss Tracker',
       'Priority Sales', 'Priority Network',
       'Action to be taken SQA', 'Update action taken sqa',
       'Action to be taken Sales', 'Update action taken sales',
@@ -5878,7 +6060,7 @@ html_template = f"""<!DOCTYPE html>
     const blob = new Blob([csv.join('\\\\n')], {{ type: 'text/csv;charset=utf-8;' }});
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `Progress_Action_Tracker_${{new Date().toISOString().slice(0,10)}}.csv`;
+    link.download = `Progress_Action_Tracker_${{isSep ? 'Sep26' : 'Aug26'}}_${{new Date().toISOString().slice(0,10)}}.csv`;
     link.click();
   }}
 
@@ -5976,9 +6158,7 @@ html_template = f"""<!DOCTYPE html>
         if (netPrioVal !== 'PRIORITY_ONLY' && row[18] !== netPrioVal) return false;
       }}
       if (agVal !== 'ALL') {{
-        if (agVal === 'Program H2' && row[42] !== 'Program H2') return false;
-        if (agVal === '0' && row[42] !== '0') return false;
-        if (agVal === '#N/A' && row[42] !== '#N/A') return false;
+        if ((row[42] || '').trim() !== agVal) return false;
       }}
 
       return true;
@@ -6087,7 +6267,7 @@ html_template = f"""<!DOCTYPE html>
 
       const plWeekBadge = (r[36] === 'CLEAR')
         ? `<span class="badge badge-success">CLEAR</span>`
-        : (r[33] ? `<span class="badge badge-warning">${{r[33]}}</span>` : '-');
+        : (r[36] ? `<span class="badge badge-warning">${{r[36]}}</span>` : '-');
 
       rowsHtml += `<tr>
         <td style="color:var(--text-dim);font-family:'JetBrains Mono'">${{i + 1}}</td>
@@ -6112,7 +6292,7 @@ html_template = f"""<!DOCTYPE html>
         <td>${{getPriorityBadge(r[18], 'net')}}</td>
         <td>${{intervBadge}}</td>
         <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#94a3b8">${{r[40] || '-'}}</span></td>
-        <td>${{r[42] === 'Program H2' ? '<span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)">Program H2</span>' : (r[42] || '-')}}</td>
+        <td>${{(r[42] === 'Program H2' || r[42] === 'Inline') ? `<span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)">${{r[42]}}</span>` : (r[42] || '-')}}</td>
         <td style="font-family:'JetBrains Mono'">${{r[19] || '-'}}</td>
         <!-- 18 ACTION / TRACKING COLUMNS (AF to AW) -->
         <td class="new-col-td" style="color:#fca5a5">${{r[20] || '-'}}</td>
@@ -6146,12 +6326,13 @@ html_template = f"""<!DOCTYPE html>
     updateSortIndicators('aug', augSortCol, augSortDir);
   }}
 
-  // Export Filtered Aug 26 To CSV
+  // Export Filtered Period Sheet To CSV
   function exportFilteredAugToCSV() {{
+    const isSep = (activePeriod === 'SEP26');
     const headers = [
       'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Kelas Site', 'Status OA', 'Type Site', 'BTS Equip',
-      'Revenue Aug-26 (Rp)', 'Direct Cost (Rp)', 'Margin (Rp)', '% Margin', 'Status PnL',
-      'GAP Dist', 'Inline SSGJ', 'Program Group', 'Priority Sales', 'Priority Network', 'Intervention Flag', 'Status Aug', 'Payload',
+      isSep ? 'Revenue Sep-26 (Rp)' : 'Revenue Aug-26 (Rp)', 'Direct Cost (Rp)', 'Margin (Rp)', '% Margin', 'Status PnL',
+      'GAP Dist', 'Inline SSGJ', 'Program Group', 'Priority Sales', 'Priority Network', 'Intervention Flag', isSep ? 'Status Sep' : 'Status Aug', 'Payload',
       'Action to be taken SQA', 'Update Action SQA',
       'Action to be taken Sales', 'Update Action Sales',
       'Action to be taken NOP', 'Update Action NOP',
@@ -6183,7 +6364,7 @@ html_template = f"""<!DOCTYPE html>
     const blob = new Blob([csv.join('\\n')], {{ type: 'text/csv;charset=utf-8;' }});
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `Database_Site_Aug26_${{new Date().toISOString().slice(0,10)}}.csv`;
+    link.download = `Database_Site_${{isSep ? 'Sep26' : 'Aug26'}}_${{new Date().toISOString().slice(0,10)}}.csv`;
     link.click();
   }}
 
