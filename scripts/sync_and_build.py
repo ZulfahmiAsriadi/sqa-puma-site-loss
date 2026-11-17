@@ -704,6 +704,57 @@ rows = sep_rows
 kab_list = sep_kab_list
 branch_kab_summary = sep_branch_kab_summary
 
+# Compute Aug -> Sep site status transitions (Loss -> Profit and Profit -> Loss)
+aug_by_sid = {r[0]: r for r in aug_rows}
+sep_by_sid = {r[0]: r for r in sep_rows}
+flip_items = []
+for sid, r_sep in sep_by_sid.items():
+    r_aug = aug_by_sid.get(sid)
+    if not r_aug:
+        continue
+    p_aug, p_sep = r_aug[13], r_sep[13]
+    if (p_aug == 'Loss' and p_sep == 'Profit') or (p_aug == 'Profit' and p_sep == 'Loss'):
+        flip_items.append({
+            't': 'REC' if p_sep == 'Profit' else 'REG',
+            'sid': sid,
+            'name': r_sep[1],
+            'nop': r_sep[2],
+            'br': r_sep[3],
+            'kab': r_sep[4],
+            'revAug': r_aug[9],
+            'revSep': r_sep[9],
+            'costAug': r_aug[10],
+            'costSep': r_sep[10],
+            'mAug': r_aug[11],
+            'mSep': r_sep[11],
+            'delta': r_sep[11] - r_aug[11],
+            'pctAug': r_aug[12],
+            'pctSep': r_sep[12],
+            'gapAug': r_aug[14],
+            'gapSep': r_sep[14],
+            'sqa': r_sep[20] or r_sep[21] or '-',
+            'tracker': r_sep[42] or '-',
+            'statusSep': r_sep[40] or '-',
+        })
+
+flip_rec_count = sum(1 for x in flip_items if x['t'] == 'REC')
+flip_reg_count = sum(1 for x in flip_items if x['t'] == 'REG')
+flip_stay_loss_count = sum(1 for sid, r_sep in sep_by_sid.items() if sid in aug_by_sid and aug_by_sid[sid][13] == 'Loss' and r_sep[13] == 'Loss')
+flip_dropped_loss_count = sum(1 for sid, r_aug in aug_by_sid.items() if sid not in sep_by_sid and r_aug[13] == 'Loss')
+flip_new_sep_count = sum(1 for sid in sep_by_sid if sid not in aug_by_sid)
+
+flip_data = {
+    'items': flip_items,
+    'recCount': flip_rec_count,
+    'regCount': flip_reg_count,
+    'stayLossCount': flip_stay_loss_count,
+    'droppedLossCount': flip_dropped_loss_count,
+    'newSepCount': flip_new_sep_count,
+    'augLossTotal': aug_meta['branchStats']['ALL']['loss_num'],
+    'sepLossTotal': sep_meta['branchStats']['ALL']['loss_num'],
+}
+json_flip_data = json.dumps(flip_data, separators=(',', ':'))
+
 json_aug_rows = json.dumps(rows, separators=(',', ':'))
 json_kab_list = json.dumps(kab_list, separators=(',', ':'))
 json_branch_kab_summary = json.dumps(branch_kab_summary, separators=(',', ':'))
@@ -2642,6 +2693,116 @@ html_template = f"""<!DOCTYPE html>
     html[data-theme="light"] ::-webkit-scrollbar-track {{ background: #f1f5f9; }}
     html[data-theme="light"] ::-webkit-scrollbar-thumb {{ background: #cbd5e1; }}
     html[data-theme="light"] ::-webkit-scrollbar-thumb:hover {{ background: #94a3b8; }}
+    .flip-mode-group {{
+      display: inline-flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+    }}
+    .flip-mode-btn {{
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 6px 13px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }}
+    .flip-mode-btn:hover {{
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }}
+    .flip-mode-btn.active-all {{
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(14, 165, 233, 0.35);
+    }}
+    .flip-mode-btn.active-rec {{
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35);
+    }}
+    .flip-mode-btn.active-reg {{
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
+    }}
+    .flip-branch-row {{
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }}
+    .flip-branch-row:hover {{
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateX(2px);
+    }}
+    .flip-branch-row.active {{
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+    }}
+    .flip-margin-row {{
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 8px 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }}
+    .flip-margin-row:hover {{
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.16);
+    }}
+    html[data-theme="light"] .flip-mode-group {{
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }}
+    html[data-theme="light"] .flip-mode-btn {{
+      color: #475569;
+    }}
+    html[data-theme="light"] .flip-mode-btn:hover {{
+      color: #0f172a;
+      background: #e2e8f0;
+    }}
+    html[data-theme="light"] .flip-mode-btn.active-all,
+    html[data-theme="light"] .flip-mode-btn.active-rec,
+    html[data-theme="light"] .flip-mode-btn.active-reg {{
+      color: #ffffff;
+    }}
+    html[data-theme="light"] .flip-branch-row,
+    html[data-theme="light"] .flip-margin-row {{
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }}
+    html[data-theme="light"] .flip-branch-row:hover,
+    html[data-theme="light"] .flip-margin-row:hover {{
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }}
+    html[data-theme="light"] .flip-branch-row.active {{
+      background: #f0f9ff;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.25);
+    }}
+    html[data-theme="light"] #flip-reconcile-banner {{
+      background: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      color: #334155 !important;
+    }}
     html[data-theme="light"] .search-input,
     html[data-theme="light"] .filter-select {{
       background: #ffffff;
@@ -3304,6 +3465,9 @@ html_template = f"""<!DOCTYPE html>
         <span id="tab-btn-db-label">📋 Database Site Sheet SEP '26</span> <span class="badge badge-info" id="tab-btn-db-badge" style="font-size:10px;margin-left:2px">51 Kolom</span>
       </button>
       <button class="tab-btn" id="tab-btn-movement" onclick="switchTab('tab-movement')">📅 Pergerakan Bulanan (Jan – Sep 2026)</button>
+      <button class="tab-btn" id="tab-btn-flip" onclick="switchTab('tab-flip')">
+        🔄 Loss ↔ Profit (Agu → Sep) <span class="badge badge-success" style="font-size:10px;margin-left:2px" id="tab-btn-flip-badge">+{flip_rec_count} / -{flip_reg_count}</span>
+      </button>
       <button class="tab-btn" onclick="switchTab('tab-gap')">📊 Matriks Defisit Gap (<3M s/d >10M)</button>
       <button class="tab-btn" onclick="switchTab('tab-regional')">🌐 Pembanding Nasional</button>
     </div>
@@ -4180,6 +4344,156 @@ html_template = f"""<!DOCTYPE html>
           </tbody>
         </table>
       </div>
+
+      <div id="flip-reconcile-banner" style="margin-top:16px;padding:14px 18px;border-radius:12px;background:rgba(15,23,42,0.55);border:1px solid rgba(56,189,248,0.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div style="font-size:12.5px;color:var(--text-muted)">
+          <strong style="color:#fff">Pergeseran Site Agustus → September 2026:</strong>
+          Tercatat <strong style="color:#34d399">{flip_rec_count} site Loss (Agu) → Profit (Sep)</strong> dan <strong style="color:#f87171">{flip_reg_count} site Profit (Agu) → Loss (Sep)</strong>.
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn-action" style="background:rgba(16,185,129,0.16);border-color:rgba(16,185,129,0.4);color:#34d399" onclick="openFlipTab('REC')">🟢 Lihat {flip_rec_count} Loss → Profit</button>
+          <button type="button" class="btn-action" style="background:rgba(239,68,68,0.16);border-color:rgba(239,68,68,0.4);color:#f87171" onclick="openFlipTab('REG')">🔴 Lihat {flip_reg_count} Profit → Loss</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4B: Analisis & Grafik Loss <-> Profit (Agustus -> September 2026) -->
+    <div id="tab-flip" class="tab-pane">
+      <div class="card-title-bar">
+        <div>
+          <h3 style="font-size:16px;color:#fff;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span>Analisis & Grafik Pergeseran Status Site (Agustus → September 2026)</span>
+            <span class="badge badge-info" id="flip-header-badge">{flip_rec_count + flip_reg_count} Site Berubah Status</span>
+          </h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:4px">
+            Daftar dan grafik site yang <strong>Loss di Agustus namun Profit di September ({flip_rec_count} site)</strong> serta sebaliknya <strong>Profit di Agustus menjadi Loss di September ({flip_reg_count} site)</strong>.
+          </p>
+        </div>
+        <button class="btn-action" onclick="exportFlipToCSV()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Export CSV Flip
+        </button>
+      </div>
+
+      <!-- 4 KPI Cards Ringkasan Transisi -->
+      <div class="priority-kpi-grid" style="margin-top:4px;margin-bottom:20px">
+        <div class="priority-kpi-item active" data-flip-kpi="ALL" onclick="setFlipMode('ALL')" title="Klik untuk menampilkan seluruh site yang berubah status">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;color:#7dd3fc;font-weight:700">🔄 Total Site Berubah Status</span>
+            <span class="badge badge-info">{flip_rec_count + flip_reg_count} Sites</span>
+          </div>
+          <div style="font-size:24px;font-weight:800;color:#fff;margin:6px 0 2px" id="flip-kpi-total">{flip_rec_count + flip_reg_count} <span style="font-size:12px;color:var(--text-dim);font-weight:normal">sites</span></div>
+          <div style="font-size:11px;color:var(--text-muted)" id="flip-kpi-net-sub">Net Status Flip: <strong style="color:#34d399">+{flip_rec_count - flip_reg_count} Profit</strong></div>
+        </div>
+
+        <div class="priority-kpi-item" data-flip-kpi="REC" onclick="setFlipMode('REC')" title="Klik untuk memfilter list Loss Agustus → Profit September">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;color:#34d399;font-weight:700">🟢 Loss Agu → Profit Sep</span>
+            <span class="badge badge-success" id="flip-kpi-rec-badge">{flip_rec_count} Membaik</span>
+          </div>
+          <div style="font-size:24px;font-weight:800;color:#34d399;margin:6px 0 2px" id="flip-kpi-rec">{flip_rec_count} <span style="font-size:12px;color:var(--text-dim);font-weight:normal">sites</span></div>
+          <div style="font-size:11px;color:var(--text-muted)" id="flip-kpi-rec-sub">Klik untuk daftar site pulih</div>
+        </div>
+
+        <div class="priority-kpi-item" data-flip-kpi="REG" onclick="setFlipMode('REG')" title="Klik untuk memfilter list Profit Agustus → Loss September">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;color:#f87171;font-weight:700">🔴 Profit Agu → Loss Sep</span>
+            <span class="badge badge-danger" id="flip-kpi-reg-badge">{flip_reg_count} Loss Baru</span>
+          </div>
+          <div style="font-size:24px;font-weight:800;color:#f87171;margin:6px 0 2px" id="flip-kpi-reg">{flip_reg_count} <span style="font-size:12px;color:var(--text-dim);font-weight:normal">sites</span></div>
+          <div style="font-size:11px;color:var(--text-muted)" id="flip-kpi-reg-sub">Klik untuk daftar site perlu kawal</div>
+        </div>
+
+        <div class="priority-kpi-item" style="cursor:default" title="Rekonsiliasi total site loss Agustus ke September">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;color:#fbbf24;font-weight:700">🔁 Rekonsiliasi Total Loss</span>
+            <span class="badge badge-warning">{flip_stay_loss_count} Tetap Loss</span>
+          </div>
+          <div style="font-size:20px;font-weight:800;color:#fff;margin:6px 0 2px">{aug_meta['branchStats']['ALL']['loss']} → {sep_meta['branchStats']['ALL']['loss']} <span style="font-size:12px;color:#34d399;font-weight:700">({mov_all:+d})</span></div>
+          <div style="font-size:11px;color:var(--text-muted)">{flip_stay_loss_count} tetap Loss + {flip_reg_count} baru ({flip_dropped_loss_count} Agu off)</div>
+        </div>
+      </div>
+
+      <!-- Dual Visual Charts -->
+      <div class="prog-charts-grid" style="margin-bottom:20px">
+        <div class="prog-chart-box">
+          <div class="prog-chart-title">
+            <span>📊 Grafik Flip Status per Branch (Agu → Sep)</span>
+            <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Hijau: Membaik • Merah: Loss Baru • Klik Branch untuk filter</span>
+          </div>
+          <div id="flip-branch-chart" style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="prog-chart-box">
+          <div class="prog-chart-title">
+            <span>📈 Grafik Top Perubahan Margin Terbesar (Agu → Sep)</span>
+            <span style="font-size:11px;color:var(--text-dim);font-weight:normal">Top Recovery vs Top Penurunan • Klik bar untuk cari</span>
+          </div>
+          <div id="flip-margin-chart" style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar & List Table -->
+      <div class="table-controls-bar controls-stacked">
+        <div class="controls-primary-row">
+          <div class="flip-mode-group">
+            <button type="button" class="flip-mode-btn active-all" id="flip-btn-all" onclick="setFlipMode('ALL')">🔄 Semua Flip ({flip_rec_count + flip_reg_count})</button>
+            <button type="button" class="flip-mode-btn" id="flip-btn-rec" onclick="setFlipMode('REC')">🟢 Loss Agu → Profit Sep ({flip_rec_count})</button>
+            <button type="button" class="flip-mode-btn" id="flip-btn-reg" onclick="setFlipMode('REG')">🔴 Profit Agu → Loss Sep ({flip_reg_count})</button>
+          </div>
+
+          <div class="controls-primary-actions">
+            <span class="filter-count-pill" id="flip-count-pill">{flip_rec_count + flip_reg_count} Sites</span>
+            <select id="flip-filter-branch" class="filter-select" onchange="renderFlipSection()">
+              <option value="ALL">Semua Branch</option>
+              <option value="AMBON">Branch AMBON</option>
+              <option value="JAYAPURA">Branch JAYAPURA</option>
+              <option value="SORONG">Branch SORONG</option>
+              <option value="TIMIKA">Branch TIMIKA</option>
+            </select>
+            <select id="flip-sort-select" class="filter-select" onchange="renderFlipSection()" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.12);color:#38bdf8;font-weight:700">
+              <option value="DELTA_ABS">Delta Margin Terbesar</option>
+              <option value="REC_BEST">Perbaikan Tertinggi (Loss→Profit)</option>
+              <option value="REG_WORST">Penurunan Terdalam (Profit→Loss)</option>
+              <option value="SITE_ID_ASC">Site ID (A - Z)</option>
+            </select>
+            <div class="search-input-wrapper" style="min-width:210px;max-width:300px">
+              <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <input type="text" id="flip-search-input" class="search-input" placeholder="Cari Site ID, Nama, Kabupaten..." oninput="renderFlipSection()">
+            </div>
+            <button type="button" class="btn-reset-filter" onclick="resetFlipFilters()" title="Reset filter Flip">↺ Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container" style="max-height:600px">
+        <table class="data-table" id="flip-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Arah Perubahan Status</th>
+              <th>Site ID</th>
+              <th>Site Name</th>
+              <th>Branch</th>
+              <th>Kabupaten</th>
+              <th style="text-align:right">Margin Aug-26 (Rp)</th>
+              <th style="text-align:right">Margin Sep-26 (Rp)</th>
+              <th style="text-align:right">Delta (Sep − Agu)</th>
+              <th style="text-align:center">% Margin (Agu → Sep)</th>
+              <th>GAP Sep</th>
+              <th class="new-col-th" style="background:rgba(239,68,68,0.18);color:#fca5a5">Action SQA (SEP '26)</th>
+              <th>Site Loss Tracker</th>
+            </tr>
+          </thead>
+          <tbody id="flip-tbody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Tab 5: Defisit Gap Analysis -->
@@ -4386,6 +4700,7 @@ html_template = f"""<!DOCTYPE html>
 
 <script>
   const periodDatasets = {json_period_datasets};
+  const flipDataset = {json_flip_data};
   let activePeriod = 'SEP26';
   let augData = periodDatasets.SEP26.rows;
   let kabData = periodDatasets.SEP26.kabData;
@@ -4535,15 +4850,264 @@ html_template = f"""<!DOCTYPE html>
   function switchTab(tabId) {{
     document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    document.getElementById(tabId).classList.add('active');
+    const clickedBtn = (typeof event !== 'undefined' && event && event.currentTarget && event.currentTarget.classList && event.currentTarget.classList.contains('tab-btn'))
+      ? event.currentTarget
+      : document.querySelector(`.tabs-nav .tab-btn[onclick*="'${{tabId}}'"]`);
+    if (clickedBtn) clickedBtn.classList.add('active');
+    const pane = document.getElementById(tabId);
+    if (pane) pane.classList.add('active');
 
     if (tabId === 'tab-kabupaten') {{
       renderKabTable();
       renderProgTable();
     }} else if (tabId === 'tab-aug-db') {{
       renderAugTable();
+    }} else if (tabId === 'tab-flip') {{
+      renderFlipSection();
     }}
+  }}
+
+  let activeFlipMode = 'ALL';
+
+  function openFlipTab(mode = 'ALL') {{
+    activeFlipMode = mode || 'ALL';
+    switchTab('tab-flip');
+    const el = document.getElementById('tab-flip');
+    if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+  }}
+
+  function setFlipMode(mode) {{
+    activeFlipMode = (activeFlipMode === mode && mode !== 'ALL') ? 'ALL' : (mode || 'ALL');
+    renderFlipSection();
+  }}
+
+  function toggleFlipBranch(branch) {{
+    const sel = document.getElementById('flip-filter-branch');
+    if (!sel) return;
+    sel.value = (sel.value === branch) ? 'ALL' : branch;
+    renderFlipSection();
+  }}
+
+  function focusFlipSite(sid) {{
+    const inp = document.getElementById('flip-search-input');
+    if (inp) {{
+      inp.value = (inp.value.trim().toUpperCase() === sid) ? '' : sid;
+    }}
+    renderFlipSection();
+  }}
+
+  function resetFlipFilters() {{
+    activeFlipMode = 'ALL';
+    const br = document.getElementById('flip-filter-branch');
+    if (br) br.value = 'ALL';
+    const so = document.getElementById('flip-sort-select');
+    if (so) so.value = 'DELTA_ABS';
+    const sq = document.getElementById('flip-search-input');
+    if (sq) sq.value = '';
+    renderFlipSection();
+  }}
+
+  function renderFlipSection() {{
+    if (!flipDataset || !Array.isArray(flipDataset.items)) return;
+    const branchSel = document.getElementById('flip-filter-branch');
+    const branchVal = branchSel ? branchSel.value : 'ALL';
+    const sortVal = document.getElementById('flip-sort-select') ? document.getElementById('flip-sort-select').value : 'DELTA_ABS';
+    const q = (document.getElementById('flip-search-input') ? document.getElementById('flip-search-input').value : '').toLowerCase().trim();
+
+    // Update mode toggle pills & KPI cards
+    const btnAll = document.getElementById('flip-btn-all');
+    const btnRec = document.getElementById('flip-btn-rec');
+    const btnReg = document.getElementById('flip-btn-reg');
+    if (btnAll) btnAll.className = 'flip-mode-btn' + (activeFlipMode === 'ALL' ? ' active-all' : '');
+    if (btnRec) btnRec.className = 'flip-mode-btn' + (activeFlipMode === 'REC' ? ' active-rec' : '');
+    if (btnReg) btnReg.className = 'flip-mode-btn' + (activeFlipMode === 'REG' ? ' active-reg' : '');
+
+    document.querySelectorAll('.priority-kpi-item[data-flip-kpi]').forEach(el => {{
+      el.classList.toggle('active', el.getAttribute('data-flip-kpi') === activeFlipMode);
+    }});
+
+    const branchItems = flipDataset.items.filter(x => branchVal === 'ALL' || x.br === branchVal);
+    const recBranch = branchItems.filter(x => x.t === 'REC');
+    const regBranch = branchItems.filter(x => x.t === 'REG');
+    const recDeltaSum = recBranch.reduce((s, x) => s + x.delta, 0);
+    const regDeltaSum = regBranch.reduce((s, x) => s + x.delta, 0);
+    const fmtMio = (v) => (v >= 0 ? '+Rp ' : '-Rp ') + (Math.abs(v) / 1e6).toFixed(1) + ' Jt';
+
+    const elTot = document.getElementById('flip-kpi-total');
+    if (elTot) elTot.innerHTML = `${{branchItems.length}} <span style="font-size:12px;color:var(--text-dim);font-weight:normal">sites</span>`;
+    const netDiff = recBranch.length - regBranch.length;
+    const elNetSub = document.getElementById('flip-kpi-net-sub');
+    if (elNetSub) elNetSub.innerHTML = `Net Status Flip: <strong style="color:${{netDiff >= 0 ? '#34d399' : '#f87171'}}">${{netDiff >= 0 ? '+' : ''}}${{netDiff}} Profit</strong>`;
+
+    const elRec = document.getElementById('flip-kpi-rec');
+    if (elRec) elRec.innerHTML = `${{recBranch.length}} <span style="font-size:12px;color:var(--text-dim);font-weight:normal">sites</span>`;
+    const elRecSub = document.getElementById('flip-kpi-rec-sub');
+    if (elRecSub) elRecSub.innerText = `Perbaikan margin: ${{fmtMio(recDeltaSum)}}`;
+    const elReg = document.getElementById('flip-kpi-reg');
+    if (elReg) elReg.innerHTML = `${{regBranch.length}} <span style="font-size:12px;color:var(--text-dim);font-weight:normal">sites</span>`;
+    const elRegSub = document.getElementById('flip-kpi-reg-sub');
+    if (elRegSub) elRegSub.innerText = `Penurunan margin: ${{fmtMio(regDeltaSum)}}`;
+
+    // 1. Render Branch Diverging Chart (Loss->Profit vs Profit->Loss per Branch)
+    const brChart = document.getElementById('flip-branch-chart');
+    if (brChart) {{
+      const branches = ['AMBON', 'JAYAPURA', 'SORONG', 'TIMIKA'];
+      const brStats = branches.map(b => {{
+        const list = flipDataset.items.filter(x => x.br === b);
+        const recC = list.filter(x => x.t === 'REC').length;
+        const regC = list.filter(x => x.t === 'REG').length;
+        return {{ b, recC, regC, net: recC - regC }};
+      }});
+      const maxBar = Math.max(1, ...brStats.map(s => Math.max(s.recC, s.regC)));
+      brChart.innerHTML = brStats.map(s => {{
+        const wRec = Math.round(s.recC / maxBar * 100);
+        const wReg = Math.round(s.regC / maxBar * 100);
+        const isAct = (branchVal === s.b);
+        const netColor = s.net > 0 ? '#34d399' : (s.net < 0 ? '#f87171' : '#38bdf8');
+        const netTxt = s.net > 0 ? `+${{s.net}} Net Membaik` : (s.net < 0 ? `${{s.net}} Net Loss` : '0 Imbang');
+        return `
+          <div class="flip-branch-row ${{isAct ? 'active' : ''}}" onclick="toggleFlipBranch('${{s.b}}')" title="Klik untuk filter ke Branch ${{s.b}}">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+              <strong style="font-size:12.5px;color:#fff">${{s.b}}</strong>
+              <span class="badge" style="background:rgba(255,255,255,0.06);color:${{netColor}};border:1px solid ${{netColor}}40">${{netTxt}}</span>
+            </div>
+            <div style="display:grid;grid-template-columns:130px 1fr 40px;align-items:center;gap:8px;margin-bottom:5px;font-size:11px">
+              <span style="color:#34d399;font-weight:600">🟢 Loss → Profit</span>
+              <div style="height:10px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden">
+                <div style="width:${{wRec}}%;height:100%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:6px;transition:width 0.5s ease"></div>
+              </div>
+              <strong style="text-align:right;color:#34d399;font-family:'JetBrains Mono'">${{s.recC}}</strong>
+            </div>
+            <div style="display:grid;grid-template-columns:130px 1fr 40px;align-items:center;gap:8px;font-size:11px">
+              <span style="color:#f87171;font-weight:600">🔴 Profit → Loss</span>
+              <div style="height:10px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden">
+                <div style="width:${{wReg}}%;height:100%;background:linear-gradient(90deg,#ef4444,#f87171);border-radius:6px;transition:width 0.5s ease"></div>
+              </div>
+              <strong style="text-align:right;color:#f87171;font-family:'JetBrains Mono'">${{s.regC}}</strong>
+            </div>
+          </div>
+        `;
+      }}).join('');
+    }}
+
+    // 2. Render Top Margin Delta Butterfly Chart
+    const mChart = document.getElementById('flip-margin-chart');
+    if (mChart) {{
+      const topRec = (activeFlipMode !== 'REG') ? [...recBranch].sort((a, b) => b.delta - a.delta).slice(0, activeFlipMode === 'REC' ? 8 : 4) : [];
+      const topReg = (activeFlipMode !== 'REC') ? [...regBranch].sort((a, b) => a.delta - b.delta).slice(0, activeFlipMode === 'REG' ? 8 : 4) : [];
+      const combined = [...topRec, ...topReg];
+      const maxDelta = Math.max(1, ...combined.map(x => Math.abs(x.delta)));
+      if (!combined.length) {{
+        mChart.innerHTML = `<div style="padding:28px;text-align:center;color:var(--text-muted);font-size:12px">Tidak ada site pada filter ini</div>`;
+      }} else {{
+        mChart.innerHTML = combined.map(x => {{
+          const isRec = (x.t === 'REC');
+          const pctW = Math.max(6, Math.round(Math.abs(x.delta) / maxDelta * 100));
+          const col = isRec ? '#10b981' : '#ef4444';
+          const grad = isRec ? 'linear-gradient(90deg,#059669,#34d399)' : 'linear-gradient(90deg,#dc2626,#f87171)';
+          return `
+            <div class="flip-margin-row" onclick="focusFlipSite('${{x.sid}}')" title="${{x.name}} | Agu: Rp ${{Math.round(x.mAug).toLocaleString()}} → Sep: Rp ${{Math.round(x.mSep).toLocaleString()}}">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;margin-bottom:4px;gap:8px">
+                <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                  <strong style="color:${{col}};font-family:'JetBrains Mono'">${{x.sid}}</strong>
+                  <span style="color:var(--text-dim)">(${{x.br}})</span>
+                  <span style="color:var(--text-muted)">${{x.name}}</span>
+                </span>
+                <strong style="color:${{col}};font-family:'JetBrains Mono';white-space:nowrap">${{fmtMio(x.delta)}}</strong>
+              </div>
+              <div style="height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
+                <div style="width:${{pctW}}%;height:100%;background:${{grad}};border-radius:4px"></div>
+              </div>
+            </div>
+          `;
+        }}).join('');
+      }}
+    }}
+
+    // 3. Filter & Sort Table List
+    let list = branchItems.filter(x => {{
+      if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
+      if (q) {{
+        const hay = `${{x.sid}} ${{x.name}} ${{x.br}} ${{x.kab}} ${{x.sqa}} ${{x.tracker}}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }}
+      return true;
+    }});
+
+    if (sortVal === 'DELTA_ABS') list.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+    else if (sortVal === 'REC_BEST') list.sort((a, b) => b.delta - a.delta);
+    else if (sortVal === 'REG_WORST') list.sort((a, b) => a.delta - b.delta);
+    else if (sortVal === 'SITE_ID_ASC') list.sort((a, b) => a.sid.localeCompare(b.sid));
+
+    const pill = document.getElementById('flip-count-pill');
+    if (pill) pill.innerText = `${{list.length}} Sites`;
+
+    const tbody = document.getElementById('flip-tbody');
+    if (!tbody) return;
+    if (!list.length) {{
+      tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:36px;color:var(--text-muted)">Tidak ada site perubahan status yang cocok dengan filter</td></tr>`;
+      return;
+    }}
+
+    tbody.innerHTML = list.map((x, idx) => {{
+      const isRec = (x.t === 'REC');
+      const dirBadge = isRec
+        ? `<span class="badge badge-success">🟢 Loss Agu → Profit Sep</span>`
+        : `<span class="badge badge-danger">🔴 Profit Agu → Loss Sep</span>`;
+      const dStr = (x.delta >= 0 ? '+' : '') + Math.round(x.delta).toLocaleString();
+      const dColor = x.delta >= 0 ? '#34d399' : '#f87171';
+      let gapBadge = x.gapSep || '-';
+      if (x.gapSep === '>10 Mio') gapBadge = `<span class="badge badge-danger">&gt;10 Mio</span>`;
+      else if (x.gapSep === '5-10 Mio') gapBadge = `<span class="badge badge-warning">5-10 Mio</span>`;
+      else if (x.gapSep === '3-5 Mio' || x.gapSep === '<3 Mio') gapBadge = `<span class="badge badge-info">${{x.gapSep}}</span>`;
+      else if (x.gapSep === 'Profit') gapBadge = `<span class="badge badge-success">Profit</span>`;
+      const trkBadge = (x.tracker === 'Inline' || x.tracker === 'Program H2')
+        ? `<span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4)">${{x.tracker}}</span>`
+        : (x.tracker || '-');
+
+      return `<tr>
+        <td style="color:var(--text-dim);font-family:'JetBrains Mono'">${{idx + 1}}</td>
+        <td>${{dirBadge}}</td>
+        <td><strong style="color:${{isRec ? '#34d399' : '#f87171'}};font-family:'JetBrains Mono'">${{x.sid}}</strong></td>
+        <td title="${{x.name}}" style="max-width:210px;overflow:hidden;text-overflow:ellipsis">${{x.name}}</td>
+        <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#94a3b8">${{x.br}}</span></td>
+        <td>${{x.kab}}</td>
+        <td style="text-align:right;font-family:'JetBrains Mono';color:${{x.mAug < 0 ? '#f87171' : '#34d399'}}">${{Math.round(x.mAug).toLocaleString()}}</td>
+        <td style="text-align:right;font-family:'JetBrains Mono';font-weight:700;color:${{x.mSep < 0 ? '#f87171' : '#34d399'}}">${{Math.round(x.mSep).toLocaleString()}}</td>
+        <td style="text-align:right;font-family:'JetBrains Mono';font-weight:700;color:${{dColor}}">${{dStr}}</td>
+        <td style="text-align:center;font-family:'JetBrains Mono'">${{x.pctAug}}% → <strong>${{x.pctSep}}%</strong></td>
+        <td>${{gapBadge}}</td>
+        <td class="new-col-td" style="color:#fca5a5">${{x.sqa}}</td>
+        <td>${{trkBadge}}</td>
+      </tr>`;
+    }}).join('');
+  }}
+
+  function exportFlipToCSV() {{
+    if (!flipDataset || !Array.isArray(flipDataset.items)) return;
+    const branchVal = document.getElementById('flip-filter-branch') ? document.getElementById('flip-filter-branch').value : 'ALL';
+    const q = (document.getElementById('flip-search-input') ? document.getElementById('flip-search-input').value : '').toLowerCase().trim();
+    const list = flipDataset.items.filter(x => {{
+      if (branchVal !== 'ALL' && x.br !== branchVal) return false;
+      if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
+      if (q) {{
+        const hay = `${{x.sid}} ${{x.name}} ${{x.br}} ${{x.kab}} ${{x.sqa}} ${{x.tracker}}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }}
+      return true;
+    }});
+    const headers = ['Arah Transisi', 'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Margin Aug-26 (Rp)', 'Margin Sep-26 (Rp)', 'Delta Margin (Rp)', '% Margin Agu', '% Margin Sep', 'GAP Sep', 'Action SQA (Sep 26)', 'Site Loss Tracker'];
+    const csv = [headers.map(h => `"${{h}}"`).join(',')];
+    list.forEach(x => {{
+      const dir = x.t === 'REC' ? 'Loss Agu -> Profit Sep' : 'Profit Agu -> Loss Sep';
+      const vals = [dir, x.sid, x.name, x.nop, x.br, x.kab, x.mAug, x.mSep, x.delta, x.pctAug + '%', x.pctSep + '%', x.gapSep, x.sqa, x.tracker];
+      csv.push(vals.map(v => `"${{String(v || '').replace(/"/g, '""')}}"`).join(','));
+    }});
+    const blob = new Blob([csv.join('\\n')], {{ type: 'text/csv;charset=utf-8;' }});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Flip_Status_Aug_Sep_2026_${{new Date().toISOString().slice(0,10)}}.csv`;
+    link.click();
   }}
 
   // Switch Sub-Tabs inside Branch Focus
@@ -6753,6 +7317,7 @@ html_template = f"""<!DOCTYPE html>
     if (typeof activeBranch !== 'undefined') updateSideCard(activeBranch);
     if (typeof renderProgCharts === 'function') renderProgCharts();
     if (typeof renderPriorityCharts === 'function') renderPriorityCharts();
+    if (typeof renderFlipSection === 'function') renderFlipSection();
   }}
 
   updateThemeButton();
@@ -6770,6 +7335,7 @@ html_template = f"""<!DOCTYPE html>
     }} catch (e) {{
       switchPeriod('SEP26', true);
     }}
+    if (typeof renderFlipSection === 'function') renderFlipSection();
   }});
   window.addEventListener('resize', renderTrendChart);
 </script>
