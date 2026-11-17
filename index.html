@@ -50,34 +50,40 @@
 
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: radial-gradient(circle at 15% 15%, #131c31 0%, #080d18 55%, #050810 100%);
+      background: radial-gradient(circle at 12% 8%, #16223b 0%, #090e1a 52%, #050810 100%);
+      background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
-      padding: 24px;
+      padding: 20px 24px;
       line-height: 1.5;
       overflow-x: hidden;
       font-feature-settings: "zero" 0;
     }
 
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.45); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
+
     .dashboard-container { max-width: 1720px; margin: 0 auto; }
 
     .glass {
       background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
     header {
-      padding: 22px 30px;
-      margin-bottom: 24px;
+      padding: 18px 26px;
+      margin-bottom: 18px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
       position: relative;
       overflow: hidden;
     }
@@ -175,14 +181,29 @@
       100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
     }
 
-    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .header-util-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
     .meta-tag {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-color);
-      padding: 6px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 12px;
+      padding: 0 12px;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 10px;
+      font-size: 11.5px;
       color: var(--text-muted);
       font-family: 'JetBrains Mono', monospace;
     }
@@ -191,15 +212,17 @@
       background: rgba(255, 42, 68, 0.15);
       border: 1px solid rgba(255, 42, 68, 0.4);
       color: #ff6b7d;
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
+      padding: 0 14px;
+      min-height: 36px;
+      border-radius: 10px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .btn-action:hover {
@@ -215,9 +238,9 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 14px;
-      padding: 14px 24px;
-      margin-bottom: 24px;
+      gap: 12px;
+      padding: 12px 20px;
+      margin-bottom: 18px;
     }
 
     .filter-group {
@@ -272,12 +295,12 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-bottom: 24px;
+      gap: 18px;
+      margin-bottom: 20px;
     }
 
     .kpi-card {
-      padding: 22px 24px;
+      padding: 20px 22px;
       position: relative;
       overflow: hidden;
       transition: all 0.25s ease;
@@ -285,7 +308,7 @@
 
     .kpi-card:hover {
       transform: translateY(-3px);
-      border-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.18);
     }
 
     .kpi-header {
@@ -296,7 +319,7 @@
     }
 
     .kpi-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -314,14 +337,15 @@
     }
 
     .kpi-val {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 800;
-      letter-spacing: -1px;
+      letter-spacing: -0.8px;
       color: #fff;
       margin-bottom: 6px;
       display: flex;
       align-items: baseline;
       gap: 6px;
+      font-variant-numeric: tabular-nums;
     }
 
     .kpi-val .unit {
@@ -449,18 +473,20 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 16px;
-      margin-bottom: 20px;
+      background: rgba(15, 23, 42, 0.48);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 7px;
+      margin-bottom: 22px;
     }
 
     .tab-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-color);
+      background: transparent;
+      border: 1px solid transparent;
       border-radius: 10px;
       color: var(--text-muted);
-      padding: 10px 18px;
-      font-size: 13.5px;
+      padding: 9px 15px;
+      font-size: 13px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
@@ -469,7 +495,7 @@
       white-space: nowrap;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .tab-btn:hover {
@@ -621,7 +647,7 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       color: var(--text-main);
       white-space: nowrap;
-      font-variant-numeric: normal;
+      font-variant-numeric: tabular-nums;
     }
 
     table.data-table tbody tr:hover { background: rgba(255, 255, 255, 0.035); }
@@ -716,10 +742,94 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 16px;
-      background: rgba(15, 23, 42, 0.4);
-      padding: 14px 18px;
-      border-radius: var(--radius-sm);
+      background: rgba(15, 23, 42, 0.5);
+      padding: 14px 16px;
+      border-radius: 12px;
       border: 1px solid var(--border-color);
+    }
+    .table-controls-bar.controls-stacked {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .controls-primary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .controls-primary-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .controls-filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 8px;
+      width: 100%;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.09);
+    }
+    .filter-count-pill {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #7dd3fc;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .btn-reset-filter {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-reset-filter:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+    .active-filter-chip {
+      height: 32px;
+      padding: 0 11px;
+      border-radius: 20px;
+      background: rgba(245, 158, 11, 0.16);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+      font-size: 11.5px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .active-filter-chip:hover {
+      background: rgba(245, 158, 11, 0.28);
+      transform: translateY(-1px);
     }
 
     .search-input-wrapper {
@@ -727,17 +837,18 @@
       align-items: center;
       gap: 10px;
       flex: 1;
-      min-width: 260px;
-      max-width: 400px;
+      min-width: 240px;
+      max-width: 460px;
       position: relative;
     }
 
     .search-input {
       width: 100%;
+      height: 36px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 8px 14px 8px 36px;
+      border-radius: 8px;
+      padding: 6px 14px 6px 36px;
       font-size: 13px;
       color: #fff;
       font-family: inherit;
@@ -761,12 +872,18 @@
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-color);
       color: var(--text-main);
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
+      height: 36px;
+      padding: 6px 12px;
+      border-radius: 8px;
       font-size: 12.5px;
       font-family: inherit;
       outline: none;
       cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .filter-select:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
     }
 
     .filter-select option { background: #0f172a; color: #fff; }
@@ -1159,6 +1276,13 @@
         align-items: stretch;
         gap: 10px;
       }
+      .controls-filters-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .controls-primary-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
       .filter-group { width: 100%; }
       .filter-select { width: 100%; min-height: 40px; font-size: 12px; }
       .search-input-wrapper { max-width: 100% !important; width: 100%; }
@@ -1469,6 +1593,11 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 16px rgba(0,0,0,0.25);
     }
+    .priority-kpi-item.active {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.14);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35), 0 10px 22px rgba(245, 158, 11, 0.15);
+    }
     .priority-filter-bar {
       display: flex;
       align-items: center;
@@ -1758,6 +1887,37 @@
       background: #f8fafc;
       border-color: #e2e8f0;
     }
+    html[data-theme="light"] .controls-filters-grid {
+      border-top-color: #e2e8f0;
+    }
+    html[data-theme="light"] .filter-count-pill {
+      background: #e0f2fe;
+      border-color: #7dd3fc;
+      color: #0369a1;
+    }
+    html[data-theme="light"] .btn-reset-filter {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #475569;
+    }
+    html[data-theme="light"] .btn-reset-filter:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #94a3b8;
+    }
+    html[data-theme="light"] .active-filter-chip {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #b45309;
+    }
+    html[data-theme="light"] .priority-kpi-item.active {
+      background: #fffbeb;
+      border-color: #d97706;
+      box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3), 0 6px 16px rgba(217, 119, 6, 0.12);
+    }
+    html[data-theme="light"] ::-webkit-scrollbar-track { background: #f1f5f9; }
+    html[data-theme="light"] ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+    html[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     html[data-theme="light"] .search-input,
     html[data-theme="light"] .filter-select {
       background: #ffffff;
@@ -2235,37 +2395,39 @@
         </p>
       </div>
     </div>
-    <div class="header-actions" style="flex-wrap:wrap">
-      <!-- Switch Periode Data (Pilihan A: Agustus 2026 <-> September 2026) -->
+    <div class="header-actions">
+      <!-- Switch Periode Data (Agustus 2026 <-> September 2026) -->
       <div class="period-switcher-group" title="Klik untuk beralih antara Data Agustus 2026 (Sheet Aug 26) dan Data September 2026 (Sheet SEP '26)">
-        <span class="period-switcher-label">📅 Periode Data:</span>
+        <span class="period-switcher-label">📅 Periode:</span>
         <button type="button" class="period-switch-btn" id="btn-period-aug" onclick="switchPeriod('AUG26')">
           <span>Agustus '26</span>
           <span class="period-pill-count" id="pill-loss-aug">242 Loss</span>
         </button>
         <button type="button" class="period-switch-btn active" id="btn-period-sep" onclick="switchPeriod('SEP26')">
-          <span>🔥 September '26</span>
+          <span>September '26</span>
           <span class="period-pill-count" id="pill-loss-sep">217 Loss</span>
         </button>
       </div>
 
-      <!-- Live Sync & Auto-Refresh Indicator -->
-      <div class="sync-status-badge">
-        <span class="pulse-dot"></span>
-        <span id="sync-status-label">Auto-Refresh: <strong id="refresh-timer" style="color:#38bdf8">30s</strong></span>
+      <div class="header-util-group">
+        <!-- Live Sync & Auto-Refresh Indicator -->
+        <div class="sync-status-badge" style="min-height:36px">
+          <span class="pulse-dot"></span>
+          <span id="sync-status-label">Sync: <strong id="refresh-timer" style="color:#38bdf8">30s</strong></span>
+        </div>
+        <div class="meta-tag" id="last-updated-badge">Update: 17 Nov 2026, 16:49 WIT</div>
+        <button class="btn-action" id="btn-refresh-manual" onclick="manualTriggerRefresh()" title="Refresh Data Sekarang">
+          <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Refresh</span>
+        </button>
+        <button class="btn-action btn-theme-toggle" id="btn-theme-toggle" onclick="toggleTheme()" title="Ganti Tema Gelap / Putih">
+          <span>☀️ Versi Putih</span>
+        </button>
+        <button class="btn-action" onclick="window.print()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          <span>PDF</span>
+        </button>
       </div>
-      <button class="btn-action" id="btn-refresh-manual" onclick="manualTriggerRefresh()" title="Refresh Data Sekarang">
-        <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-        <span>Refresh</span>
-      </button>
-      <div class="meta-tag" id="last-updated-badge">Update: 17 Nov 2026, 16:39 WIT</div>
-      <button class="btn-action btn-theme-toggle" id="btn-theme-toggle" onclick="toggleTheme()" title="Ganti Tema Gelap / Putih">
-        <span>☀️ Versi Putih</span>
-      </button>
-      <button class="btn-action" onclick="window.print()">
-        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-        Print / PDF
-      </button>
     </div>
   </header>
 
@@ -2409,8 +2571,8 @@
         🏙️ Branch Focus: Kota/Kabupaten & Progress Action <span class="badge badge-danger" style="font-size:10px;margin-left:4px">Per-City & Action</span>
       </button>
       <button class="tab-btn" id="tab-btn-target" onclick="switchTab('tab-target')">🎯 Target vs Realisasi September 2026</button>
-      <button class="tab-btn" id="tab-btn-db" onclick="switchTab('tab-aug-db')" style="background:rgba(6,182,212,0.15);color:#38bdf8;border-color:rgba(6,182,212,0.4)">
-        <span id="tab-btn-db-label">📋 Database Site Sheet SEP '26</span> <span class="badge badge-info" id="tab-btn-db-badge" style="font-size:10px;margin-left:4px">Lengkap 51 Kolom (Termasuk Breakdown, Nilai Cost, Plan Improv, Kategori)</span>
+      <button class="tab-btn" id="tab-btn-db" onclick="switchTab('tab-aug-db')" style="background:rgba(6,182,212,0.12);color:#38bdf8;border-color:rgba(6,182,212,0.35)">
+        <span id="tab-btn-db-label">📋 Database Site Sheet SEP '26</span> <span class="badge badge-info" id="tab-btn-db-badge" style="font-size:10px;margin-left:2px">51 Kolom</span>
       </button>
       <button class="tab-btn" id="tab-btn-movement" onclick="switchTab('tab-movement')">📅 Pergerakan Bulanan (Jan – Sep 2026)</button>
       <button class="tab-btn" onclick="switchTab('tab-gap')">📊 Matriks Defisit Gap (<3M s/d >10M)</button>
@@ -2561,7 +2723,7 @@
 
           <!-- Priority KPI Summary Cards -->
           <div class="priority-kpi-grid">
-            <div class="priority-kpi-item" onclick="setPriorityFilter('SALES_ONLY')" title="Klik untuk filter tabel ke Priority Sales">
+            <div class="priority-kpi-item" data-prio-kpi="SALES_ONLY" onclick="togglePriorityKpi('SALES_ONLY')" title="Klik untuk filter / reset Priority Sales">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <span style="font-size:12px;color:#fcd34d;font-weight:700">💼 Priority Sales</span>
                 <span class="badge" style="background:rgba(245,158,11,0.25);color:#fcd34d" id="kpi-prio-sales-badge">41 Sites</span>
@@ -2573,7 +2735,7 @@
               </div>
             </div>
 
-            <div class="priority-kpi-item" onclick="setPriorityFilter('NET_ONLY')" title="Klik untuk filter tabel ke Priority Network">
+            <div class="priority-kpi-item" data-prio-kpi="NET_ONLY" onclick="togglePriorityKpi('NET_ONLY')" title="Klik untuk filter / reset Priority Network">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <span style="font-size:12px;color:#7dd3fc;font-weight:700">📡 Priority Network</span>
                 <span class="badge" style="background:rgba(56,189,248,0.25);color:#7dd3fc" id="kpi-prio-net-badge">22 Sites</span>
@@ -2585,7 +2747,7 @@
               </div>
             </div>
 
-            <div class="priority-kpi-item" onclick="setPriorityFilter('ANY_PRIO')" title="Klik untuk filter ke semua site priority">
+            <div class="priority-kpi-item" data-prio-kpi="ANY_PRIO" onclick="togglePriorityKpi('ANY_PRIO')" title="Klik untuk filter / reset Semua Site Priority">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <span style="font-size:12px;color:#d8b4fe;font-weight:700">⭐ Total Site Priority</span>
                 <span class="badge badge-purple" id="kpi-prio-total-badge">62 Sites</span>
@@ -2597,7 +2759,7 @@
               </div>
             </div>
 
-            <div class="priority-kpi-item" onclick="setPriorityFilter('ACTION_DONE')" title="Klik untuk filter site priority yang sudah ada progress">
+            <div class="priority-kpi-item" data-prio-kpi="ACTION_DONE" onclick="togglePriorityKpi('ACTION_DONE')" title="Klik untuk filter / reset site priority yang sudah ada progress">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <span style="font-size:12px;color:#34d399;font-weight:700">✅ Sudah Ada Action</span>
                 <span class="badge badge-success" id="kpi-prio-done-pct">58.1%</span>
@@ -2606,7 +2768,7 @@
               <div style="font-size:11px;color:var(--text-muted)" id="kpi-prio-done-sub">Site priority dengan action terisi</div>
             </div>
 
-            <div class="priority-kpi-item" onclick="setPriorityFilter('ACTION_PENDING')" title="Klik untuk filter site priority yang belum ada progress">
+            <div class="priority-kpi-item" data-prio-kpi="ACTION_PENDING" onclick="togglePriorityKpi('ACTION_PENDING')" title="Klik untuk filter / reset site priority yang belum ada progress">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <span style="font-size:12px;color:#f87171;font-weight:700">⏳ Belum Ada Action</span>
                 <span class="badge badge-danger" id="kpi-prio-pending-pct">41.9%</span>
@@ -2697,44 +2859,47 @@
           </div>
         </div>
 
-        
-        <!-- QUICK PRIORITY FILTER PILLS -->
-        <div class="priority-filter-bar">
-          <span style="font-size:12px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px">
-            <span style="color:#f59e0b">⭐</span> Filter Priority:
-          </span>
-          <button class="priority-pill active" id="prio-pill-all" onclick="setPriorityFilter('ALL')">Semua Site (242 Loss)</button>
-          <button class="priority-pill" id="prio-pill-any" onclick="setPriorityFilter('ANY_PRIO')">⭐ Semua Priority Sites (78)</button>
-          <button class="priority-pill" id="prio-pill-sales" onclick="setPriorityFilter('SALES_ONLY')">💼 Priority Sales (56)</button>
-          <button class="priority-pill" id="prio-pill-net" onclick="setPriorityFilter('NET_ONLY')">📡 Priority Network (23)</button>
-          <button class="priority-pill" id="prio-pill-p1" onclick="setPriorityFilter('P1_ONLY')">🔥 Priority P1 (42)</button>
-          <button class="priority-pill" id="prio-pill-p2" onclick="setPriorityFilter('P2_ONLY')">⚡ Priority P2 (35)</button>
-          <button class="priority-pill" id="prio-pill-done" onclick="setPriorityFilter('ACTION_DONE')">✅ Sudah Ada Action (39)</button>
-          <button class="priority-pill" id="prio-pill-pending" onclick="setPriorityFilter('ACTION_PENDING')">⏳ Belum Ada Action (39)</button>
-        </div>
+        <!-- Controls for Progress Tracker (Structured 2-Tier Toolbar) -->
+        <div class="table-controls-bar controls-stacked">
+          <div class="controls-primary-row">
+            <div class="search-input-wrapper">
+              <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <input type="text" id="prog-search-input" class="search-input" placeholder="Cari Site ID, Site Name, Kabupaten, Action..." oninput="onProgSearch()">
+            </div>
 
-        <!-- QUICK NETWORK PART FILTER PILLS -->
-        <div class="priority-filter-bar" style="margin-top:6px;background:rgba(168,85,247,0.06);border-color:rgba(168,85,247,0.25)">
-          <span style="font-size:12px;font-weight:700;color:#d8b4fe;display:flex;align-items:center;gap:6px">
-            <span>📡</span> Part Priority Net:
-          </span>
-          <button class="priority-pill active" id="prio-part-all" onclick="setNetPartFilter('ALL')">Semua Part Net</button>
-          <button class="priority-pill" id="prio-part-sqa" onclick="setNetPartFilter('PART_SQA')">🎯 Part SQA (23)</button>
-          <button class="priority-pill" id="prio-part-rhi" onclick="setNetPartFilter('PART_RHI')">📡 Part RHI (16)</button>
-          <button class="priority-pill" id="prio-part-thi" onclick="setNetPartFilter('PART_THI')">📶 Part THI (0)</button>
-          <button class="priority-pill" id="prio-part-avail" onclick="setNetPartFilter('PART_AVAIL')">⚡ Part Avail (11)</button>
-          <button class="priority-pill" id="prio-part-pl" onclick="setNetPartFilter('PART_PL')">🔌 Part PL/MBA (12)</button>
-          <button class="priority-pill" id="prio-part-cost" onclick="setNetPartFilter('PART_COST')">💰 Part Cost (0)</button>
-        </div>
+            <div class="controls-primary-actions">
+              <button type="button" class="active-filter-chip" id="prog-active-prio-chip" onclick="setPriorityFilter('ALL')" style="display:none" title="Klik untuk hapus filter kartu Priority">
+                <span id="prog-active-prio-label">Filter Priority</span> <span>✕</span>
+              </button>
+              <span class="filter-count-pill" id="prog-count-pill">217 Sites</span>
 
-        <!-- Controls for Progress Tracker -->
-        <div class="table-controls-bar">
-          <div class="search-input-wrapper">
-            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="text" id="prog-search-input" class="search-input" placeholder="Cari Site ID, Site Name, Kabupaten, Action..." oninput="onProgSearch()">
+              <select id="prog-sort-select" class="filter-select" onchange="onProgSortChange(this.value)" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.12);color:#38bdf8;font-weight:700">
+                <option value="NONE">Urutkan: Default</option>
+                <option value="DEFISIT_DESC">Defisit Terbesar</option>
+                <option value="DEFISIT_ASC">Defisit Terkecil</option>
+                <option value="COST_DESC">Cost Terbesar</option>
+                <option value="REV_DESC">Revenue Terbesar</option>
+                <option value="NILAI_COST_DESC">Nilai Cost Terbesar</option>
+                <option value="SITE_ID_ASC">Site ID (A - Z)</option>
+              </select>
+
+              <select id="prog-page-size" class="filter-select" onchange="changeProgPageSize(this.value)">
+                <option value="25">25 / hal</option>
+                <option value="50" selected>50 / hal</option>
+                <option value="100">100 / hal</option>
+                <option value="250">250 / hal</option>
+              </select>
+
+              <button type="button" class="btn-reset-filter" onclick="resetProgFilters()" title="Reset semua filter tabel">↺ Reset</button>
+
+              <button class="btn-action" onclick="exportProgressToCSV()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Export CSV
+              </button>
+            </div>
           </div>
 
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div class="controls-filters-grid">
             <select id="prog-filter-nop" class="filter-select" onchange="applyProgFilters()">
               <option value="ALL">Semua Branch</option>
               <option value="AMBON">Branch AMBON</option>
@@ -2743,41 +2908,10 @@
               <option value="TIMIKA">Branch TIMIKA</option>
             </select>
 
-            
-            <select id="prog-filter-priority-sales" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);color:#fcd34d">
-              <option value="ALL">Semua Priority Sales</option>
-              <option value="PRIORITY_ONLY">Hanya Priority Sales (P1/P2/P3)</option>
-              <option value="P1">P1 Sales Priority (39)</option>
-              <option value="P2">P2 Sales Priority (16)</option>
-              <option value="P3">P3 Sales Priority (1)</option>
-              <option value="Not Priority">Not Priority Sales</option>
-            </select>
-
-            <select id="prog-filter-priority-net" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.08);color:#7dd3fc">
-              <option value="ALL">Semua Priority Network</option>
-              <option value="PRIORITY_ONLY">Hanya Priority Network (P1/P2/P3)</option>
-              <option value="P1">P1 Network Priority (3)</option>
-              <option value="P2">P2 Network Priority (19)</option>
-              <option value="P3">P3 Network Priority (1)</option>
-              <option value="Not Priority">Not Priority Network</option>
-            </select>
-
-            <select id="prog-filter-net-part" class="filter-select" onchange="onNetPartDropdownChange()" style="border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.08);color:#d8b4fe">
-              <option value="ALL">Part Priority Net: Semua</option>
-              <option value="PART_SQA">🎯 Part SQA (Col AH/AI)</option>
-              <option value="PART_RHI">📡 Part RHI (Col AO/AP)</option>
-              <option value="PART_THI">📶 Part THI (Col AR/AS)</option>
-              <option value="PART_AVAIL">⚡ Part Avail (Col AW)</option>
-              <option value="PART_PL">🔌 Part PL / MBA (Col AY)</option>
-              <option value="PART_COST">💰 Part Cost (Col AZ/BA)</option>
-              <option value="PART_ANY">✅ Sudah Ada Part Net (Any)</option>
-              <option value="PART_NONE">⏳ Belum Ada Part Net</option>
-            </select>
-
             <select id="prog-filter-pnl" class="filter-select" onchange="applyProgFilters()">
-              <option value="Loss" selected>Loss Sites Only (242)</option>
+              <option value="Loss" selected>Loss Sites Only (217)</option>
               <option value="ALL">Semua Status (Profit/Loss)</option>
-              <option value="Profit">Profit Sites Only (2,549)</option>
+              <option value="Profit">Profit Sites Only (2,571)</option>
             </select>
 
             <select id="prog-filter-oa" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(16,185,129,0.35);background:rgba(16,185,129,0.06);color:#34d399">
@@ -2786,21 +2920,44 @@
               <option value="Not OA">Not OA Only</option>
             </select>
 
-            <select id="prog-filter-plweek" class="filter-select" onchange="applyProgFilters()">
-              <option value="ALL">Semua Status PL Terakhir</option>
-              <option value="CLEAR">CLEAR</option>
-              <option value="UNCLEAR">Belum CLEAR</option>
+            <select id="prog-filter-priority-sales" class="filter-select" onchange="onProgDropdownFilterChange()" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);color:#fcd34d">
+              <option value="ALL">Semua Priority Sales</option>
+              <option value="PRIORITY_ONLY">Priority Sales (P1/P2/P3)</option>
+              <option value="P1">P1 Sales Priority</option>
+              <option value="P2">P2 Sales Priority</option>
+              <option value="P3">P3 Sales Priority</option>
+              <option value="Not Priority">Not Priority Sales</option>
             </select>
 
-            <select id="prog-filter-transport" class="filter-select" onchange="applyProgFilters()">
-              <option value="ALL">Semua Type Transport</option>
-              <option value="FO TELKOM">FO TELKOM</option>
-              <option value="Radio IP Telkom">Radio IP Telkom</option>
-              <option value="FO TSEL">FO TSEL</option>
+            <select id="prog-filter-priority-net" class="filter-select" onchange="onProgDropdownFilterChange()" style="border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.08);color:#7dd3fc">
+              <option value="ALL">Semua Priority Network</option>
+              <option value="PRIORITY_ONLY">Priority Network (P1/P2/P3)</option>
+              <option value="P1">P1 Network Priority</option>
+              <option value="P2">P2 Network Priority</option>
+              <option value="P3">P3 Network Priority</option>
+              <option value="Not Priority">Not Priority Network</option>
+            </select>
+
+            <select id="prog-filter-net-part" class="filter-select" onchange="onNetPartDropdownChange()" style="border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.08);color:#d8b4fe">
+              <option value="ALL">Semua Part Priority Net</option>
+              <option value="PART_SQA">Part SQA</option>
+              <option value="PART_RHI">Part RHI</option>
+              <option value="PART_THI">Part THI</option>
+              <option value="PART_AVAIL">Part Avail</option>
+              <option value="PART_PL">Part PL / MBA</option>
+              <option value="PART_COST">Part Cost</option>
+              <option value="PART_ANY">Sudah Ada Part Net</option>
+              <option value="PART_NONE">Belum Ada Part Net</option>
+            </select>
+
+            <select id="prog-filter-ag" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(234,179,8,0.45);background:rgba(234,179,8,0.1);color:#fde047;font-weight:600">
+              <option value="ALL">Semua Site Loss Tracker</option>
+              <option value="Inline">Inline</option>
+              <option value="Not Inline">Not Inline</option>
             </select>
 
             <select id="prog-filter-cek" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(6,182,212,0.4);background:rgba(6,182,212,0.08);color:#67e8f9">
-              <option value="ALL">Semua Kategori (Kolom BB)</option>
+              <option value="ALL">Semua Kategori Site</option>
               <option value="Reguler">Reguler</option>
               <option value="Repeater/CDC/IDR/SPS">Repeater/CDC/IDR/SPS</option>
               <option value="Business & Commercial">Business & Commercial</option>
@@ -2813,36 +2970,18 @@
               <option value="TTC/MSC/STO">TTC/MSC/STO</option>
             </select>
 
-            <!-- Filter Kolom AG: Site Loss Tracker -->
-            <select id="prog-filter-ag" class="filter-select" onchange="applyProgFilters()" style="border-color:rgba(234,179,8,0.45);background:rgba(234,179,8,0.1);color:#fde047;font-weight:600">
-              <option value="ALL">Semua Site Loss Tracker (Kolom AG)</option>
-              <option value="Program H2">Program H2 (32 Site Loss)</option>
-              <option value="0">0 (Non Program H2)</option>
-              <option value="#N/A">#N/A</option>
+            <select id="prog-filter-plweek" class="filter-select" onchange="applyProgFilters()">
+              <option value="ALL">Semua Status PL</option>
+              <option value="CLEAR">CLEAR</option>
+              <option value="UNCLEAR">Belum CLEAR</option>
             </select>
 
-            <!-- Fitur Sort Besar ke Kecil (Shorting) -->
-            <select id="prog-sort-select" class="filter-select" onchange="onProgSortChange(this.value)" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.12);color:#38bdf8;font-weight:700">
-              <option value="NONE">⚡ Urutkan: Default</option>
-              <option value="DEFISIT_DESC">🔻 Defisit Terbesar (Besar ke Kecil)</option>
-              <option value="DEFISIT_ASC">🔺 Defisit Terkecil (Kecil ke Besar)</option>
-              <option value="COST_DESC">🔻 Cost Terbesar (Besar ke Kecil)</option>
-              <option value="REV_DESC">🔻 Revenue Terbesar (Besar ke Kecil)</option>
-              <option value="NILAI_COST_DESC">🔻 Nilai Cost Terbesar (Kolom BA)</option>
-              <option value="SITE_ID_ASC">🔤 Site ID (A - Z)</option>
+            <select id="prog-filter-transport" class="filter-select" onchange="applyProgFilters()">
+              <option value="ALL">Semua Type Transport</option>
+              <option value="FO TELKOM">FO TELKOM</option>
+              <option value="Radio IP Telkom">Radio IP Telkom</option>
+              <option value="FO TSEL">FO TSEL</option>
             </select>
-
-            <select id="prog-page-size" class="filter-select" onchange="changeProgPageSize(this.value)">
-              <option value="25">25 per hal</option>
-              <option value="50" selected>50 per hal</option>
-              <option value="100">100 per hal</option>
-              <option value="250">250 per hal</option>
-            </select>
-
-            <button class="btn-action" onclick="exportProgressToCSV()">
-              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-              Export CSV
-            </button>
           </div>
         </div>
 
@@ -2861,7 +3000,7 @@
                 <th onclick="sortProgTable('cost')" style="cursor:pointer;user-select:none;background:rgba(245,158,11,0.18);color:#fcd34d" title="Klik untuk mengurutkan Cost Terbesar (Besar ke Kecil)">Cost (Rp) <span id="th-sort-prog-cost" style="font-size:10px;color:#fcd34d">⬍</span></th>
                 <th>Kelas Site</th>
                 <th>Status OA</th>
-                <th onclick="sortProgTable('ag')" style="cursor:pointer;user-select:none;background:rgba(234,179,8,0.25);color:#fde047" title="Klik untuk mengurutkan Kolom AG (Site Loss Tracker)">Site Loss Tracker (AG) <span id="th-sort-prog-ag" style="font-size:10px;color:#fde047">⬍</span></th>
+                <th onclick="sortProgTable('ag')" style="cursor:pointer;user-select:none;background:rgba(234,179,8,0.25);color:#fde047" title="Klik untuk mengurutkan Site Loss Tracker">Site Loss Tracker <span id="th-sort-prog-ag" style="font-size:10px;color:#fde047">⬍</span></th>
                 <th class="new-col-th" style="background:rgba(245,158,11,0.25);color:#fcd34d">Priority Sales</th>
                 <th class="new-col-th" style="background:rgba(56,189,248,0.25);color:#7dd3fc">Priority Network</th>
                 <th class="new-col-th" style="background:rgba(239,68,68,0.2);color:#fca5a5">Action to be taken SQA</th>
@@ -3014,14 +3153,39 @@
         </button>
       </div>
 
-      <!-- Controls: Search & Filters -->
-      <div class="table-controls-bar">
-        <div class="search-input-wrapper">
-          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input type="text" id="aug-search-input" class="search-input" placeholder="Cari Site ID, Site Name, NOP, Kabupaten, Kelas..." oninput="onAugSearch()">
+      <!-- Controls: Search & Filters (Structured 2-Tier Toolbar) -->
+      <div class="table-controls-bar controls-stacked">
+        <div class="controls-primary-row">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="aug-search-input" class="search-input" placeholder="Cari Site ID, Site Name, NOP, Kabupaten, Kelas..." oninput="onAugSearch()">
+          </div>
+
+          <div class="controls-primary-actions">
+            <span class="filter-count-pill" id="aug-count-pill">2,788 Sites</span>
+
+            <select id="aug-sort-select" class="filter-select" onchange="onAugSortChange(this.value)" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.12);color:#38bdf8;font-weight:700">
+              <option value="NONE">Urutkan: Default</option>
+              <option value="DEFISIT_DESC">Defisit Terbesar</option>
+              <option value="DEFISIT_ASC">Defisit Terkecil</option>
+              <option value="COST_DESC">Cost Terbesar</option>
+              <option value="REV_DESC">Revenue Terbesar</option>
+              <option value="NILAI_COST_DESC">Nilai Cost Terbesar</option>
+              <option value="SITE_ID_ASC">Site ID (A - Z)</option>
+            </select>
+
+            <select id="aug-page-size" class="filter-select" onchange="changePageSize(this.value)">
+              <option value="25">25 / hal</option>
+              <option value="50" selected>50 / hal</option>
+              <option value="100">100 / hal</option>
+              <option value="250">250 / hal</option>
+            </select>
+
+            <button type="button" class="btn-reset-filter" onclick="resetAugFilters()" title="Reset semua filter database">↺ Reset</button>
+          </div>
         </div>
 
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="controls-filters-grid">
           <select id="aug-filter-nop" class="filter-select" onchange="applyAugFilters()">
             <option value="ALL">Semua NOP</option>
             <option value="NOP AMBON">NOP AMBON (853)</option>
@@ -3030,7 +3194,36 @@
             <option value="NOP TIMIKA">NOP TIMIKA (578)</option>
           </select>
 
-          
+          <select id="aug-filter-pnl" class="filter-select" onchange="applyAugFilters()">
+            <option value="ALL">Semua Status (Profit/Loss)</option>
+            <option value="Loss">Loss Only (217)</option>
+            <option value="Profit">Profit Only (2,571)</option>
+          </select>
+
+          <select id="aug-filter-oa" class="filter-select" onchange="applyAugFilters()">
+            <option value="ALL">Semua Status OA</option>
+            <option value="OA">OA (2,787)</option>
+            <option value="Not OA">Not OA (1)</option>
+          </select>
+
+          <select id="aug-filter-class" class="filter-select" onchange="applyAugFilters()">
+            <option value="ALL">Semua Kelas Site</option>
+            <option value="DIAMOND">DIAMOND</option>
+            <option value="PLATINUM">PLATINUM</option>
+            <option value="GOLD">GOLD</option>
+            <option value="SILVER">SILVER</option>
+            <option value="BRONZE">BRONZE</option>
+          </select>
+
+          <select id="aug-filter-gap" class="filter-select" onchange="applyAugFilters()">
+            <option value="ALL">Semua GAP Dist</option>
+            <option value="<3 Mio">< 3 Mio</option>
+            <option value="3-5 Mio">3-5 Mio</option>
+            <option value="5-10 Mio">5-10 Mio</option>
+            <option value=">10 Mio">> 10 Mio (High Loss)</option>
+            <option value="Profit">Profit</option>
+          </select>
+
           <select id="aug-filter-priority-sales" class="filter-select" onchange="applyAugFilters()" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);color:#fcd34d">
             <option value="ALL">Semua Priority Sales</option>
             <option value="PRIORITY_ONLY">Hanya Priority (P1/P2/P3)</option>
@@ -3049,38 +3242,14 @@
             <option value="Not Priority">Not Priority Network</option>
           </select>
 
-          <select id="aug-filter-pnl" class="filter-select" onchange="applyAugFilters()">
-            <option value="ALL">Semua Status (Profit/Loss)</option>
-            <option value="Loss">Loss Only (217)</option>
-            <option value="Profit">Profit Only (2,571)</option>
-          </select>
-
-          <select id="aug-filter-class" class="filter-select" onchange="applyAugFilters()">
-            <option value="ALL">Semua Kelas Site</option>
-            <option value="DIAMOND">DIAMOND</option>
-            <option value="PLATINUM">PLATINUM</option>
-            <option value="GOLD">GOLD</option>
-            <option value="SILVER">SILVER</option>
-            <option value="BRONZE">BRONZE</option>
-          </select>
-
-          <select id="aug-filter-oa" class="filter-select" onchange="applyAugFilters()">
-            <option value="ALL">Semua Status OA</option>
-            <option value="OA">OA (2,787)</option>
-            <option value="Not Oa">Not OA (1)</option>
-          </select>
-
-          <select id="aug-filter-gap" class="filter-select" onchange="applyAugFilters()">
-            <option value="ALL">Semua GAP Dist</option>
-            <option value="<3 Mio">< 3 Mio</option>
-            <option value="3-5 Mio">3-5 Mio</option>
-            <option value="5-10 Mio">5-10 Mio</option>
-            <option value=">10 Mio">> 10 Mio (High Loss)</option>
-            <option value="Profit">Profit</option>
+          <select id="aug-filter-ag" class="filter-select" onchange="applyAugFilters()" style="border-color:rgba(234,179,8,0.45);background:rgba(234,179,8,0.1);color:#fde047;font-weight:600">
+            <option value="ALL">Semua Site Loss Tracker</option>
+            <option value="Inline">Inline</option>
+            <option value="Not Inline">Not Inline</option>
           </select>
 
           <select id="aug-filter-cek" class="filter-select" onchange="applyAugFilters()" style="border-color:rgba(6,182,212,0.4);background:rgba(6,182,212,0.08);color:#67e8f9">
-            <option value="ALL">Semua Kategori (Kolom BB)</option>
+            <option value="ALL">Semua Kategori Site</option>
             <option value="Reguler">Reguler</option>
             <option value="Repeater/CDC/IDR/SPS">Repeater/CDC/IDR/SPS</option>
             <option value="Business & Commercial">Business & Commercial</option>
@@ -3091,32 +3260,6 @@
             <option value="Public Transportation">Public Transportation</option>
             <option value="Reguler / CDC">Reguler / CDC</option>
             <option value="TTC/MSC/STO">TTC/MSC/STO</option>
-          </select>
-
-          <!-- Filter Kolom AG: Site Loss Tracker -->
-          <select id="aug-filter-ag" class="filter-select" onchange="applyAugFilters()" style="border-color:rgba(234,179,8,0.45);background:rgba(234,179,8,0.1);color:#fde047;font-weight:600">
-            <option value="ALL">Semua Site Loss Tracker (Kolom AG)</option>
-            <option value="Program H2">Program H2 (34 Site)</option>
-            <option value="0">0 (Non Program H2)</option>
-            <option value="#N/A">#N/A</option>
-          </select>
-
-          <!-- Fitur Sort Besar ke Kecil (Shorting) -->
-          <select id="aug-sort-select" class="filter-select" onchange="onAugSortChange(this.value)" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.12);color:#38bdf8;font-weight:700">
-            <option value="NONE">⚡ Urutkan: Default</option>
-            <option value="DEFISIT_DESC">🔻 Defisit Terbesar (Besar ke Kecil)</option>
-            <option value="DEFISIT_ASC">🔺 Defisit Terkecil (Kecil ke Besar)</option>
-            <option value="COST_DESC">🔻 Cost Terbesar (Besar ke Kecil)</option>
-            <option value="REV_DESC">🔻 Revenue Terbesar (Besar ke Kecil)</option>
-            <option value="NILAI_COST_DESC">🔻 Nilai Cost Terbesar (Kolom BA)</option>
-            <option value="SITE_ID_ASC">🔤 Site ID (A - Z)</option>
-          </select>
-
-          <select id="aug-page-size" class="filter-select" onchange="changePageSize(this.value)">
-            <option value="25">25 per hal</option>
-            <option value="50" selected>50 per hal</option>
-            <option value="100">100 per hal</option>
-            <option value="250">250 per hal</option>
           </select>
         </div>
       </div>
@@ -3148,7 +3291,7 @@
               <th class="new-col-th" style="background:rgba(56,189,248,0.25);color:#7dd3fc">Priority Network</th>
               <th>Intervention Flag</th>
               <th id="th-db-status">Status Sep</th>
-              <th onclick="sortAugTable('ag')" style="cursor:pointer;user-select:none;background:rgba(234,179,8,0.25);color:#fde047" title="Klik untuk mengurutkan Kolom AG">Site Loss Tracker (AG) <span id="th-sort-aug-ag" style="font-size:10px;color:#fde047">⬍</span></th>
+              <th onclick="sortAugTable('ag')" style="cursor:pointer;user-select:none;background:rgba(234,179,8,0.25);color:#fde047" title="Klik untuk mengurutkan Site Loss Tracker">Site Loss Tracker <span id="th-sort-aug-ag" style="font-size:10px;color:#fde047">⬍</span></th>
               <th>Payload</th>
               <!-- NEW COLUMNS HEADERS -->
               <th class="new-col-th" style="background:rgba(239,68,68,0.2);color:#fca5a5">Action to be taken SQA</th>
@@ -3841,7 +3984,7 @@
     const tabBtnDbLabel = document.getElementById('tab-btn-db-label');
     if (tabBtnDbLabel) tabBtnDbLabel.innerText = `📋 Database Site ${sLabel}`;
     const tabBtnDbBadge = document.getElementById('tab-btn-db-badge');
-    if (tabBtnDbBadge) tabBtnDbBadge.innerText = `Lengkap ${colLabel} (Termasuk Breakdown, Nilai Cost, Plan Improv, Kategori)`;
+    if (tabBtnDbBadge) tabBtnDbBadge.innerText = colLabel;
     const dbTitle = document.getElementById('db-tab-title');
     if (dbTitle) dbTitle.innerText = `Database Site ${sLabel} (Lengkap ${colLabel})`;
     const dbBadge = document.getElementById('db-tab-badge');
@@ -4287,85 +4430,93 @@
     return false;
   }
 
-  function setPriorityFilter(prioType) {
-    activePriorityPill = prioType;
-    document.querySelectorAll('.priority-pill').forEach(btn => {
-      if (!btn.id.startsWith('prio-part-')) btn.classList.remove('active');
+  function syncPriorityKpiCardsUi() {
+    document.querySelectorAll('.priority-kpi-item[data-prio-kpi]').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-prio-kpi') === activePriorityPill);
     });
-    const btnId = 
-      prioType === 'ALL' ? 'prio-pill-all' :
-      prioType === 'ANY_PRIO' ? 'prio-pill-any' :
-      prioType === 'SALES_ONLY' ? 'prio-pill-sales' :
-      prioType === 'NET_ONLY' ? 'prio-pill-net' :
-      prioType === 'P1_ONLY' ? 'prio-pill-p1' :
-      prioType === 'P2_ONLY' ? 'prio-pill-p2' :
-      prioType === 'ACTION_DONE' ? 'prio-pill-done' :
-      prioType === 'ACTION_PENDING' ? 'prio-pill-pending' : '';
-    const btn = document.getElementById(btnId);
-    if (btn) btn.classList.add('active');
+    const chip = document.getElementById('prog-active-prio-chip');
+    const chipLabel = document.getElementById('prog-active-prio-label');
+    if (chip && chipLabel) {
+      const labels = {
+        'ANY_PRIO': 'Semua Priority Sites',
+        'SALES_ONLY': 'Priority Sales',
+        'NET_ONLY': 'Priority Network',
+        'P1_ONLY': 'Priority P1',
+        'P2_ONLY': 'Priority P2',
+        'ACTION_DONE': 'Priority: Sudah Ada Action',
+        'ACTION_PENDING': 'Priority: Belum Ada Action'
+      };
+      if (activePriorityPill !== 'ALL' && labels[activePriorityPill]) {
+        chipLabel.innerText = `Filter Kartu: ${labels[activePriorityPill]}`;
+        chip.style.display = 'inline-flex';
+      } else {
+        chip.style.display = 'none';
+      }
+    }
+  }
 
-    // If switching away from NET_ONLY, reset net part dropdown and pills
-    if (prioType !== 'NET_ONLY') {
+  function togglePriorityKpi(prioType) {
+    setPriorityFilter(activePriorityPill === prioType ? 'ALL' : prioType);
+  }
+
+  function setPriorityFilter(prioType) {
+    activePriorityPill = prioType || 'ALL';
+    if (activePriorityPill !== 'NET_ONLY') {
       const el = document.getElementById('prog-filter-net-part');
       if (el) el.value = 'ALL';
-      document.querySelectorAll('[id^="prio-part-"]').forEach(b => b.classList.remove('active'));
-      const allPartBtn = document.getElementById('prio-part-all');
-      if (allPartBtn) allPartBtn.classList.add('active');
     }
+    syncPriorityKpiCardsUi();
     applyProgFilters();
   }
 
   function setNetPartFilter(part) {
     const el = document.getElementById('prog-filter-net-part');
     if (el) el.value = part;
-    
-    document.querySelectorAll('[id^="prio-part-"]').forEach(b => b.classList.remove('active'));
-    const pillId = 
-      part === 'ALL' ? 'prio-part-all' :
-      part === 'PART_SQA' ? 'prio-part-sqa' :
-      part === 'PART_RHI' ? 'prio-part-rhi' :
-      part === 'PART_THI' ? 'prio-part-thi' :
-      part === 'PART_AVAIL' ? 'prio-part-avail' :
-      part === 'PART_PL' ? 'prio-part-pl' :
-      part === 'PART_COST' ? 'prio-part-cost' : '';
-    const pillBtn = document.getElementById(pillId);
-    if (pillBtn) pillBtn.classList.add('active');
-
-    if (part !== 'ALL') {
-      activePriorityPill = 'NET_ONLY';
-      document.querySelectorAll('.priority-pill').forEach(btn => {
-        if (!btn.id.startsWith('prio-part-')) btn.classList.remove('active');
-      });
-      const netBtn = document.getElementById('prio-pill-net');
-      if (netBtn) netBtn.classList.add('active');
-    }
-
+    activePriorityPill = (part !== 'ALL') ? 'NET_ONLY' : 'ALL';
+    syncPriorityKpiCardsUi();
     applyProgFilters();
   }
 
   function onNetPartDropdownChange() {
     const el = document.getElementById('prog-filter-net-part');
     const val = el ? el.value : 'ALL';
-    document.querySelectorAll('[id^="prio-part-"]').forEach(b => b.classList.remove('active'));
-    const pillId = 
-      val === 'ALL' ? 'prio-part-all' :
-      val === 'PART_SQA' ? 'prio-part-sqa' :
-      val === 'PART_RHI' ? 'prio-part-rhi' :
-      val === 'PART_THI' ? 'prio-part-thi' :
-      val === 'PART_AVAIL' ? 'prio-part-avail' :
-      val === 'PART_PL' ? 'prio-part-pl' :
-      val === 'PART_COST' ? 'prio-part-cost' : '';
-    const pillBtn = document.getElementById(pillId);
-    if (pillBtn) pillBtn.classList.add('active');
+    activePriorityPill = (val !== 'ALL') ? 'NET_ONLY' : 'ALL';
+    syncPriorityKpiCardsUi();
+    applyProgFilters();
+  }
 
-    if (val !== 'ALL') {
-      activePriorityPill = 'NET_ONLY';
-      document.querySelectorAll('.priority-pill').forEach(btn => {
-        if (!btn.id.startsWith('prio-part-')) btn.classList.remove('active');
-      });
-      const netBtn = document.getElementById('prio-pill-net');
-      if (netBtn) netBtn.classList.add('active');
+  function onProgDropdownFilterChange() {
+    if (activePriorityPill !== 'ALL') {
+      activePriorityPill = 'ALL';
+      syncPriorityKpiCardsUi();
     }
+    applyProgFilters();
+  }
+
+  function resetProgFilters() {
+    const s = document.getElementById('prog-search-input');
+    if (s) s.value = '';
+    const defaults = {
+      'prog-filter-nop': 'ALL',
+      'prog-filter-pnl': 'Loss',
+      'prog-filter-oa': 'ALL',
+      'prog-filter-priority-sales': 'ALL',
+      'prog-filter-priority-net': 'ALL',
+      'prog-filter-net-part': 'ALL',
+      'prog-filter-ag': 'ALL',
+      'prog-filter-cek': 'ALL',
+      'prog-filter-plweek': 'ALL',
+      'prog-filter-transport': 'ALL',
+      'prog-sort-select': 'NONE'
+    };
+    Object.entries(defaults).forEach(([id, v]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = v;
+    });
+    progSortCol = null;
+    progSortDir = 'DESC';
+    activePriorityPill = 'ALL';
+    syncPriorityKpiCardsUi();
     applyProgFilters();
   }
 
@@ -4645,12 +4796,15 @@
     document.getElementById('prog-btn-next').disabled = (curProgPage === totalPages);
     document.getElementById('prog-btn-last').disabled = (curProgPage === totalPages);
 
+    const progCountPill = document.getElementById('prog-count-pill');
+    if (progCountPill) progCountPill.innerText = `${total.toLocaleString()} Sites`;
+
     document.getElementById('prog-pagination-info').innerText = total === 0 
       ? 'Tidak ada data site yang sesuai' 
       : `Menampilkan ${startIdx + 1} - ${endIdx} dari ${total.toLocaleString()} site`;
 
     if (total === 0) {
-      tbody.innerHTML = `<tr><td colspan="32" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="35" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data site yang sesuai filter</td></tr>`;
       renderProgCharts();
       renderPriorityCharts();
       return;
@@ -4843,39 +4997,6 @@
     if (elPendVal) elPendVal.innerHTML = `${allPending} <span style="font-size:12px;color:var(--text-dim);font-weight:normal">sites</span>`;
     const elPendPct = document.getElementById('kpi-prio-pending-pct');
     if (elPendPct) elPendPct.innerText = `${allPendingPct}%`;
-
-    // Update Quick Priority Filter Pills & Part Pills dynamically
-    const allP1 = allPrioRows.filter(r => r[17] === 'P1' || r[18] === 'P1').length;
-    const allP2 = allPrioRows.filter(r => r[17] === 'P2' || r[18] === 'P2').length;
-    const pAllBtn = document.getElementById('prio-pill-all');
-    if (pAllBtn) pAllBtn.innerText = `Semua Site (${lossRowsCount} Loss)`;
-    const pAnyBtn = document.getElementById('prio-pill-any');
-    if (pAnyBtn) pAnyBtn.innerText = `⭐ Semua Priority Sites (${allTotal})`;
-    const pSalesBtn = document.getElementById('prio-pill-sales');
-    if (pSalesBtn) pSalesBtn.innerText = `💼 Priority Sales (${sTotal})`;
-    const pNetBtn = document.getElementById('prio-pill-net');
-    if (pNetBtn) pNetBtn.innerText = `📡 Priority Network (${nTotal})`;
-    const pP1Btn = document.getElementById('prio-pill-p1');
-    if (pP1Btn) pP1Btn.innerText = `🔥 Priority P1 (${allP1})`;
-    const pP2Btn = document.getElementById('prio-pill-p2');
-    if (pP2Btn) pP2Btn.innerText = `⚡ Priority P2 (${allP2})`;
-    const pDoneBtn = document.getElementById('prio-pill-done');
-    if (pDoneBtn) pDoneBtn.innerText = `✅ Sudah Ada Action (${allProg})`;
-    const pPendBtn = document.getElementById('prio-pill-pending');
-    if (pPendBtn) pPendBtn.innerText = `⏳ Belum Ada Action (${allPending})`;
-
-    const ptSqa = document.getElementById('prio-part-sqa');
-    if (ptSqa) ptSqa.innerText = `🎯 Part SQA (${netSqa})`;
-    const ptRhi = document.getElementById('prio-part-rhi');
-    if (ptRhi) ptRhi.innerText = `📡 Part RHI (${netRhi})`;
-    const ptThi = document.getElementById('prio-part-thi');
-    if (ptThi) ptThi.innerText = `📶 Part THI (${netThi})`;
-    const ptAvail = document.getElementById('prio-part-avail');
-    if (ptAvail) ptAvail.innerText = `⚡ Part Avail (${netAvail})`;
-    const ptPl = document.getElementById('prio-part-pl');
-    if (ptPl) ptPl.innerText = `🔌 Part PL/MBA (${netPl})`;
-    const ptCost = document.getElementById('prio-part-cost');
-    if (ptCost) ptCost.innerText = `💰 Part Cost (${netCost})`;
 
     // 1. RENDER DIAGRAM BATANG 1: VOLUME & DISTRIBUSI
     let volHtml = `
@@ -5419,7 +5540,10 @@
       if (nopVal !== 'ALL' && row[2] !== nopVal) return false;
       if (pnlVal !== 'ALL' && row[13] !== pnlVal) return false;
       if (classVal !== 'ALL' && row[7] !== classVal) return false;
-      if (oaVal !== 'ALL' && row[8] !== oaVal) return false;
+      if (oaVal !== 'ALL') {
+        if (oaVal === 'OA' && row[8] !== 'OA') return false;
+        if (oaVal !== 'OA' && row[8] === 'OA') return false;
+      }
       if (cekVal !== 'ALL' && row[43] !== cekVal) return false;
       if (gapVal !== 'ALL') {
         if (gapVal === 'Profit' && row[14] !== 'Profit') return false;
@@ -5486,10 +5610,36 @@
     renderAugTable();
   }
 
+  function resetAugFilters() {
+    const s = document.getElementById('aug-search-input');
+    if (s) s.value = '';
+    const defaults = {
+      'aug-filter-nop': 'ALL',
+      'aug-filter-pnl': 'ALL',
+      'aug-filter-oa': 'ALL',
+      'aug-filter-class': 'ALL',
+      'aug-filter-gap': 'ALL',
+      'aug-filter-priority-sales': 'ALL',
+      'aug-filter-priority-net': 'ALL',
+      'aug-filter-ag': 'ALL',
+      'aug-filter-cek': 'ALL',
+      'aug-sort-select': 'NONE'
+    };
+    Object.entries(defaults).forEach(([id, v]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = v;
+    });
+    augSortCol = null;
+    augSortDir = 'DESC';
+    applyAugFilters();
+  }
+
   function renderAugTable() {
     const tbody = document.getElementById('aug-table-body');
     const total = filteredAugRows.length;
     const totalPages = Math.ceil(total / pageSize) || 1;
+    const augCountPill = document.getElementById('aug-count-pill');
+    if (augCountPill) augCountPill.innerText = `${total.toLocaleString()} Sites`;
 
     if (curPage > totalPages) curPage = totalPages;
     if (curPage < 1) curPage = 1;
@@ -5677,7 +5827,7 @@
   let refreshCountdown = 30;
   let isRefreshing = false;
   let isLocalEngine = false;
-  const currentVersionHash = "1794901170";
+  const currentVersionHash = "1794901771";
 
   function canAutoReload() {
     const lastReload = parseInt(sessionStorage.getItem('last_auto_reload') || '0', 10);
