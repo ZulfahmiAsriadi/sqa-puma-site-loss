@@ -4485,7 +4485,6 @@ html_template = f"""<!DOCTYPE html>
               <th style="text-align:right">Delta (Sep − Agu)</th>
               <th style="text-align:center">% Margin (Agu → Sep)</th>
               <th>GAP Sep</th>
-              <th class="new-col-th" style="background:rgba(239,68,68,0.18);color:#fca5a5">Action SQA (SEP '26)</th>
               <th>Site Loss Tracker</th>
             </tr>
           </thead>
@@ -5028,7 +5027,7 @@ html_template = f"""<!DOCTYPE html>
     let list = branchItems.filter(x => {{
       if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
       if (q) {{
-        const hay = `${{x.sid}} ${{x.name}} ${{x.br}} ${{x.kab}} ${{x.sqa}} ${{x.tracker}}`.toLowerCase();
+        const hay = `${{x.sid}} ${{x.name}} ${{x.br}} ${{x.kab}} ${{x.tracker}}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }}
       return true;
@@ -5045,7 +5044,7 @@ html_template = f"""<!DOCTYPE html>
     const tbody = document.getElementById('flip-tbody');
     if (!tbody) return;
     if (!list.length) {{
-      tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:36px;color:var(--text-muted)">Tidak ada site perubahan status yang cocok dengan filter</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:36px;color:var(--text-muted)">Tidak ada site perubahan status yang cocok dengan filter</td></tr>`;
       return;
     }}
 
@@ -5077,7 +5076,6 @@ html_template = f"""<!DOCTYPE html>
         <td style="text-align:right;font-family:'JetBrains Mono';font-weight:700;color:${{dColor}}">${{dStr}}</td>
         <td style="text-align:center;font-family:'JetBrains Mono'">${{x.pctAug}}% → <strong>${{x.pctSep}}%</strong></td>
         <td>${{gapBadge}}</td>
-        <td class="new-col-td" style="color:#fca5a5">${{x.sqa}}</td>
         <td>${{trkBadge}}</td>
       </tr>`;
     }}).join('');
@@ -5091,16 +5089,16 @@ html_template = f"""<!DOCTYPE html>
       if (branchVal !== 'ALL' && x.br !== branchVal) return false;
       if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
       if (q) {{
-        const hay = `${{x.sid}} ${{x.name}} ${{x.br}} ${{x.kab}} ${{x.sqa}} ${{x.tracker}}`.toLowerCase();
+        const hay = `${{x.sid}} ${{x.name}} ${{x.br}} ${{x.kab}} ${{x.tracker}}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }}
       return true;
     }});
-    const headers = ['Arah Transisi', 'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Margin Aug-26 (Rp)', 'Margin Sep-26 (Rp)', 'Delta Margin (Rp)', '% Margin Agu', '% Margin Sep', 'GAP Sep', 'Action SQA (Sep 26)', 'Site Loss Tracker'];
+    const headers = ['Arah Transisi', 'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Margin Aug-26 (Rp)', 'Margin Sep-26 (Rp)', 'Delta Margin (Rp)', '% Margin Agu', '% Margin Sep', 'GAP Sep', 'Site Loss Tracker'];
     const csv = [headers.map(h => `"${{h}}"`).join(',')];
     list.forEach(x => {{
       const dir = x.t === 'REC' ? 'Loss Agu -> Profit Sep' : 'Profit Agu -> Loss Sep';
-      const vals = [dir, x.sid, x.name, x.nop, x.br, x.kab, x.mAug, x.mSep, x.delta, x.pctAug + '%', x.pctSep + '%', x.gapSep, x.sqa, x.tracker];
+      const vals = [dir, x.sid, x.name, x.nop, x.br, x.kab, x.mAug, x.mSep, x.delta, x.pctAug + '%', x.pctSep + '%', x.gapSep, x.tracker];
       csv.push(vals.map(v => `"${{String(v || '').replace(/"/g, '""')}}"`).join(','));
     }});
     const blob = new Blob([csv.join('\\n')], {{ type: 'text/csv;charset=utf-8;' }});
