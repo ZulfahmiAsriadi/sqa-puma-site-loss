@@ -2535,7 +2535,7 @@
           <span class="pulse-dot"></span>
           <span id="sync-status-label">Sync: <strong id="refresh-timer" style="color:#38bdf8">30s</strong></span>
         </div>
-        <div class="meta-tag" id="last-updated-badge">Update: 18 Nov 2026, 10:24 WIT</div>
+        <div class="meta-tag" id="last-updated-badge">Update: 18 Nov 2026, 17:47 WIT</div>
         <button class="btn-action" id="btn-refresh-manual" onclick="manualTriggerRefresh()" title="Refresh Data Sekarang">
           <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           <span>Refresh</span>
@@ -3715,6 +3715,7 @@
               <th style="text-align:right">Delta (Sep − Agu)</th>
               <th style="text-align:center">% Margin (Agu → Sep)</th>
               <th>GAP Sep</th>
+              <th class="new-col-th" style="background:rgba(239,68,68,0.18);color:#fca5a5">Action SQA (SEP '26)</th>
               <th>Site Loss Tracker</th>
             </tr>
           </thead>
@@ -4257,6 +4258,7 @@
     let list = branchItems.filter(x => {
       if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
       if (q) {
+        const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.sqa} ${x.tracker}`.toLowerCase();
         const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.tracker}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
@@ -4274,6 +4276,7 @@
     const tbody = document.getElementById('flip-tbody');
     if (!tbody) return;
     if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:36px;color:var(--text-muted)">Tidak ada site perubahan status yang cocok dengan filter</td></tr>`;
       tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:36px;color:var(--text-muted)">Tidak ada site perubahan status yang cocok dengan filter</td></tr>`;
       return;
     }
@@ -4306,6 +4309,7 @@
         <td style="text-align:right;font-family:'JetBrains Mono';font-weight:700;color:${dColor}">${dStr}</td>
         <td style="text-align:center;font-family:'JetBrains Mono'">${x.pctAug}% → <strong>${x.pctSep}%</strong></td>
         <td>${gapBadge}</td>
+        <td class="new-col-td" style="color:#fca5a5">${x.sqa}</td>
         <td>${trkBadge}</td>
       </tr>`;
     }).join('');
@@ -4319,15 +4323,18 @@
       if (branchVal !== 'ALL' && x.br !== branchVal) return false;
       if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
       if (q) {
+        const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.sqa} ${x.tracker}`.toLowerCase();
         const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.tracker}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
+    const headers = ['Arah Transisi', 'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Margin Aug-26 (Rp)', 'Margin Sep-26 (Rp)', 'Delta Margin (Rp)', '% Margin Agu', '% Margin Sep', 'GAP Sep', 'Action SQA (Sep 26)', 'Site Loss Tracker'];
     const headers = ['Arah Transisi', 'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Margin Aug-26 (Rp)', 'Margin Sep-26 (Rp)', 'Delta Margin (Rp)', '% Margin Agu', '% Margin Sep', 'GAP Sep', 'Site Loss Tracker'];
     const csv = [headers.map(h => `"${h}"`).join(',')];
     list.forEach(x => {
       const dir = x.t === 'REC' ? 'Loss Agu -> Profit Sep' : 'Profit Agu -> Loss Sep';
+      const vals = [dir, x.sid, x.name, x.nop, x.br, x.kab, x.mAug, x.mSep, x.delta, x.pctAug + '%', x.pctSep + '%', x.gapSep, x.sqa, x.tracker];
       const vals = [dir, x.sid, x.name, x.nop, x.br, x.kab, x.mAug, x.mSep, x.delta, x.pctAug + '%', x.pctSep + '%', x.gapSep, x.tracker];
       csv.push(vals.map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
     });
@@ -6385,7 +6392,7 @@
   let refreshCountdown = 30;
   let isRefreshing = false;
   let isLocalEngine = false;
-  const currentVersionHash = "1794965084";
+  const currentVersionHash = "1794991673";
 
   function canAutoReload() {
     const lastReload = parseInt(sessionStorage.getItem('last_auto_reload') || '0', 10);
