@@ -2535,7 +2535,7 @@
           <span class="pulse-dot"></span>
           <span id="sync-status-label">Sync: <strong id="refresh-timer" style="color:#38bdf8">30s</strong></span>
         </div>
-        <div class="meta-tag" id="last-updated-badge">Update: 18 Nov 2026, 18:36 WIT</div>
+        <div class="meta-tag" id="last-updated-badge">Update: 18 Nov 2026, 19:05 WIT</div>
         <button class="btn-action" id="btn-refresh-manual" onclick="manualTriggerRefresh()" title="Refresh Data Sekarang">
           <svg id="refresh-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           <span>Refresh</span>
@@ -4259,7 +4259,6 @@
       if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
       if (q) {
         const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.sqa} ${x.tracker}`.toLowerCase();
-        const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.tracker}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
@@ -4277,7 +4276,6 @@
     if (!tbody) return;
     if (!list.length) {
       tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:36px;color:var(--text-muted)">Tidak ada site perubahan status yang cocok dengan filter</td></tr>`;
-      tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:36px;color:var(--text-muted)">Tidak ada site perubahan status yang cocok dengan filter</td></tr>`;
       return;
     }
 
@@ -4324,18 +4322,15 @@
       if (activeFlipMode !== 'ALL' && x.t !== activeFlipMode) return false;
       if (q) {
         const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.sqa} ${x.tracker}`.toLowerCase();
-        const hay = `${x.sid} ${x.name} ${x.br} ${x.kab} ${x.tracker}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
     const headers = ['Arah Transisi', 'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Margin Aug-26 (Rp)', 'Margin Sep-26 (Rp)', 'Delta Margin (Rp)', '% Margin Agu', '% Margin Sep', 'GAP Sep', 'Action SQA (Sep 26)', 'Site Loss Tracker'];
-    const headers = ['Arah Transisi', 'Site ID', 'Site Name', 'NOP', 'Branch', 'Kabupaten', 'Margin Aug-26 (Rp)', 'Margin Sep-26 (Rp)', 'Delta Margin (Rp)', '% Margin Agu', '% Margin Sep', 'GAP Sep', 'Site Loss Tracker'];
     const csv = [headers.map(h => `"${h}"`).join(',')];
     list.forEach(x => {
       const dir = x.t === 'REC' ? 'Loss Agu -> Profit Sep' : 'Profit Agu -> Loss Sep';
       const vals = [dir, x.sid, x.name, x.nop, x.br, x.kab, x.mAug, x.mSep, x.delta, x.pctAug + '%', x.pctSep + '%', x.gapSep, x.sqa, x.tracker];
-      const vals = [dir, x.sid, x.name, x.nop, x.br, x.kab, x.mAug, x.mSep, x.delta, x.pctAug + '%', x.pctSep + '%', x.gapSep, x.tracker];
       csv.push(vals.map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
     });
     const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
@@ -6392,7 +6387,7 @@
   let refreshCountdown = 30;
   let isRefreshing = false;
   let isLocalEngine = false;
-  const currentVersionHash = "1794994609";
+  const currentVersionHash = "1794996350";
 
   function canAutoReload() {
     const lastReload = parseInt(sessionStorage.getItem('last_auto_reload') || '0', 10);
